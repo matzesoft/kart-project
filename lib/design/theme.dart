@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 class AppTheme {
   static Color customShadowColor(BuildContext context) {
     if (Theme.of(context).brightness == Brightness.dark)
-      return Colors.grey[100].withOpacity(0.05);
-    return Colors.grey[100].withOpacity(0.22);
+      return Colors.grey[100].withOpacity(0.05); // TODO: Adapt to Raspi-Display
+    return Colors.grey[500].withOpacity(0.22);
   }
 
   static double get customElevation {

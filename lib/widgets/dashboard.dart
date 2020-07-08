@@ -172,7 +172,7 @@ class Battery extends StatefulWidget {
 class _BatteryState extends State<Battery> {
   final Duration _animationDuration = Duration(milliseconds: 300);
   double _batteryPercentageBefore = 1.0;
-  double _batteryPercentage = 0.0;
+  double _batteryPercentage = 0.4;
 
   Color _batteryColor() {
     if (_batteryPercentage <= 0.2) {
@@ -264,11 +264,6 @@ class Consumption extends StatelessWidget {
             icon: Icon(EvaIcons.trendingUpOutline),
             title: "43 km", //TODO: Add API
             subtitle: "Reichweite",
-          ),
-          CustomListTile(
-            icon: Icon(EvaIcons.barChartOutline),
-            title: "Verlauf", //TODO: Localization
-            subtitle: "Zeitlicher Verbrauch",
             onPressed: _openConsumptionHistory,
             trailing: Icon(EvaIcons.arrowIosForwardOutline),
           ),
