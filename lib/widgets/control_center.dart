@@ -2,6 +2,8 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/lights_provider.dart';
+import 'package:kart_project/providers/serial_provider/serial_provider.dart';
+import 'package:provider/provider.dart';
 
 class ControlCenter extends StatefulWidget {
   @override
@@ -13,10 +15,18 @@ class _ControlCenterState extends State<ControlCenter> {
 
   void _toggleCruiseControl() {
     // TODO: Implement
+    // TODO: Remove after testing
+    final serialProvider = Provider.of<SerialProvider>(context, listen: false);
+    int value = serialProvider.getByte();
+    print(value);
   }
 
   void _hoot() {
     // TODO: Implement
+    // TODO: Remove after testing
+    final serialProvider = Provider.of<SerialProvider>(context, listen: false);
+    serialProvider.openSerialPort(); // TODO: Remove after testing
+    serialProvider.sendString("Das kommt vom Raspi :=O");
   }
 
   void _lock() {
@@ -67,23 +77,35 @@ class _ControlCenterState extends State<ControlCenter> {
                           icon: EvaIcons.volumeDownOutline,
                         ),
                       ),
+                      // TODO: Improve transition
                       Expanded(
-                        child: AnimatedCrossFade(
-                          duration: Duration(milliseconds: 400),
-                          crossFadeState: state == LightState.on
-                              ? CrossFadeState.showSecond
-                              : CrossFadeState.showFirst,
-                          firstChild: ControlCenterButton(
+                        child: ControlCenterButton(
+                          onPressed: _toggleCruiseControl,
+                          icon: EvaIcons.arrowheadRightOutline,
+                          selected: false, //TODO: Add Provider data
+                        ),
+                      ),
+                      /*
+                      AnimatedCrossFade(
+                        duration: Duration(milliseconds: 400),
+                        crossFadeState: state == LightState.on
+                            ? CrossFadeState.showSecond
+                            : CrossFadeState.showFirst,
+                        firstChild: Expanded(
+                          child: ControlCenterButton(
                             onPressed: _toggleCruiseControl,
                             icon: EvaIcons.arrowheadRightOutline,
                             selected: false, //TODO: Add Provider data
                           ),
-                          secondChild: ControlCenterButton(
+                        ),
+                        secondChild: Expanded(
+                          child: ControlCenterButton(
                             onPressed: _lock,
                             icon: EvaIcons.lockOutline,
                           ),
                         ),
                       ),
+                      */
                     ],
                   ),
                 ),
