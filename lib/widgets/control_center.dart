@@ -17,8 +17,7 @@ class _ControlCenterState extends State<ControlCenter> {
     // TODO: Implement
     // TODO: Remove after testing
     final serialProvider = Provider.of<SerialProvider>(context, listen: false);
-    int value = serialProvider.getByte();
-    print(value);
+    print(serialProvider.getByte());
   }
 
   void _hoot() {

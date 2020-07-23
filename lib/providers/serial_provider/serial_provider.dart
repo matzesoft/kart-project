@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:convert';
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
@@ -32,12 +32,19 @@ class SerialProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void sendByte(int byte) {
+  /// Sends the hex [value] to the serial device linked to the [fileDescriptor].
+  /// Max length of the hex [value] is 8 digits.
+  void sendHex(String value) {
+    // TODO: Create a for loop to allow more than 8 digits
+    // TODO: Test Controller to work with more data packages
     _checkIfInitalized();
-    _serialNative.serialPutchar(fileDescriptor, byte);
+    if (value.length > 8)
+      throw ArgumentError("The hex values "); // TODO: Implement error message
+    int parsedInt = int.parse(value, radix: 16);
+    _serialNative.serialPutchar(fileDescriptor, parsedInt);
   }
 
-  /// Sends the [value] to the serial device definded by the [fileDescriptor].
+  /// Sends the [value] to the serial device linked to the [fileDescriptor].
   void sendString(String value) {
     // TODO: ASCII to HEXA?
     _checkIfInitalized();
@@ -51,9 +58,17 @@ class SerialProvider extends ChangeNotifier {
     return _serialNative.serialGetchar(fileDescriptor);
   }
 
+  /// This discards all data received, or waiting to be send down the given device.
+  void clear() {
+    _checkIfInitalized();
+    return _serialNative.serialFlush(fileDescriptor);
+  }
+
   /// Closes the serial port. Should be called if serial port is not in use anymore.
-  void closeSerialPort() {
+  void closePort() {
     _serialNative.serialClose(fileDescriptor);
+    fileDescriptor = -1;
+    notifyListeners();
   }
 
   void _checkIfInitalized() {

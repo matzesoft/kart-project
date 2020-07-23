@@ -23,6 +23,10 @@ typedef SerialPuts = void Function(int fd, Pointer<Utf8>);
 typedef serial_getchar = Int32 Function(Int32 fd);
 typedef SerialGetchar = int Function(int fd);
 
+/// WiringPi Native: `void serialFlush(int fd);`
+typedef serial_flush = Void Function(Int32 fd);
+typedef SerialFlush = void Function(int fd);
+
 class SerialNative {
   final String _path = '/usr/lib/libwiringPi.so';
   DynamicLibrary _dylib;
@@ -46,6 +50,9 @@ class SerialNative {
   /// 10 seconds if no data is available (when it will return -1)
   SerialGetchar serialGetchar;
 
+  /// This discards all data received, or waiting to be send down the given device.
+  SerialFlush serialFlush;
+
   SerialNative() {
     _dylib = DynamicLibrary.open(_path);
     serialOpen = _dylib
@@ -54,7 +61,7 @@ class SerialNative {
     serialClose = _dylib
         .lookup<NativeFunction<serial_close>>('serialClose')
         .asFunction<SerialClose>();
-    serialPutchar  = _dylib
+    serialPutchar = _dylib
         .lookup<NativeFunction<serial_putchar>>('serialPutchar')
         .asFunction<SerialPutchar>();
     serialPuts = _dylib
@@ -63,5 +70,8 @@ class SerialNative {
     serialGetchar = _dylib
         .lookup<NativeFunction<serial_getchar>>('serialGetchar')
         .asFunction<SerialGetchar>();
+    serialFlush = _dylib
+        .lookup<NativeFunction<serial_flush>>('serialFlush')
+        .asFunction<SerialFlush>();
   }
 }
