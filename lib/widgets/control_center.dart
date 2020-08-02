@@ -1,9 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
-import 'package:kart_project/providers/lights_provider.dart';
-import 'package:kart_project/providers/serial_provider/serial_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:kart_project/providers/lights_provider/lights_provider.dart';
 
 class ControlCenter extends StatefulWidget {
   @override
@@ -13,19 +11,12 @@ class ControlCenter extends StatefulWidget {
 class _ControlCenterState extends State<ControlCenter> {
   LightState state = LightState.off;
 
-  void _toggleCruiseControl() {
+  void _toggleCruiseControl() async {
     // TODO: Implement
-    // TODO: Remove after testing
-    final serialProvider = Provider.of<SerialProvider>(context, listen: false);
-    print(serialProvider.getByte());
   }
 
-  void _hoot() {
+  void _hoot() async {
     // TODO: Implement
-    // TODO: Remove after testing
-    final serialProvider = Provider.of<SerialProvider>(context, listen: false);
-    serialProvider.openSerialPort(); // TODO: Remove after testing
-    serialProvider.sendString("Das kommt vom Raspi :=O");
   }
 
   void _lock() {
@@ -177,7 +168,7 @@ class ControlCenterLightSwitch extends StatelessWidget {
                   ),
                   Text(
                     _text(),
-                    style: Theme.of(context).textTheme.body1.copyWith(
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(
                           color: _highlightColor(context),
                         ),
                   ),

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/providers/serial_provider/serial_native.dart';
@@ -35,25 +33,24 @@ class SerialProvider extends ChangeNotifier {
   /// Sends the hex [value] to the serial device linked to the [fileDescriptor].
   /// Max length of the hex [value] is 8 digits.
   void sendHex(String value) {
-    // TODO: Create a for loop to allow more than 8 digits
     // TODO: Test Controller to work with more data packages
     _checkIfInitalized();
     if (value.length > 8)
-      throw ArgumentError("The hex values "); // TODO: Implement error message
+      throw ArgumentError("The hex value can be maximal 8 digits long: ${value.length}");
     int parsedInt = int.parse(value, radix: 16);
     _serialNative.serialPutchar(fileDescriptor, parsedInt);
   }
 
   /// Sends the [value] to the serial device linked to the [fileDescriptor].
   void sendString(String value) {
-    // TODO: ASCII to HEXA?
+    // TODO: ASCII/HEX
     _checkIfInitalized();
     _serialNative.serialPuts(fileDescriptor, Utf8.toUtf8(value));
   }
 
   /// Returns the next character available on the serial device. Timeout: 10 seconds
   int getByte() {
-    // TODO: ASCII to HEXA?
+    // TODO: ASCII/HEX
     _checkIfInitalized();
     return _serialNative.serialGetchar(fileDescriptor);
   }
