@@ -4,7 +4,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.8.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -15,8 +15,8 @@ dependencies:
   flutter_gpiod: ^0.1.0+3
   flutter_map: ^0.9.0
   ffi: ^0.1.3
-
-  cupertino_icons:
+  sqflite_common_ffi: ^1.1.0+1
+  shared_preferences: ^0.5.8
 
 
 dev_dependencies:
@@ -30,40 +30,6 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/map/anholt_osmbright/12/2177/
-    - assets/map/anholt_osmbright/12/2178/
-    - assets/map/anholt_osmbright/12/2179/
-    - assets/map/anholt_osmbright/12/2180/
-    - assets/map/anholt_osmbright/12/2181/
-    - assets/map/anholt_osmbright/13/4354/
-    - assets/map/anholt_osmbright/13/4355/
-    - assets/map/anholt_osmbright/13/4356/
-    - assets/map/anholt_osmbright/13/4357/
-    - assets/map/anholt_osmbright/13/4358/
-    - assets/map/anholt_osmbright/13/4359/
-    - assets/map/anholt_osmbright/13/4360/
-    - assets/map/anholt_osmbright/13/4361/
-    - assets/map/anholt_osmbright/13/4362/
-    - assets/map/anholt_osmbright/13/4363/
-    - assets/map/anholt_osmbright/14/8709/
-    - assets/map/anholt_osmbright/14/8710/
-    - assets/map/anholt_osmbright/14/8711/
-    - assets/map/anholt_osmbright/14/8712/
-    - assets/map/anholt_osmbright/14/8713/
-    - assets/map/anholt_osmbright/14/8714/
-    - assets/map/anholt_osmbright/14/8715/
-    - assets/map/anholt_osmbright/14/8716/
-    - assets/map/anholt_osmbright/14/8717/
-    - assets/map/anholt_osmbright/14/8718/
-    - assets/map/anholt_osmbright/14/8719/
-    - assets/map/anholt_osmbright/14/8720/
-    - assets/map/anholt_osmbright/14/8721/
-    - assets/map/anholt_osmbright/14/8722/
-    - assets/map/anholt_osmbright/14/8723/
-    - assets/map/anholt_osmbright/14/8724/
-    - assets/map/anholt_osmbright/14/8725/
-    - assets/map/anholt_osmbright/14/8726/
-    - assets/map/anholt_osmbright/14/8727/
 
   fonts:
     - family: Rubik

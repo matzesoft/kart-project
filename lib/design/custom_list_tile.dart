@@ -50,7 +50,7 @@ class CustomListTile extends StatelessWidget {
                       title,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.body2,
+                      style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ),
                   Padding(
@@ -60,7 +60,7 @@ class CustomListTile extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow
                           .ellipsis, // TODO: Text is not overflowing correctly
-                      style: Theme.of(context).textTheme.subtitle,
+                      style: Theme.of(context).textTheme.subtitle2,
                     ),
                   ),
                 ],

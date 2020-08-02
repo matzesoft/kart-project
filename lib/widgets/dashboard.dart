@@ -54,7 +54,7 @@ class SpeedAndProfile extends StatelessWidget {
             children: <Widget>[
               Text(
                 "32", // TODO: Add API
-                style: Theme.of(context).textTheme.display4,
+                style: Theme.of(context).textTheme.headline1,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -63,7 +63,7 @@ class SpeedAndProfile extends StatelessWidget {
                 ),
                 child: Text(
                   "km/h", //TODO: Localization
-                  style: Theme.of(context).textTheme.body2,
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
               ),
             ],
@@ -155,7 +155,7 @@ class MomentaryConsumption extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
               "3 kW", //TODO: Add API
-              style: Theme.of(context).textTheme.subtitle,
+              style: Theme.of(context).textTheme.subtitle2,
             ),
           ),
         ],
@@ -201,7 +201,7 @@ class _BatteryState extends State<Battery> {
                 alignment: Alignment.center,
                 child: Text(
                   (_batteryPercentage * 100).round().toString() + "%",
-                  style: Theme.of(context).textTheme.body2,
+                  style: Theme.of(context).textTheme.bodyText2,
                 ),
               ),
               Expanded(

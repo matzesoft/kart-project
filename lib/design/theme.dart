@@ -28,52 +28,52 @@ class AppTheme {
         iconTheme: IconThemeData(color: Colors.grey[800], size: 32),
         toggleableActiveColor: Color(0xFF428DFC),
         textTheme: TextTheme(
-          display4: TextStyle(
+          headline1: TextStyle(
             fontSize: 90,
             fontWeight: FontWeight.w400,
             color: Colors.grey[900],
           ),
-          display3: TextStyle(
+          headline2: TextStyle(
             fontSize: 62,
             fontWeight: FontWeight.w500,
             color: Colors.grey[900],
           ),
-          display2: TextStyle(
+          headline3: TextStyle(
             fontSize: 50,
             fontWeight: FontWeight.w500,
             color: Colors.grey[900],
           ),
-          display1: TextStyle(
+          headline4: TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.w500,
             color: Colors.grey[900],
           ),
-          headline: TextStyle(
+          headline5: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.w500,
             color: Colors.grey[900],
           ),
-          title: TextStyle(
+          headline6: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.w500,
             color: Colors.grey[900],
           ),
-          subhead: TextStyle(
+          subtitle1: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
             color: Colors.grey[700],
           ),
-          subtitle: TextStyle(
+          subtitle2: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
             color: Colors.grey[700],
           ),
-          body2: TextStyle(
+          bodyText1: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
             color: Colors.grey[800],
           ),
-          body1: TextStyle(
+          bodyText2: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
             color: Colors.grey[800],
@@ -104,52 +104,52 @@ class AppTheme {
         iconTheme: IconThemeData(color: Colors.grey[300], size: 32),
         toggleableActiveColor: Colors.blueAccent[100],
         textTheme: TextTheme(
-          display4: TextStyle(
+          headline1: TextStyle(
             fontSize: 90,
             fontWeight: FontWeight.w400,
             color: Colors.grey[50],
           ),
-          display3: TextStyle(
+          headline2: TextStyle(
             fontSize: 62,
             fontWeight: FontWeight.w500,
             color: Colors.grey[50],
           ),
-          display2: TextStyle(
+          headline3: TextStyle(
             fontSize: 50,
             fontWeight: FontWeight.w500,
             color: Colors.grey[50],
           ),
-          display1: TextStyle(
+          headline4: TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.w500,
             color: Colors.grey[50],
           ),
-          headline: TextStyle(
+          headline5: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.w500,
             color: Colors.grey[50],
           ),
-          title: TextStyle(
+          headline6: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.w500,
             color: Colors.grey[50],
           ),
-          subhead: TextStyle(
+          subtitle1: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
             color: Colors.grey[500],
           ),
-          subtitle: TextStyle(
+          subtitle2: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
             color: Colors.grey[500],
           ),
-          body2: TextStyle(
+          bodyText1: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
             color: Colors.grey[300],
           ),
-          body1: TextStyle(
+          bodyText2: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
             color: Colors.grey[300],

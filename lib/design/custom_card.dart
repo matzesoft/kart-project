@@ -34,7 +34,7 @@ class CustomCard extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 title == null ? "" : title.toUpperCase(),
-                style: Theme.of(context).textTheme.subtitle,
+                style: Theme.of(context).textTheme.subtitle2,
               ),
             ),
           ),
