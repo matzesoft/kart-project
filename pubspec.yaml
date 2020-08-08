@@ -1,7 +1,7 @@
 name: kart_project
-description: A new Flutter project.
+description: A flutter-pi-app running on a RaspberryPi 4, being the infotainment system for a custom builded e-kart, planned by two brothers.
 
-version: 1.0.0+1
+version: 0.1.0+1
 
 environment:
   sdk: ">=2.8.0 <3.0.0"

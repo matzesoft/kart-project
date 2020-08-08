@@ -4,9 +4,9 @@ import 'package:kart_project/providers/pwm_provider/pwm_provider.dart';
 import 'package:kart_project/providers/serial_provider/serial_provider.dart';
 import 'package:kart_project/widgets/dashboard.dart';
 import 'package:kart_project/widgets/entertainment.dart';
+import 'package:kart_project/widgets/profil_menu.dart';
 import 'package:provider/provider.dart';
 import 'design/theme.dart';
-
 
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
@@ -38,12 +38,18 @@ class Core extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.light,
-      home: Root(),
+      initialRoute: Root.route,
+      routes: {
+        Root.route: (context) => Root(),
+        ProfilMenu.route: (context) => ProfilMenu(),
+      },
     );
   }
 }
 
 class Root extends StatelessWidget {
+  static String route = "/";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

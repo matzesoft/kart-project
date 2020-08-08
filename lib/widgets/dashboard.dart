@@ -2,7 +2,9 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/custom_list_tile.dart';
 import 'package:kart_project/design/theme.dart';
+import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/control_center.dart';
+import 'package:kart_project/widgets/profil_menu.dart';
 
 /// Padding each element/widget should have.
 const EdgeInsets widgetPadding =
@@ -38,8 +40,8 @@ class Dashboard extends StatelessWidget {
 }
 
 class SpeedAndProfile extends StatelessWidget {
-  void _openProfilMenu() {
-    //TODO: Implement
+  void _openProfilMenu(BuildContext context) {
+    Navigator.pushNamed(context, ProfilMenu.route);
   }
 
   @override
@@ -62,7 +64,7 @@ class SpeedAndProfile extends StatelessWidget {
                   vertical: 18.0,
                 ),
                 child: Text(
-                  "km/h", //TODO: Localization
+                  Strings.kmh,
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
               ),
@@ -76,7 +78,9 @@ class SpeedAndProfile extends StatelessWidget {
             child: IconButton(
               icon: Icon(EvaIcons.personOutline),
               iconSize: 34,
-              onPressed: _openProfilMenu,
+              onPressed: () {
+                _openProfilMenu(context);
+              },
             ),
           ),
         ),
@@ -263,7 +267,7 @@ class Consumption extends StatelessWidget {
           CustomListTile(
             icon: Icon(EvaIcons.trendingUpOutline),
             title: "43 km", //TODO: Add API
-            subtitle: "Reichweite",
+            subtitle: Strings.range,
             onPressed: _openConsumptionHistory,
             trailing: Icon(EvaIcons.arrowIosForwardOutline),
           ),
