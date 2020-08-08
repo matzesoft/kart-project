@@ -2,6 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/lights_provider/lights_provider.dart';
+import 'package:kart_project/strings.dart';
 
 class ControlCenter extends StatefulWidget {
   @override
@@ -138,10 +139,9 @@ class ControlCenterLightSwitch extends StatelessWidget {
   }
 
   String _text() {
-    // TODO: Localization
-    if (state == LightState.on) return "An";
-    if (state == LightState.dimmed) return "Gedimmt";
-    return "Aus";
+    if (state == LightState.on) return Strings.on;
+    if (state == LightState.dimmed) return Strings.dimmed;
+    return Strings.off;
   }
 
   @override
