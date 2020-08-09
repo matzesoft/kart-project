@@ -13,11 +13,11 @@ class Strings {
     "profiles": "Profile",
     "drive": "Fahren",
     "light_and_display": "Licht und Anzeige",
-    "about": "About",
+    "about": "Über",
     "on": "An",
     "off": "Aus",
     "dimmed": "Gedimmt",
     "kmh": "km/h",
-    "range": "range",
+    "range": "Reichweite",
   };
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:kart_project/providers/profil_provider.dart';
 import 'package:kart_project/providers/pwm_provider/pwm_provider.dart';
 import 'package:kart_project/providers/serial_provider/serial_provider.dart';
 import 'package:kart_project/widgets/dashboard.dart';
@@ -25,7 +26,14 @@ class KartProject extends StatelessWidget {
           create: (context) => SerialProvider(),
         ),
       ],
-      child: Core(),
+      child: Builder(builder: (context) {
+        return ChangeNotifierProvider(
+          create: (context) => ProfilProvider(
+            context,
+          ),
+          child: Core(),
+        );
+      }),
     );
   }
 }
@@ -52,18 +60,27 @@ class Root extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 4,
-            child: Dashboard(),
-          ),
-          Expanded(
-            flex: 7,
-            child: Entertainment(),
-          ),
-        ],
+    // TODO: Improve loading screen...
+    return Selector<ProfilProvider, bool>(
+      selector: (context, profilProvider) => profilProvider.initalized,
+      builder: (context, initalized, child) {
+        if (!initalized) return Text("Init...");
+        print("Rebuilded loading page...");
+        return child;
+      },
+      child: Scaffold(
+        body: Row(
+          children: <Widget>[
+            Expanded(
+              flex: 4,
+              child: Dashboard(),
+            ),
+            Expanded(
+              flex: 7,
+              child: Entertainment(),
+            ),
+          ],
+        ),
       ),
     );
   }
