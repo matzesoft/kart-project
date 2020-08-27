@@ -7,18 +7,15 @@ class AppTheme {
       return Colors.grey[100].withOpacity(0.05); // TODO: Adapt to Raspi-Display
     return Colors.grey[500].withOpacity(0.22);
   }
-
-  static double get customElevation {
-    return 14.0;
-  }
-
+  static double get customElevation => 12.0;
   static double get customBorderRadius => 16.0;
+  static double get iconButtonSize => 34;
 
   static ThemeData get lightTheme => ThemeData(
         brightness: Brightness.light,
         primaryColorBrightness: Brightness.light,
         primaryColor: Color(0xFF428DFC),
-        accentColor: Color(0xFF428DFC),
+        accentColor: Colors.blueAccent[700],
         backgroundColor: Colors.white,
         scaffoldBackgroundColor: Colors.grey[200],
         canvasColor: Colors.grey[300],

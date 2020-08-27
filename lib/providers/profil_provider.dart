@@ -86,6 +86,10 @@ class ProfilProvider extends ChangeNotifier {
     );
   }
 
+  List<Profil> get profilesWithoutCurrentProfil {
+    return profiles.where((profil) => profil.id != currentProfil.id).toList();
+  }
+
   ProfilProvider(BuildContext context) {
     _init(context);
   }

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/providers/profil_provider.dart';
 import 'package:kart_project/providers/pwm_provider/pwm_provider.dart';
 import 'package:kart_project/providers/serial_provider/serial_provider.dart';
-import 'package:kart_project/widgets/dashboard.dart';
+import 'package:kart_project/widgets/dashboard/dashboard.dart';
 import 'package:kart_project/widgets/entertainment.dart';
-import 'package:kart_project/widgets/profil_menu.dart';
+import 'package:kart_project/widgets/settings/settings.dart';
 import 'package:provider/provider.dart';
 import 'design/theme.dart';
 
@@ -49,7 +49,7 @@ class Core extends StatelessWidget {
       initialRoute: Root.route,
       routes: {
         Root.route: (context) => Root(),
-        ProfilMenu.route: (context) => ProfilMenu(),
+        Settings.route: (context) => Settings(),
       },
     );
   }

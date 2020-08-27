@@ -58,8 +58,7 @@ class CustomListTile extends StatelessWidget {
                     child: Text(
                       subtitle,
                       maxLines: 2,
-                      overflow: TextOverflow
-                          .ellipsis, // TODO: Text is not overflowing correctly
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.subtitle2,
                     ),
                   ),

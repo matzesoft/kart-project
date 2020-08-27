@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/design/custom_list_tile.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/strings.dart';
-import 'package:kart_project/widgets/control_center.dart';
-import 'package:kart_project/widgets/profil_menu.dart';
+import 'package:kart_project/widgets/dashboard/control_center.dart';
+import 'package:kart_project/widgets/settings/settings.dart';
 
 /// Padding each element/widget should have.
 const EdgeInsets widgetPadding =
@@ -41,7 +41,7 @@ class Dashboard extends StatelessWidget {
 
 class SpeedAndProfile extends StatelessWidget {
   void _openProfilMenu(BuildContext context) {
-    Navigator.pushNamed(context, ProfilMenu.route);
+    Navigator.pushNamed(context, Settings.route);
   }
 
   @override
@@ -76,8 +76,8 @@ class SpeedAndProfile extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(14.0),
             child: IconButton(
-              icon: Icon(EvaIcons.personOutline),
-              iconSize: 34,
+              icon: Icon(EvaIcons.settings2Outline),
+              iconSize: AppTheme.iconButtonSize,
               onPressed: () {
                 _openProfilMenu(context);
               },

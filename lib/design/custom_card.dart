@@ -29,7 +29,7 @@ class CustomCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Visibility(
-            visible: title == null ? false : true,
+            visible: title != null,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
