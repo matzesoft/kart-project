@@ -16,7 +16,7 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: AppTheme.customElevation,
+      elevation: AppTheme.elevation,
       color: Theme.of(context).backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(4.0),
@@ -104,7 +104,7 @@ class MomentaryConsumption extends StatelessWidget {
               color: Theme.of(context).canvasColor,
               shape: RoundedRectangleBorder(
                 borderRadius:
-                    BorderRadius.circular(AppTheme.customBorderRadius),
+                    BorderRadius.circular(AppTheme.borderRadius),
               ),
             ),
             child: Row(
@@ -121,9 +121,9 @@ class MomentaryConsumption extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topLeft:
-                                Radius.circular(AppTheme.customBorderRadius),
+                                Radius.circular(AppTheme.borderRadius),
                             bottomLeft:
-                                Radius.circular(AppTheme.customBorderRadius),
+                                Radius.circular(AppTheme.borderRadius),
                           ),
                         ),
                       ),
@@ -142,9 +142,9 @@ class MomentaryConsumption extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topRight:
-                                Radius.circular(AppTheme.customBorderRadius),
+                                Radius.circular(AppTheme.borderRadius),
                             bottomRight:
-                                Radius.circular(AppTheme.customBorderRadius),
+                                Radius.circular(AppTheme.borderRadius),
                           ),
                         ),
                       ),
@@ -215,7 +215,7 @@ class _BatteryState extends State<Battery> {
                     color: Theme.of(context).canvasColor,
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(AppTheme.customBorderRadius),
+                          BorderRadius.circular(AppTheme.borderRadius),
                     ),
                   ),
                   alignment: Alignment.topLeft,
@@ -234,7 +234,7 @@ class _BatteryState extends State<Battery> {
                             color: _batteryColor(),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
-                                AppTheme.customBorderRadius,
+                                AppTheme.borderRadius,
                               ),
                             ),
                           ),

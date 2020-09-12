@@ -2,28 +2,85 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AppTheme {
-  static Color customShadowColor(BuildContext context) {
+  static Color shadowColor(BuildContext context) {
     if (Theme.of(context).brightness == Brightness.dark)
-      return Colors.grey[100].withOpacity(0.05); // TODO: Adapt to Raspi-Display
+      return Colors.grey[100].withOpacity(0.05);
     return Colors.grey[500].withOpacity(0.22);
   }
-  static double get customElevation => 12.0;
-  static double get customBorderRadius => 16.0;
+
+  static double get elevation => 12.0;
+  static double get borderRadius => 16.0;
   static double get iconButtonSize => 34;
+  static double get dialogSize => 0.6;
 
   static ThemeData get lightTheme => ThemeData(
-        brightness: Brightness.light,
-        primaryColorBrightness: Brightness.light,
-        primaryColor: Color(0xFF428DFC),
         accentColor: Colors.blueAccent[700],
+        applyElevationOverlayColor: true,
         backgroundColor: Colors.white,
-        scaffoldBackgroundColor: Colors.grey[200],
+        brightness: Brightness.light,
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.blueAccent[700],
+          padding: EdgeInsets.all(16.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
+        buttonBarTheme: ButtonBarThemeData(
+          buttonPadding: EdgeInsets.all(16.0),
+          buttonTextTheme: ButtonTextTheme.accent,
+        ),
         canvasColor: Colors.grey[300],
-        cursorColor: Color(0xFF428DFC),
-        hoverColor: Colors.grey[100],
-        fontFamily: 'Rubik',
+        cardTheme: CardTheme(
+          color: Colors.white,
+          shadowColor: Colors.black26,
+          elevation: 12.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
+        cursorColor: Colors.blueAccent[700],
+        dialogTheme: DialogTheme(
+          backgroundColor: Colors.white,
+          elevation: 12.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
+        disabledColor: Colors.black38,
+        dividerTheme: DividerThemeData(color: Colors.grey[300]),
+        errorColor: Colors.red[700],
+        hintColor: Colors.grey[600],
         iconTheme: IconThemeData(color: Colors.grey[800], size: 32),
-        toggleableActiveColor: Color(0xFF428DFC),
+        inputDecorationTheme: InputDecorationTheme(
+          enabledBorder: UnderlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+            borderSide: BorderSide(style: BorderStyle.none),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+            borderSide: BorderSide(style: BorderStyle.none),
+          ),
+          disabledBorder: UnderlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+            borderSide: BorderSide(style: BorderStyle.none),
+          ),
+          filled: true,
+          fillColor: Colors.grey[200],
+          hintStyle: TextStyle(
+            fontWeight: FontWeight.w400,
+            color: Colors.grey[600],
+          ),
+        ),
+        primaryColor: Colors.blueAccent[700],
+        scaffoldBackgroundColor: Colors.grey[200],
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: Colors.white,
+          elevation: 12.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
+        fontFamily: 'Rubik',
         textTheme: TextTheme(
           headline1: TextStyle(
             fontSize: 90,
@@ -88,18 +145,67 @@ class AppTheme {
       );
 
   static ThemeData get darkTheme => ThemeData(
-        brightness: Brightness.dark,
-        primaryColorBrightness: Brightness.dark,
-        primaryColor: Colors.blueAccent[100],
         accentColor: Colors.blueAccent[100],
+        applyElevationOverlayColor: true,
         backgroundColor: Colors.grey[900],
-        scaffoldBackgroundColor: Colors.black,
+        brightness: Brightness.dark,
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.blueAccent[100],
+          padding: EdgeInsets.all(16.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
+        buttonBarTheme: ButtonBarThemeData(
+          buttonPadding: EdgeInsets.all(16.0),
+          buttonTextTheme: ButtonTextTheme.accent,
+        ),
         canvasColor: Colors.grey[800],
+        cardTheme: CardTheme(
+          elevation: 12.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
         cursorColor: Colors.blueAccent[100],
-        hoverColor: Colors.grey[700],
-        fontFamily: 'Rubik',
+        dialogTheme: DialogTheme(
+          elevation: 12.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
+        disabledColor: Colors.white38,
+        dividerTheme: DividerThemeData(color: Colors.grey[800]),
         iconTheme: IconThemeData(color: Colors.grey[300], size: 32),
-        toggleableActiveColor: Colors.blueAccent[100],
+        inputDecorationTheme: InputDecorationTheme(
+          enabledBorder: UnderlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+            borderSide: BorderSide(style: BorderStyle.none),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+            borderSide: BorderSide(style: BorderStyle.none),
+          ),
+          disabledBorder: UnderlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+            borderSide: BorderSide(style: BorderStyle.none),
+          ),
+          filled: true,
+          fillColor: Colors.grey[800],
+          hintStyle: TextStyle(
+            fontWeight: FontWeight.w400,
+            color: Colors.grey[600],
+          ),
+        ),
+        primaryColor: Colors.blueAccent[100],
+        scaffoldBackgroundColor: Colors.black,
+        snackBarTheme: SnackBarThemeData(
+          elevation: 12.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
+        fontFamily: 'Rubik',
         textTheme: TextTheme(
           headline1: TextStyle(
             fontSize: 90,

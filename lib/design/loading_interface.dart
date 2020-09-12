@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kart_project/design/custom_card.dart';
+import 'package:kart_project/design/sized_alert_dialog.dart';
 import 'package:kart_project/strings.dart';
 
 class LoadingInterface extends StatelessWidget {
@@ -9,26 +9,20 @@ class LoadingInterface extends StatelessWidget {
 
   /// Shows a dialog with a [CircularProgressIndicator] and a message.
   LoadingInterface.dialog(BuildContext context, {this.message}) {
-    // TODO: Set dialog to center
     showDialog(
       context: context,
-      builder: (context) => WillPopScope(
-        onWillPop: () async => false,
-        child: Center(
-          child: FractionallySizedBox(
-            widthFactor: 0.6,
-            heightFactor: 0.6,
-            alignment: Alignment.center,
-            child: Container(
-              color: Colors.green, // TODO: Remove after testing
-              child: Center(
-                child: CustomCard(
-                  padding: EdgeInsets.all(16.0),
-                  child: LoadingInterface(message: message),
-                ),
-              ),
-            ),
-          ),
+      builder: (context) => dialogInterface(),
+    );
+  }
+
+  /// Interface of the dialog.
+  Widget dialogInterface() {
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SizedAlertDialog(
+        content: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: LoadingInterface(message: message),
         ),
       ),
     );
@@ -37,6 +31,7 @@ class LoadingInterface extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(

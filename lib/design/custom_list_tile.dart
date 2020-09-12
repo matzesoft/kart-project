@@ -81,7 +81,7 @@ class CustomListTile extends StatelessWidget {
     if (onPressed != null) {
       return InkWell(
         onTap: onPressed,
-        borderRadius: BorderRadius.circular(AppTheme.customBorderRadius),
+        borderRadius: BorderRadius.circular(AppTheme.borderRadius),
         child: _widget(context),
       );
     } else {

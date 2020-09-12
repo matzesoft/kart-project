@@ -150,12 +150,12 @@ class ControlCenterLightSwitch extends StatelessWidget {
       child: Padding(
         padding: margin,
         child: Material(
-          borderRadius: BorderRadius.circular(AppTheme.customBorderRadius),
+          borderRadius: BorderRadius.circular(AppTheme.borderRadius),
           color: _backgroundColor(context),
           child: InkWell(
             onTap: onPressed,
             onLongPress: onLongPress,
-            borderRadius: BorderRadius.circular(AppTheme.customBorderRadius),
+            borderRadius: BorderRadius.circular(AppTheme.borderRadius),
             child: Padding(
               padding: padding,
               child: Column(
@@ -203,13 +203,13 @@ class ControlCenterButton extends StatelessWidget {
       child: Padding(
         padding: margin,
         child: Material(
-          borderRadius: BorderRadius.circular(AppTheme.customBorderRadius),
+          borderRadius: BorderRadius.circular(AppTheme.borderRadius),
           color: selected
               ? Theme.of(context).accentColor
               : Theme.of(context).canvasColor,
           child: InkWell(
             onTap: onPressed,
-            borderRadius: BorderRadius.circular(AppTheme.customBorderRadius),
+            borderRadius: BorderRadius.circular(AppTheme.borderRadius),
             child: Padding(
               padding: padding,
               child: Icon(
