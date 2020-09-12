@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/profil_provider.dart';
 import 'package:kart_project/strings.dart';
+import 'package:kart_project/widgets/settings/profil_picture.dart';
 import 'package:kart_project/widgets/settings/profil_setting.dart';
 import 'package:provider/provider.dart';
 
@@ -90,7 +91,7 @@ class _SettingsState extends State<Settings> {
             flex: 3,
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(8.0),
                 child: settings[_currentIndex].content,
               ),
             ),
@@ -111,20 +112,10 @@ class Drawer extends StatelessWidget {
 
   Drawer({this.currentIndex: 0, @required this.onTap});
 
-  /// Color used by the title of the setting.
+  /// Color used by the title and the icon of the setting.
   Color _textColor(BuildContext context, bool active) => active
       ? Theme.of(context).accentColor
       : Theme.of(context).textTheme.subtitle1.color;
-
-  /// Color used by the icon and the letter in the profil picture.
-  Color _iconColor(BuildContext context, bool active) => active
-      ? Theme.of(context).accentColor
-      : Theme.of(context).textTheme.subtitle1.color;
-
-  /// Color used by the subtile and background of the profile picture.
-  Color _profilPictureColor(BuildContext context, bool active) => active
-      ? Theme.of(context).accentColor.withOpacity(0.4)
-      : Theme.of(context).canvasColor;
 
   /// Background color when the setting is selcted.
   Color _backgroundColor(BuildContext context, bool active) => active
@@ -137,16 +128,16 @@ class Drawer extends StatelessWidget {
       padding: EdgeInsets.all(6.0),
       child: Material(
         color: _backgroundColor(context, active),
-        borderRadius: BorderRadius.circular(AppTheme.customBorderRadius),
+        borderRadius: BorderRadius.circular(AppTheme.borderRadius),
         child: InkWell(
-          borderRadius: BorderRadius.circular(AppTheme.customBorderRadius),
+          borderRadius: BorderRadius.circular(AppTheme.borderRadius),
           onTap: () {
             onTap(itemIndex);
           },
           child: ListTile(
             leading: Icon(
               settings[itemIndex].icon,
-              color: _iconColor(context, active),
+              color: _textColor(context, active),
             ),
             title: Text(
               settings[itemIndex].name,
@@ -166,9 +157,9 @@ class Drawer extends StatelessWidget {
           padding: EdgeInsets.all(6.0),
           child: Material(
             color: _backgroundColor(context, active),
-            borderRadius: BorderRadius.circular(AppTheme.customBorderRadius),
+            borderRadius: BorderRadius.circular(AppTheme.borderRadius),
             child: InkWell(
-              borderRadius: BorderRadius.circular(AppTheme.customBorderRadius),
+              borderRadius: BorderRadius.circular(AppTheme.borderRadius),
               onTap: () {
                 onTap(itemIndex);
               },
@@ -177,24 +168,12 @@ class Drawer extends StatelessWidget {
                   return profilProvider.currentProfil.name;
                 },
                 builder: (context, profilName, child) {
-                  String profilLetter = profilName[0];
                   return ListTile(
-                    leading: Container(
-                      width: 32,
-                      height: 32,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _profilPictureColor(context, active),
-                      ),
-                      margin: EdgeInsets.all(4.0),
-                      padding: EdgeInsets.all(2.0),
-                      child: Text(
-                        profilLetter,
-                        style: Theme.of(context).textTheme.bodyText1.copyWith(
-                              color: _iconColor(context, active),
-                            ),
-                      ),
+                    leading: ProfilPicture(
+                      active: active,
+                      name: profilName,
+                      size: 38,
+                      margin: EdgeInsets.all(0.0),
                     ),
                     title: Text(
                       profilName,
@@ -211,17 +190,7 @@ class Drawer extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 16.0),
-          child: Container(
-            height: 3.0,
-            width: double.infinity,
-            decoration: ShapeDecoration(
-              color: Theme.of(context).canvasColor,
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(AppTheme.customBorderRadius),
-              ),
-            ),
-          ),
+          child: Divider(),
         )
       ],
     );
@@ -233,8 +202,8 @@ class Drawer extends StatelessWidget {
       height: double.infinity,
       child: Material(
         color: Theme.of(context).backgroundColor,
-        elevation: AppTheme.customElevation,
-        shadowColor: AppTheme.customShadowColor(context),
+        elevation: AppTheme.elevation,
+        shadowColor: AppTheme.shadowColor(context),
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(6.0),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kart_project/strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -86,10 +87,6 @@ class ProfilProvider extends ChangeNotifier {
     );
   }
 
-  List<Profil> get profilesWithoutCurrentProfil {
-    return profiles.where((profil) => profil.id != currentProfil.id).toList();
-  }
-
   ProfilProvider(BuildContext context) {
     _init(context);
   }
@@ -167,7 +164,7 @@ class ProfilProvider extends ChangeNotifier {
   }
 
   /// Sets the new profil and updates all settings.
-  Future setProfil(BuildContext context, int id) async {
+  Future setProfil(BuildContext context, int id, {bool force: false}) async {
     await _data.setInt(_currentProfilKey, id);
     List<Map> query = await _db.query(
       _table,
@@ -180,8 +177,12 @@ class ProfilProvider extends ChangeNotifier {
   }
 
   /// Creates a profil with the default settings and switches to it.
-  Future createProfil(BuildContext context, {String name: "Profil"}) async {
+  /// If [name] is null, a default name with the profilId will be created.
+  Future createProfil(BuildContext context, {String name}) async {
     int profilId = _data.getInt(_profilesIndexKey);
+    if (name == null || name.isEmpty) {
+      name = "${Strings.profil} $profilId";
+    }
     Profil profil = Profil(
       id: profilId,
       name: name,
@@ -197,8 +198,9 @@ class ProfilProvider extends ChangeNotifier {
 
   /// Updates the name of the profil.
   Future setName(int id, String name) async {
-    ArgumentError.checkNotNull(name, "name");
-    _updateProfil(id, <String, Object>{_nameColumn: name});
+    if (name == null || name.isEmpty)
+      throw ArgumentError("Name must not be null or empty.");
+    await _updateProfil(id, <String, Object>{_nameColumn: name});
   }
 
   /// Updates the themeMode setting. Only allows 0, 1 and 2 as parameter.
@@ -208,7 +210,7 @@ class ProfilProvider extends ChangeNotifier {
         "ThemeMode only allows 0 (SystemMode), 1 (LightMode) and 2 (DarkMode).",
       );
     }
-    _updateProfil(id, <String, Object>{_themeModeColumn: themeMode});
+    await _updateProfil(id, <String, Object>{_themeModeColumn: themeMode});
   }
 
   /// Updates the max speed setting. Only allows values between 10 and 100.
@@ -218,7 +220,7 @@ class ProfilProvider extends ChangeNotifier {
         "Max speed is only allowed to be set between 10 km/h and 100 km/h.",
       );
     }
-    _updateProfil(id, <String, Object>{_maxSpeedColumn: maxSpeed});
+    await _updateProfil(id, <String, Object>{_maxSpeedColumn: maxSpeed});
   }
 
   /// Updates the light brightness setting. Only allows values between 0.3 and 1.
@@ -228,18 +230,24 @@ class ProfilProvider extends ChangeNotifier {
         "Light brightness is only allowed to be set between 0.3 and 1.",
       );
     }
-    _updateProfil(
+    await _updateProfil(
       id,
       <String, Object>{_lightBrightnessColumn: lightBrightness},
     );
   }
 
-  /// Deletes the profil. Switches the profil to profil 0, if requested profil
-  /// is the currentUser.
-  Future deleteProfil(BuildContext context, int id) async {
-    if (currentProfil.id == id) {
-      await setProfil(context, 0);
+  /// Deletes the profil. If no id is given the current profil will be deleted.
+  /// Throws an [StateError] if there are no other profiles. Switches to the
+  /// first profil in the list, if requested profil is the currentUser.
+  Future deleteProfil(BuildContext context, {int id}) async {
+    if (profiles.length <= 1) {
+      throw StateError(
+        "There is at least one profil needed. Deleting all profiles is not supported.",
+      );
     }
+    id ??= currentProfil.id;
     await _db.delete(_table, where: '$_idColumn = ?', whereArgs: [id]);
+    await _updateProfilesList();
+    await setProfil(context, profiles[0].id);
   }
 }
