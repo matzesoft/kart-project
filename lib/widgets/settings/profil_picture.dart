@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// Shows a round background with the first letter of the name in it. If
+/// [active] is set to true, the profil pircture will be highlighted.
+/// 
+/// Use [size] to change the height and width and text size of the widget.
 class ProfilPicture extends StatelessWidget {
   final bool active;
   final String name;

@@ -28,9 +28,7 @@ class KartProject extends StatelessWidget {
       ],
       child: Builder(builder: (context) {
         return ChangeNotifierProvider(
-          create: (context) => ProfilProvider(
-            context,
-          ),
+          create: (context) => ProfilProvider(context),
           child: Core(),
         );
       }),

@@ -8,7 +8,8 @@ import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/profil_picture.dart';
 import 'package:provider/provider.dart';
 
-/// Lets you create, switch, edit and delete profiles.
+/// Lets you create, switch, edit and delete profiles. Consists of a header
+/// which shows the [CurrentProfil] and a [GridView] with a list of all profiles.
 class ProfilSetting extends StatefulWidget {
   @override
   _ProfilSettingState createState() => _ProfilSettingState();
@@ -16,10 +17,10 @@ class ProfilSetting extends StatefulWidget {
 
 class _ProfilSettingState extends State<ProfilSetting> {
   ProfilProvider _profilProvider;
-
   List<Profil> _profiles;
   Profil _currentProfil;
 
+  /// Opens up the [CreateProfilDialog].
   Future _createProfil() async {
     showDialog(
       context: context,
@@ -27,6 +28,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
     );
   }
 
+  /// Switches the profil. Shows an [LoadingInterface] as long as processing.
   Future _setProfil(Profil profil) async {
     LoadingInterface.dialog(context, message: Strings.profilIsSwitched);
     await _profilProvider.setProfil(context, profil.id).catchError((error) {
@@ -35,6 +37,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
     Navigator.pop(context);
   }
 
+  /// Opens the [EditProfilDialog].
   Future _editProfil(Profil profil) async {
     showDialog(
       context: context,
@@ -42,6 +45,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
     );
   }
 
+  /// Opens the [DeleteProfilDialog].
   Future _deleteProfil(Profil profil) async {
     showDialog(
       context: context,
@@ -81,7 +85,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
                   return CreateProfilItem(_createProfil);
                 return ProfilItem(
                   _profiles[index],
-                  currentProfil: _profiles[index].id == _currentProfil.id,
+                  active: _profiles[index].id == _currentProfil.id,
                   setProfil: _setProfil,
                 );
               },
@@ -95,7 +99,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
 }
 
 /// Shows which profil is currently choosen and lets you delete and edit it.
-/// Setting [enableDeletion] to false disables the delete button.
+/// Set [enableDeletion] to false to disable the delete button.
 class CurrentProfil extends StatelessWidget {
   final Profil profil;
   final bool enableDeletion;
@@ -172,16 +176,18 @@ class CurrentProfil extends StatelessWidget {
   }
 }
 
-/// Represents one profil in the grid.
+/// Represents one profil in the grid.  If [active] is true the profil will be
+/// highlighted and the [setProfil] function disabled to prevent user from
+/// resetting the current profil.
 class ProfilItem extends StatelessWidget {
   final Profil profil;
-  final bool currentProfil;
+  final bool active;
   final Function(Profil profil) setProfil;
 
-  ProfilItem(this.profil, {this.currentProfil: false, this.setProfil});
+  ProfilItem(this.profil, {this.active: false, this.setProfil});
 
   /// Color used by the title and the icon of the setting.
-  Color _textColor(BuildContext context) => currentProfil
+  Color _textColor(BuildContext context) => active
       ? Theme.of(context).accentColor
       : Theme.of(context).textTheme.subtitle1.color;
 
@@ -191,7 +197,7 @@ class ProfilItem extends StatelessWidget {
       padding: EdgeInsets.all(8.0),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-        onTap: currentProfil
+        onTap: active
             ? null
             : () {
                 setProfil(profil);
@@ -203,7 +209,7 @@ class ProfilItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ProfilPicture(
-                active: currentProfil,
+                active: active,
                 name: profil.name,
                 size: 42,
               ),
@@ -224,7 +230,7 @@ class ProfilItem extends StatelessWidget {
   }
 }
 
-/// Opens the [CreateProfilDialog]. Is always the last item in the grid.
+/// Always the last item in the [GridView]. Calls [createProfil] when tapped on.
 class CreateProfilItem extends StatelessWidget {
   final Function createProfil;
 
@@ -256,7 +262,8 @@ class CreateProfilItem extends StatelessWidget {
   }
 }
 
-/// Interface for creating a new profil.
+/// Interface for creating a new profil. If no name for the new profil is given
+/// an automatic generated name will be used.
 class CreateProfilDialog extends StatefulWidget {
   final ProfilProvider profilProvider;
 
@@ -269,8 +276,11 @@ class CreateProfilDialog extends StatefulWidget {
 class _CreateProfilDialogState extends State<CreateProfilDialog> {
   final _formKey = GlobalKey<FormState>();
 
-  bool _processing = false;
   TextEditingController _controller;
+
+  /// Set to true when work is in progress. Normaly used to check wether to show
+  /// a [LoadingInterface] or not.
+  bool _processing = false;
 
   @override
   void initState() {
@@ -284,8 +294,7 @@ class _CreateProfilDialogState extends State<CreateProfilDialog> {
     super.dispose();
   }
 
-  /// Creates a new profil. To check if the work is in progress use the
-  /// [_processing] value.
+  /// Creates a new profil. Sets [_processing] to true while processing.
   Future _createProfil() async {
     if (_formKey.currentState.validate()) {
       setState(() {
@@ -357,7 +366,7 @@ class _CreateProfilDialogState extends State<CreateProfilDialog> {
   }
 }
 
-/// Interface for creating a new profil.
+/// Interface to edit the profil.
 class EditProfilDialog extends StatefulWidget {
   final ProfilProvider profilProvider;
 
@@ -371,8 +380,11 @@ class _EditProfilDialogState extends State<EditProfilDialog> {
   final _formKey = GlobalKey<FormState>();
 
   Profil _profil;
-  bool _processing = false;
   TextEditingController _controller;
+
+  /// Set to true when work is in progress. Normaly used to check wether to show
+  /// a [LoadingInterface] or not.
+  bool _processing = false;
 
   @override
   void initState() {
@@ -387,8 +399,7 @@ class _EditProfilDialogState extends State<EditProfilDialog> {
     super.dispose();
   }
 
-  /// Updates the profil. To check if the work is in progress use the
-  /// [_processing] value.
+  /// Updates the [_profil].  Sets [_processing] to true while processing.
   Future _updateProfil() async {
     if (_formKey.currentState.validate()) {
       setState(() {
@@ -463,6 +474,9 @@ class DeleteProfilDialog extends StatefulWidget {
 
 class _DeleteProfilDialogState extends State<DeleteProfilDialog> {
   Profil _profil;
+
+  /// Set to true when work is in progress. Normaly used to check wether to show
+  /// a [LoadingInterface] or not.
   bool _processing = false;
 
   @override
@@ -471,6 +485,7 @@ class _DeleteProfilDialogState extends State<DeleteProfilDialog> {
     super.initState();
   }
 
+  /// Deletes the [_profil]. Sets [_processing] to true while processing.
   Future _deleteProfil() async {
     setState(() {
       _processing = true;

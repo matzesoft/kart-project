@@ -10,44 +10,33 @@ import 'package:provider/provider.dart';
 List<Setting> get settings {
   return [
     Setting(
-      name: Strings.profiles,
+      title: Strings.profiles,
       content: ProfilSetting(),
     ),
     Setting(
-      name: Strings.drive,
+      title: Strings.drive,
       icon: EvaIcons.navigationOutline,
-      activeIcon: EvaIcons.navigation,
       content: DriveSetting(),
     ),
     Setting(
-      name: Strings.lightAndDisplay,
+      title: Strings.lightAndDisplay,
       icon: EvaIcons.bulbOutline,
-      activeIcon: EvaIcons.bulb,
       content: LightAndDisplaySetting(),
     ),
     Setting(
-      name: Strings.about,
+      title: Strings.about,
       icon: EvaIcons.infoOutline,
-      activeIcon: EvaIcons.info,
       content: AboutSetting(),
     ),
   ];
 }
 
 class Setting {
-  /// Indicates the title of the setting.
-  final String name;
-
-  /// Icon when not selected.
+  final String title;
   final IconData icon;
-
-  /// Icon when selected.
-  final IconData activeIcon;
-
-  /// Widget with the controls.
   final Widget content;
 
-  Setting({this.name, this.icon, this.activeIcon, this.content});
+  Setting({this.title, this.icon, this.content});
 }
 
 /// Menu which lets you switch between Profiles, change settings
@@ -61,8 +50,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  /// The currently selected setting. `settings.elementAt(_currentIndex)`
-  /// gives more information.
+  /// The currently selected setting.
   int _currentIndex = 1;
 
   /// Gets called when the user taps on a setting.
@@ -102,8 +90,8 @@ class _SettingsState extends State<Settings> {
   }
 }
 
-/// List of settings.
 class Drawer extends StatelessWidget {
+  /// The currently selected setting.
   final int currentIndex;
 
   /// Called when the user taps on one setting while the [index] discribes
@@ -122,6 +110,7 @@ class Drawer extends StatelessWidget {
       ? Theme.of(context).accentColor.withOpacity(0.2)
       : Colors.transparent;
 
+  /// Indicates one setting in the list.
   Widget _item(BuildContext context, int itemIndex) {
     bool active = (itemIndex == currentIndex);
     return Padding(
@@ -140,7 +129,7 @@ class Drawer extends StatelessWidget {
               color: _textColor(context, active),
             ),
             title: Text(
-              settings[itemIndex].name,
+              settings[itemIndex].title,
               style: TextStyle(color: _textColor(context, active)),
             ),
           ),
@@ -149,6 +138,8 @@ class Drawer extends StatelessWidget {
     );
   }
 
+  /// Shown on top of the list. Shows the current profil and contains of a
+  /// [ProfilPicture] instead of a icon.
   Widget _profilItem(BuildContext context, int itemIndex) {
     bool active = (itemIndex == currentIndex);
     return Column(
