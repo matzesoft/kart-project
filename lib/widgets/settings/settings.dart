@@ -5,6 +5,7 @@ import 'package:kart_project/providers/profil_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/profil_picture.dart';
 import 'package:kart_project/widgets/settings/profil_setting.dart';
+import 'package:kart_project/widgets/settings/test_serial.dart';
 import 'package:provider/provider.dart';
 
 List<Setting> get settings {
@@ -27,6 +28,12 @@ List<Setting> get settings {
       title: Strings.about,
       icon: EvaIcons.infoOutline,
       content: AboutSetting(),
+    ),
+    // TODO: Remove after testing
+    Setting(
+      title: "Serielle Schnittstelle",
+      icon: EvaIcons.archiveOutline,
+      content: TestSerial(),
     ),
   ];
 }

@@ -19,6 +19,10 @@ typedef SerialPutchar = void Function(int fd, int c);
 typedef serial_puts = Void Function(Int32 fd, Pointer<Utf8>);
 typedef SerialPuts = void Function(int fd, Pointer<Utf8>);
 
+/// WiringPi Native: `int serialDataAvail(int fd);`
+typedef serial_data_avail = Int32 Function(Int32 fd);
+typedef SerialDataAvail = int Function(int fd);
+
 /// WiringPi Native: `int serialGetchar(int fd);`
 typedef serial_getchar = Int32 Function(Int32 fd);
 typedef SerialGetchar = int Function(int fd);
@@ -31,23 +35,30 @@ class SerialNative {
   final String _path = '/usr/lib/libwiringPi.so';
   DynamicLibrary _dylib;
 
-  /// This opens and initialises the serial device and sets the baud rate. It sets the
-  /// port into “raw” mode (character at a time and no translations), and sets the read
-  /// timeout to 10 seconds. The return value is the file descriptor or -1 for any error,
-  /// in which case errno will be set as appropriate.
+  /// This opens and initialises the serial device and sets the baud rate. It
+  /// sets the port into “raw” mode (character at a time and no translations),
+  /// and sets the read timeout to 10 seconds. The return value is the file
+  /// descriptor or -1 for any error, in which case errno will be set as
+  /// appropriate.
   SerialOpen serialOpen;
 
   /// Closes the device identified by the file descriptor given.
   SerialClose serialClose;
 
-  /// Sends the single byte to the serial device identified by the given file descriptor.
+  /// Sends the single byte to the serial device identified by the given file
+  /// descriptor.
   SerialPutchar serialPutchar;
 
-  /// Sends the nul-terminated string to the serial device identified by the given file descriptor.
+  /// Sends the nul-terminated string to the serial device identified by the
+  /// given file descriptor.
   SerialPuts serialPuts;
 
-  /// Returns the next character available on the serial device. This call will block for up to
-  /// 10 seconds if no data is available (when it will return -1)
+  /// Returns the number of characters available for reading, or -1 for any
+  /// error condition.
+  SerialDataAvail serialDataAvail;
+
+  /// Returns the next character available on the serial device. This call will
+  /// block for up to 10 seconds if no data is available (when it will return -1)
   SerialGetchar serialGetchar;
 
   /// This discards all data received, or waiting to be send down the given device.
@@ -67,6 +78,9 @@ class SerialNative {
     serialPuts = _dylib
         .lookup<NativeFunction<serial_puts>>('serialPuts')
         .asFunction<SerialPuts>();
+    serialDataAvail = _dylib
+        .lookup<NativeFunction<serial_data_avail>>('serialDataAvail')
+        .asFunction<SerialDataAvail>();
     serialGetchar = _dylib
         .lookup<NativeFunction<serial_getchar>>('serialGetchar')
         .asFunction<SerialGetchar>();

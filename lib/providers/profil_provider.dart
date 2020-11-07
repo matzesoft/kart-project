@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kart_project/strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,7 +93,6 @@ class ProfilProvider extends ChangeNotifier {
   /// Opens the datbase. Initalizes SharedPreferences and sets the profil based
   /// on the [_currentProfilKey].
   Future _init(BuildContext context) async {
-    print("Called _init");
     var dbFactory = databaseFactoryFfi;
     _db = await dbFactory.openDatabase(
       _dbPath,
@@ -121,7 +119,6 @@ class ProfilProvider extends ChangeNotifier {
   /// Creates the Profiles table and adds the default profil to it. Gets
   /// usually called when the database is opened the first time.
   Future _createTable(Database db, int version) async {
-    print("Called create Table");
     await db.execute('''
       CREATE TABLE $_table (
         $_idColumn INTEGER PRIMARY KEY,
@@ -152,6 +149,7 @@ class ProfilProvider extends ChangeNotifier {
     );
   }
 
+  /// Updates the settings of the profil.
   Future _updateProfil(int id, Map<String, Object> values) async {
     await _db.update(
       _table,
