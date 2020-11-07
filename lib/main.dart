@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:kart_project/providers/map_provider.dart';
+import 'package:kart_project/providers/motor_provider.dart';
 import 'package:kart_project/providers/profil_provider.dart';
 import 'package:kart_project/providers/pwm_provider/pwm_provider.dart';
-import 'package:kart_project/providers/serial_provider/serial_provider.dart';
 import 'package:kart_project/widgets/dashboard/dashboard.dart';
 import 'package:kart_project/widgets/entertainment.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
@@ -22,13 +23,20 @@ class KartProject extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => PwmProvider(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => SerialProvider(),
-        ),
       ],
       child: Builder(builder: (context) {
-        return ChangeNotifierProvider(
-          create: (context) => ProfilProvider(context),
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => ProfilProvider(context),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => ControllerProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => MapProvider(),
+            ),
+          ],
           child: Core(),
         );
       }),

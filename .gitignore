@@ -28,6 +28,9 @@
 .pub/
 /build/
 
+# Project related
+/map/
+
 # Web related
 lib/generated_plugin_registrant.dart
 
