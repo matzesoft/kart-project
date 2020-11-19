@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:kart_project/models/profil.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/motor_provider.dart';
-import 'package:kart_project/providers/profil_provider.dart';
-import 'package:kart_project/providers/pwm_provider/pwm_provider.dart';
+import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:kart_project/widgets/dashboard/dashboard.dart';
 import 'package:kart_project/widgets/entertainment.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
@@ -21,25 +21,16 @@ class KartProject extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => PwmProvider(),
+          create: (context) => ProfilProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ControllerProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MapProvider(),
         ),
       ],
-      child: Builder(builder: (context) {
-        return MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (context) => ProfilProvider(context),
-            ),
-            ChangeNotifierProvider(
-              create: (context) => ControllerProvider(),
-            ),
-            ChangeNotifierProvider(
-              create: (context) => MapProvider(),
-            ),
-          ],
-          child: Core(),
-        );
-      }),
+      child: Core(),
     );
   }
 }
@@ -71,21 +62,27 @@ class Root extends StatelessWidget {
       selector: (context, profilProvider) => profilProvider.initalized,
       builder: (context, initalized, child) {
         if (!initalized) return Text("Init...");
-        print("Rebuilded loading page...");
         return child;
       },
-      child: Scaffold(
-        body: Row(
-          children: <Widget>[
-            Expanded(
-              flex: 4,
-              child: Dashboard(),
-            ),
-            Expanded(
-              flex: 7,
-              child: Entertainment(),
-            ),
-          ],
+      child: Selector<ProfilProvider, Profil>(
+        selector: (context, profilProvider) => profilProvider.currentProfil,
+        builder: (context, profil, child) {
+          Provider.of<MapProvider>(context).updateLocationsWithProfil(profil);
+          return child;
+        },
+        child: Scaffold(
+          body: Row(
+            children: <Widget>[
+              Expanded(
+                flex: 4,
+                child: Dashboard(),
+              ),
+              Expanded(
+                flex: 7,
+                child: Entertainment(),
+              ),
+            ],
+          ),
         ),
       ),
     );

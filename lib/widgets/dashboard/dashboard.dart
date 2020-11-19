@@ -16,7 +16,7 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: AppTheme.elevation,
+      elevation: AppTheme.elevation + 10.0,
       color: Theme.of(context).backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(4.0),

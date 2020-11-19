@@ -12,11 +12,12 @@ dependencies:
 
   eva_icons_flutter:
   provider: ^4.0.5+1
+  intl: ^0.16.1
   ffi: ^0.1.3
+  flutter_gpiod: ^0.1.0+3
+
   sqflite_common_ffi: ^1.1.0+1
   shared_preferences: ^0.5.8
-  flutter_gpiod: ^0.1.0+3
-  native_pdf_view: ^3.8.0
 
   latlong: ^0.6.1
   flutter_map: ^0.9.0
@@ -43,118 +44,3 @@ flutter:
 
   assets:
     - assets/images/
-    # Map
-    # - assets/map/12/2114/
-    # - assets/map/12/2115/
-    # - assets/map/12/2116/
-    # - assets/map/12/2117/
-    # - assets/map/12/2118/
-    # - assets/map/12/2119/
-    # # 120
-    # - assets/map/12/2120/
-    # - assets/map/12/2121/
-    # - assets/map/12/2122/
-    # - assets/map/12/2123/
-    # - assets/map/12/2124/
-    # - assets/map/12/2125/
-    # - assets/map/12/2126/
-    # - assets/map/12/2127/
-    # - assets/map/12/2128/
-    # - assets/map/12/2129/
-    # # 2130
-    # - assets/map/12/2130/
-    # - assets/map/12/2131/
-    # - assets/map/12/2132/
-    # - assets/map/12/2133/
-    # - assets/map/12/2134/
-    # - assets/map/12/2135/
-    # - assets/map/12/2136/
-    # - assets/map/12/2137/
-    # - assets/map/12/2138/
-    # - assets/map/12/2139/
-    # # 2140
-    # - assets/map/12/2140/
-    # - assets/map/12/2141/
-    # - assets/map/12/2142/
-    # - assets/map/12/2143/
-    # - assets/map/12/2144/
-    # - assets/map/12/2145/
-    # - assets/map/12/2146/
-    # - assets/map/12/2147/
-    # - assets/map/12/2148/
-    # - assets/map/12/2149/
-    # # 2150
-    # - assets/map/12/2150/
-    # - assets/map/12/2151/
-    # - assets/map/12/2152/
-    # - assets/map/12/2153/
-    # - assets/map/12/2154/
-    # - assets/map/12/2155/
-    # - assets/map/12/2156/
-    # - assets/map/12/2157/
-    # - assets/map/12/2158/
-    # - assets/map/12/2159/
-    # # 2160
-    # - assets/map/12/2160/
-    # - assets/map/12/2161/
-    # - assets/map/12/2162/
-    # - assets/map/12/2163/
-    # - assets/map/12/2164/
-    # - assets/map/12/2165/
-    # - assets/map/12/2166/
-    # - assets/map/12/2167/
-    # - assets/map/12/2168/
-    # - assets/map/12/2169/
-    # # 2170
-    # - assets/map/12/2170/
-    # - assets/map/12/2171/
-    # - assets/map/12/2172/
-    # - assets/map/12/2173/
-    # - assets/map/12/2174/
-    # - assets/map/12/2175/
-    # - assets/map/12/2176/
-    # - assets/map/12/2177/
-    # - assets/map/12/2178/
-    # - assets/map/12/2179/
-    # # 2180
-    # - assets/map/12/2180/
-    # - assets/map/12/2181/
-    # - assets/map/12/2182/
-    # - assets/map/12/2183/
-    # - assets/map/12/2184/
-    # - assets/map/12/2185/
-    # - assets/map/12/2186/
-    # - assets/map/12/2187/
-    # - assets/map/12/2188/
-    # - assets/map/12/2189/
-    # # 2190
-    # - assets/map/12/2190/
-    # - assets/map/12/2191/
-    # - assets/map/12/2192/
-    # - assets/map/12/2193/
-    # - assets/map/12/2194/
-    # - assets/map/12/2195/
-    # - assets/map/12/2196/
-    # - assets/map/12/2197/
-    # - assets/map/12/2198/
-    # - assets/map/12/2199/
-    # # 2200
-    # - assets/map/12/2201/
-    # - assets/map/12/2202/
-    # - assets/map/12/2203/
-    # - assets/map/12/2204/
-    # - assets/map/12/2205/
-    # - assets/map/12/2206/
-    # - assets/map/12/2207/
-    # - assets/map/12/2208/
-    # - assets/map/12/2209/
-    # # 2210
-    # - assets/map/12/2201/
-    # - assets/map/12/2202/
-    # - assets/map/12/2203/
-    # - assets/map/12/2204/
-    # - assets/map/12/2205/
-    # - assets/map/12/2206/
-    # - assets/map/12/2207/
-    # - assets/map/12/2208/
-    # - assets/map/12/2209/
