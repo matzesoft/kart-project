@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/design/loading_interface.dart';
 import 'package:kart_project/design/sized_alert_dialog.dart';
 import 'package:kart_project/design/theme.dart';
-import 'package:kart_project/providers/profil_provider.dart';
+import 'package:kart_project/models/profil.dart';
+import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/profil_picture.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +32,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
   /// Switches the profil. Shows an [LoadingInterface] as long as processing.
   Future _setProfil(Profil profil) async {
     LoadingInterface.dialog(context, message: Strings.profilIsSwitched);
-    await _profilProvider.setProfil(context, profil.id).catchError((error) {
+    await _profilProvider.setProfil(profil.id).catchError((error) {
       // TODO: Implement error message
     });
     Navigator.pop(context);
@@ -302,7 +303,7 @@ class _CreateProfilDialogState extends State<CreateProfilDialog> {
       });
 
       await widget.profilProvider
-          .createProfil(context, name: _controller.text)
+          .createProfil(name: _controller.text)
           .then((_) {
         Navigator.pop(context);
       }).catchError((error) {
@@ -333,6 +334,7 @@ class _CreateProfilDialogState extends State<CreateProfilDialog> {
               decoration: InputDecoration(
                 hintText: Strings.typeInTheName,
               ),
+              autocorrect: false, // TODO: Test
               controller: _controller,
               validator: (value) {
                 return value.length > 30 ? Strings.maxLengthOfName : null;
@@ -435,6 +437,7 @@ class _EditProfilDialogState extends State<EditProfilDialog> {
             decoration: InputDecoration(
               hintText: Strings.typeInTheName,
             ),
+            autocorrect: false,
             controller: _controller,
             validator: (value) {
               if (value.isEmpty) return Strings.giveName;

@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
-import 'package:kart_project/providers/pwm_provider/pwm_native.dart';
+import 'package:kart_project/providers/pwm_port/pwm_native.dart';
 
 /// Communicates with [PwmNative] to use the PWM pins on the Raspberry Pi.
-class PwmProvider extends ChangeNotifier {
+class PwmPort {
   final PwmNative _pwmNative = PwmNative();
 
   /// Containes information on which pins have already been set to PWM mode.
@@ -16,7 +15,7 @@ class PwmProvider extends ChangeNotifier {
   /// Defines if wiringPi is already initalized.
   bool _initalized = false;
 
-  PwmProvider() {
+  PwmPort() {
     _init();
   }
 
