@@ -67,7 +67,8 @@ class Root extends StatelessWidget {
       child: Selector<ProfilProvider, Profil>(
         selector: (context, profilProvider) => profilProvider.currentProfil,
         builder: (context, profil, child) {
-          Provider.of<MapProvider>(context).updateLocationsWithProfil(profil);
+          Provider.of<MapProvider>(context, listen: false)
+              .updateLocationsWithProfil(profil);
           return child;
         },
         child: Scaffold(

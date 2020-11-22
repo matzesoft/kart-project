@@ -3,6 +3,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:intl/intl.dart';
+import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -69,42 +70,64 @@ class LocationControls extends StatelessWidget {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FlatButton(
-                child: Icon(EvaIcons.pinOutline),
-                onPressed: () {
-                  mapProvider.toLocation(1);
-                },
-                onLongPress: () {
-                  mapProvider.setCurrentLocation(context, 1);
-                },
-              ),
+            LocationButton(
+              icon: Icon(EvaIcons.pinOutline),
+              onPressed: () {
+                mapProvider.toLocation(1);
+              },
+              onLongPress: () {
+                mapProvider.setCurrentLocation(context, 1);
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FlatButton(
-                child: Icon(EvaIcons.pinOutline),
-                onPressed: () {
-                  mapProvider.toLocation(2);
-                },
-                onLongPress: () {
-                  mapProvider.setCurrentLocation(context, 2);
-                },
-              ),
+            LocationButton(
+              icon: Icon(EvaIcons.pinOutline),
+              onPressed: () {
+                mapProvider.toLocation(2);
+              },
+              onLongPress: () {
+                mapProvider.setCurrentLocation(context, 2);
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FlatButton(
-                child: Icon(EvaIcons.homeOutline),
-                onPressed: () {
-                  mapProvider.toHome();
-                },
-              ),
+            LocationButton(
+              icon: Icon(EvaIcons.homeOutline),
+              onPressed: () {
+                mapProvider.toHome();
+              },
             ),
           ],
         );
       },
+    );
+  }
+}
+
+class LocationButton extends StatelessWidget {
+  final _radius = BorderRadius.circular(90.0);
+  final Widget icon;
+  final Function onPressed;
+  final Function onLongPress;
+
+  LocationButton({this.icon, this.onPressed, this.onLongPress});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Material(
+        borderRadius: _radius,
+        elevation: AppTheme.elevation,
+        shadowColor: AppTheme.shadowColor(context),
+        color: Theme.of(context).backgroundColor,
+        child: InkWell(
+          onTap: onPressed,
+          onLongPress: onLongPress,
+          borderRadius: _radius,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: icon,
+          ),
+        ),
+      ),
     );
   }
 }

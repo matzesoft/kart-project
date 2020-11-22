@@ -26,12 +26,12 @@ class MapProvider extends ChangeNotifier {
   Location location2;
 
   /// Sets and updates the location values based on the [index]. Only updates
-  /// its listeners if there is a change.
-  void _setLocation(int index, Location location) {
-    if (location != _locationOfIndex(index)) {
+  /// its listeners if there is a change and [notify] is set to true.
+  void _setLocation(int index, Location location, {bool notify: true}) {
+    if (!location.compare(_locationOfIndex(index))) {
       if (index == 1) location1 = location;
       if (index == 2) location2 = location;
-      // TODO: How to update; even needed?
+      if (notify) notifyListeners();
     }
   }
 
@@ -60,15 +60,15 @@ class MapProvider extends ChangeNotifier {
 
   /// Moves to [location1] or [location2] based on the [index].
   void toLocation(int index) {
-    // TODO: if location is null
+    // TODO: Add notification if location is null
     _moveToLocation(_locationOfIndex(index));
   }
 
   /// Sets the location values to the ones of the [profil]. Gets normally
   /// called when the profil has changed.
   void updateLocationsWithProfil(Profil profil) {
-    _setLocation(1, profil.location1);
-    _setLocation(2, profil.location2);
+    _setLocation(1, profil.location1, notify: false);
+    _setLocation(2, profil.location2, notify: false);
   }
 
   /// Returns the path to the mapdata based on the theme.

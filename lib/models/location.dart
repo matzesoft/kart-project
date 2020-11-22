@@ -9,6 +9,17 @@ class Location {
 
   Location({@required this.zoom, @required this.coordinates});
 
+  /// Compares two locations and returns true if they are the same.
+  /// In some conditions the default `==`-operator might not work so you can use
+  /// this method.
+  bool compare(Location second) {
+    if (second == null) return false;
+    if ((zoom != second.zoom) || (coordinates != second.coordinates)) {
+      return false;
+    }
+    return true;
+  }
+
   /// Returns the data in form of a map, with the syntax of the [ProfilDatabase].
   Map<String, Object> toProfilMap(int index) {
     if (!(index == 1 || index == 2)) {

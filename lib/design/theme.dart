@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// Holds the [ThemeData] for the [lightTheme] and [darkTheme], and provides
+/// some extra values for consistent design.
 class AppTheme {
+  /// Default color when using shadows. Flutter supports no default
+  /// [shadowColor] so always use this when working with elevation.
   static Color shadowColor(BuildContext context) {
     if (Theme.of(context).brightness == Brightness.dark)
       return Colors.grey[100].withOpacity(0.05);
