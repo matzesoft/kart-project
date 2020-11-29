@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kart_project/providers/motor_provider.dart';
+import 'package:kart_project/providers/controller_provider.dart';
 import 'package:kart_project/providers/serial_port/serial_port.dart';
-import 'package:provider/provider.dart';
+import 'package:kart_project/extensions.dart';
 
 class TestSerial extends StatefulWidget {
   @override
@@ -20,10 +20,6 @@ class _TestSerialState extends State<TestSerial> {
 
   void echo() {
     motorProvider.getEcho();
-  }
-
-  Future everyCmd() async {
-    motorProvider.everyCmd();
   }
 
   Future getBytesOn() async {
@@ -61,16 +57,10 @@ class _TestSerialState extends State<TestSerial> {
 
   @override
   Widget build(BuildContext context) {
-    motorProvider = Provider.of<ControllerProvider>(context);
+    motorProvider = context.watch<ControllerProvider>();
 
     return Column(
       children: [
-        RaisedButton(
-          onPressed: () {
-            everyCmd();
-          },
-          child: Text("Every CMD"),
-        ),
         RaisedButton(
           onPressed: () {
             getBytesOn();

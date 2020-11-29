@@ -46,15 +46,6 @@ class ControllerProvider extends ChangeNotifier {
     _controller.sendCommand(Byte("42"));
   }
 
-  // TODO: Remove after testing
-  void everyCmd() {
-    for (int i = 30; i < 256; i++) {
-      String value = i.toRadixString(16);
-      print(value);
-      _controller.sendCommand(Byte(value));
-    }
-  }
-
   List<DataPackage> getData() {
     return _controller.readData();
   }
