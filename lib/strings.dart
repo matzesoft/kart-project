@@ -26,9 +26,13 @@ class Strings {
   static String get profilIsCreated => _strings['profil_is_created'];
   static String get profilIsDeleted => _strings['profil_is_deleted'];
   static String get profilIsUpdated => _strings['profil_is_updated'];
+  static String get profilWasCreated => _strings['profil_was_created'];
+  static String get profilWasDeleted => _strings['profil_was_deleted'];
+  static String get profilWasUpdated => _strings['profil_was_updated'];
   static String get editProfil => _strings['edit_profil'];
   static String get giveName => _strings['give_name'];
   static String get safe => _strings['safe'];
+  static String get locationWasSaved => _strings['location_was_saved'];
 
   static final Map<String, String> _strings = {
     "profiles": "Profile",
@@ -58,8 +62,12 @@ class Strings {
     "profil_is_created": "Profil wird erstellt...",
     "profil_is_deleted": "Profil wird gelöscht...",
     "profil_is_updated": "Profil wird aktualisiert...",
+    "profil_was_created": "Profil wurde erstellt",
+    "profil_was_deleted": "Profil wurde gelöscht",
+    "profil_was_updated": "Profil wurde aktualisiert",
     "edit_profil": "Profil bearbeiten",
     "give_name": "Gebe einen Namen ein.",
     "safe": "Speichern",
+    "location_was_saved": "Ort wurde gespeichert",
   };
 }

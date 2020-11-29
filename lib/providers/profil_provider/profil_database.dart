@@ -24,6 +24,8 @@ const String location2ZoomColumn = "location2_zoom";
 const String location2LatColumn = "location2_lat";
 const String location2LngColumn = "location2_lng";
 
+/// Manages the database of the profiles. Lets you init, create, update and
+/// delete profiles.
 class ProfilDatabase {
   SharedPreferences _data;
   Database _db;

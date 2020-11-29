@@ -1,10 +1,13 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:kart_project/models/location.dart';
 import 'package:kart_project/models/profil.dart';
+import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
+import 'package:kart_project/extensions.dart';
+import 'package:kart_project/strings.dart';
 import 'package:latlong/latlong.dart';
-import 'package:provider/provider.dart';
 
 const String _lightMapPath = "/home/pi/data/map_light/{z}/{x}/{y}.png";
 const String _darkMapPath = "/home/pi/data/map_dark/{z}/{x}/{y}.png";
@@ -38,14 +41,16 @@ class MapProvider extends ChangeNotifier {
   /// Updates the location values to the current bounds. The [index] defines if
   /// [location1] or [location2] should be used.
   Future setCurrentLocation(BuildContext context, int index) async {
-    // TODO: Add confirmation notification
+    context.read<NotificationsProvider>().showConfirmNotification(
+          icon: EvaIcons.pinOutline,
+          message: Strings.locationWasSaved,
+        );
     Location location = Location(
       zoom: controller.zoom,
       coordinates: controller.center,
     );
     _setLocation(index, location);
-    await Provider.of<ProfilProvider>(context, listen: false)
-        .setLocation(index, location);
+    await context.read<ProfilProvider>().setLocation(index, location);
   }
 
   /// Moves the map to the given [location].

@@ -2,13 +2,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/models/profil.dart';
 import 'package:kart_project/providers/map_provider.dart';
-import 'package:kart_project/providers/motor_provider.dart';
+import 'package:kart_project/providers/controller_provider.dart';
+import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:kart_project/widgets/dashboard/dashboard.dart';
 import 'package:kart_project/widgets/entertainment.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
-import 'design/theme.dart';
+import 'package:kart_project/design/theme.dart';
+import 'package:kart_project/extensions.dart';
 
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
@@ -29,6 +32,9 @@ class KartProject extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => MapProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => NotificationsProvider(),
+        ),
       ],
       child: Core(),
     );
@@ -38,16 +44,18 @@ class KartProject extends StatelessWidget {
 class Core extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Kart Project',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.light,
-      initialRoute: Root.route,
-      routes: {
-        Root.route: (context) => Root(),
-        Settings.route: (context) => Settings(),
-      },
+    return OverlaySupport(
+      child: MaterialApp(
+        title: 'Kart Project',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.light,
+        initialRoute: Root.route,
+        routes: {
+          Root.route: (context) => Root(),
+          Settings.route: (context) => Settings(),
+        },
+      ),
     );
   }
 }
@@ -67,8 +75,7 @@ class Root extends StatelessWidget {
       child: Selector<ProfilProvider, Profil>(
         selector: (context, profilProvider) => profilProvider.currentProfil,
         builder: (context, profil, child) {
-          Provider.of<MapProvider>(context, listen: false)
-              .updateLocationsWithProfil(profil);
+          context.read<MapProvider>().updateLocationsWithProfil(profil);
           return child;
         },
         child: Scaffold(

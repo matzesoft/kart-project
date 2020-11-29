@@ -1,10 +1,14 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kart_project/models/location.dart';
 import 'package:kart_project/models/profil.dart';
+import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/profil_provider/profil_database.dart';
 import 'package:kart_project/strings.dart';
+import 'package:kart_project/extensions.dart';
 
-/// Manages the database and gives options to control the profiles.
+// TODO: Think about: When using error messages
+/// Lets you create, update and delete profiles.
 class ProfilProvider extends ChangeNotifier {
   ProfilDatabase _db = ProfilDatabase();
 
@@ -58,22 +62,31 @@ class ProfilProvider extends ChangeNotifier {
 
   /// Creates a profil with the default settings and switches to it.
   /// If [name] is null, a default name with the profilId will be created.
-  Future createProfil({String name}) async {
-    print("Called create profil");
-    int profilId = _db.profilesIndex;
-    if (name == null || name.isEmpty) {
-      name = "${Strings.profil} $profilId";
+  Future createProfil(BuildContext context, {String name}) async {
+    try {
+      int profilId = _db.profilesIndex;
+      if (name == null || name.isEmpty) {
+        name = "${Strings.profil} $profilId";
+      }
+      Profil profil = Profil(
+        id: profilId,
+        name: name,
+        themeMode: 0,
+        maxSpeed: 80,
+        lightBrightness: 0.6,
+      );
+      await _db.createProfil(profil);
+      await _updateProfilesList();
+      await setProfil(profilId);
+    } catch (error) {
+      context.showErrorNotification(Strings.profilWasCreated);
+      throw StateError("[ProfilProvider]: Failed to create profil: $error");
+    } finally {
+      context.showConfirmNotification(
+        icon: EvaIcons.plusOutline,
+        message: Strings.profilWasCreated,
+      );
     }
-    Profil profil = Profil(
-      id: profilId,
-      name: name,
-      themeMode: 0,
-      maxSpeed: 80,
-      lightBrightness: 0.6,
-    );
-    await _db.createProfil(profil);
-    await _updateProfilesList();
-    await setProfil(profilId);
   }
 
   /// Deletes the profil. If no id is given the current profil will be deleted.
@@ -89,15 +102,24 @@ class ProfilProvider extends ChangeNotifier {
     _db.deleteProfil(id);
     await _updateProfilesList();
     await setProfil(profiles[0].id);
+    context.read<NotificationsProvider>().showConfirmNotification(
+          icon: EvaIcons.trash2Outline,
+          message: Strings.profilWasDeleted,
+        );
   }
 
   /// Updates the name of the profil.
-  Future setName(int id, String name) async {
+  Future setName(BuildContext context, int id, String name) async {
     if (name == null || name.isEmpty)
       throw ArgumentError("Name must not be null or empty.");
     await _updateProfil(id, <String, Object>{nameColumn: name});
+    context.showConfirmNotification(
+      icon: EvaIcons.personOutline,
+      message: Strings.profilWasUpdated,
+    );
   }
 
+  /// Updates the location at the given [index] of the current profil.
   Future setLocation(int index, Location location) async {
     await _updateProfil(currentProfil.id, location.toProfilMap(index));
   }

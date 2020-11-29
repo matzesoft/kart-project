@@ -7,7 +7,7 @@ import 'package:kart_project/models/profil.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/profil_picture.dart';
-import 'package:provider/provider.dart';
+import 'package:kart_project/extensions.dart';
 
 /// Lets you create, switch, edit and delete profiles. Consists of a header
 /// which shows the [CurrentProfil] and a [GridView] with a list of all profiles.
@@ -32,9 +32,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
   /// Switches the profil. Shows an [LoadingInterface] as long as processing.
   Future _setProfil(Profil profil) async {
     LoadingInterface.dialog(context, message: Strings.profilIsSwitched);
-    await _profilProvider.setProfil(profil.id).catchError((error) {
-      // TODO: Implement error message
-    });
+    await _profilProvider.setProfil(profil.id);
     Navigator.pop(context);
   }
 
@@ -56,7 +54,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
 
   @override
   Widget build(BuildContext context) {
-    _profilProvider = Provider.of<ProfilProvider>(context);
+    _profilProvider = context.watch<ProfilProvider>();
     _profiles = _profilProvider.profiles;
     _currentProfil = _profilProvider.currentProfil;
 
@@ -301,17 +299,11 @@ class _CreateProfilDialogState extends State<CreateProfilDialog> {
       setState(() {
         _processing = true;
       });
-
-      await widget.profilProvider
-          .createProfil(name: _controller.text)
-          .then((_) {
-        Navigator.pop(context);
-      }).catchError((error) {
-        setState(() {
-          _processing = false;
-        });
-        // TODO: Implement error message
-      });
+      await widget.profilProvider.createProfil(
+        context,
+        name: _controller.text,
+      );
+      Navigator.pop(context);
     }
   }
 
@@ -334,7 +326,7 @@ class _CreateProfilDialogState extends State<CreateProfilDialog> {
               decoration: InputDecoration(
                 hintText: Strings.typeInTheName,
               ),
-              autocorrect: false, // TODO: Test
+              autocorrect: false,
               controller: _controller,
               validator: (value) {
                 return value.length > 30 ? Strings.maxLengthOfName : null;
@@ -407,16 +399,12 @@ class _EditProfilDialogState extends State<EditProfilDialog> {
       setState(() {
         _processing = true;
       });
-      await widget.profilProvider
-          .setName(_profil.id, _controller.text)
-          .then((_) {
-        Navigator.pop(context);
-      }).catchError((error) {
-        setState(() {
-          _processing = false;
-        });
-        // TODO: Implement error message
-      });
+      await widget.profilProvider.setName(
+        context,
+        _profil.id,
+        _controller.text,
+      );
+      Navigator.pop(context);
     }
   }
 
@@ -493,14 +481,8 @@ class _DeleteProfilDialogState extends State<DeleteProfilDialog> {
     setState(() {
       _processing = true;
     });
-    await widget.profilProvider.deleteProfil(context).then((_) {
-      Navigator.pop(context);
-    }).catchError((error) {
-      setState(() {
-        _processing = false;
-      });
-      // TODO: Error message
-    });
+    await widget.profilProvider.deleteProfil(context);
+    Navigator.pop(context);
   }
 
   @override
