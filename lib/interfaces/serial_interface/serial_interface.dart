@@ -19,7 +19,7 @@ class Byte {
   }
 }
 
-class SerialPort {
+class SerialInterface {
   final SerialNative _serialNative = SerialNative();
 
   /// File descriptor for the initalized serial port. If [openSerialPort] has

@@ -1,7 +1,7 @@
-import 'package:kart_project/providers/pwm_port/pwm_native.dart';
+import 'package:kart_project/interfaces/pwm_port/pwm_native.dart';
 
 /// Communicates with [PwmNative] to use the PWM pins on the Raspberry Pi.
-class PwmPort {
+class PwmInterface {
   final PwmNative _pwmNative = PwmNative();
 
   /// Containes information on which pins have already been set to PWM mode.
@@ -15,7 +15,7 @@ class PwmPort {
   /// Defines if wiringPi is already initalized.
   bool _initalized = false;
 
-  PwmPort() {
+  PwmInterface() {
     _init();
   }
 
