@@ -29,6 +29,9 @@ class Strings {
   static String get profilWasCreated => _strings['profil_was_created'];
   static String get profilWasDeleted => _strings['profil_was_deleted'];
   static String get profilWasUpdated => _strings['profil_was_updated'];
+  static String get failedCreatingProfil => _strings['failed_creating_profil'];
+  static String get failedDeletingProfil => _strings['failed_deleting_profil'];
+  static String get failedUpdatingProfil => _strings['failed_updating_profil'];
   static String get editProfil => _strings['edit_profil'];
   static String get giveName => _strings['give_name'];
   static String get safe => _strings['safe'];
@@ -65,6 +68,9 @@ class Strings {
     "profil_was_created": "Profil wurde erstellt",
     "profil_was_deleted": "Profil wurde gelöscht",
     "profil_was_updated": "Profil wurde aktualisiert",
+    "failed_creating_profil": "Erstellen des Profils fehlgeschlagen",
+    "failed_deleting_profil": "Löschen des Profils fehlgeschlagen",
+    "failed_updating_profil": "Aktualisieren des Profils fehlgeschlagen",
     "edit_profil": "Profil bearbeiten",
     "give_name": "Gebe einen Namen ein.",
     "safe": "Speichern",

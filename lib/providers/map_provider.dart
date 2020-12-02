@@ -64,9 +64,13 @@ class MapProvider extends ChangeNotifier {
   }
 
   /// Moves to [location1] or [location2] based on the [index].
-  void toLocation(int index) {
-    // TODO: Add notification if location is null
-    _moveToLocation(_locationOfIndex(index));
+  void toLocation(BuildContext context, int index) {
+    Location location = _locationOfIndex(index);
+    if (location == null) {
+      // TODO: Add notification
+    } else {
+      _moveToLocation(location);
+    }
   }
 
   /// Sets the location values to the ones of the [profil]. Gets normally

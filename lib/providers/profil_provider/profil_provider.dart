@@ -7,7 +7,6 @@ import 'package:kart_project/providers/profil_provider/profil_database.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/extensions.dart';
 
-// TODO: Think about: When using error messages
 /// Lets you create, update and delete profiles.
 class ProfilProvider extends ChangeNotifier {
   ProfilDatabase _db = ProfilDatabase();
@@ -78,14 +77,13 @@ class ProfilProvider extends ChangeNotifier {
       await _db.createProfil(profil);
       await _updateProfilesList();
       await setProfil(profilId);
-    } catch (error) {
-      context.showErrorNotification(Strings.profilWasCreated);
-      throw StateError("[ProfilProvider]: Failed to create profil: $error");
-    } finally {
       context.showConfirmNotification(
         icon: EvaIcons.plusOutline,
         message: Strings.profilWasCreated,
       );
+    } catch (error) {
+      context.showErrorNotification(Strings.failedCreatingProfil);
+      throw StateError("[ProfilProvider]: Failed to create profil: $error");
     }
   }
 
@@ -98,25 +96,35 @@ class ProfilProvider extends ChangeNotifier {
         "There is at least one profil needed. Deleting all profiles is not supported.",
       );
     }
-    id ??= currentProfil.id;
-    _db.deleteProfil(id);
-    await _updateProfilesList();
-    await setProfil(profiles[0].id);
-    context.read<NotificationsProvider>().showConfirmNotification(
-          icon: EvaIcons.trash2Outline,
-          message: Strings.profilWasDeleted,
-        );
+    try {
+      id ??= currentProfil.id;
+      _db.deleteProfil(id);
+      await _updateProfilesList();
+      await setProfil(profiles[0].id);
+      context.read<NotificationsProvider>().showConfirmNotification(
+            icon: EvaIcons.trash2Outline,
+            message: Strings.profilWasDeleted,
+          );
+    } catch (error) {
+      context.showErrorNotification(Strings.failedDeletingProfil);
+      throw StateError("[ProfilProvider]: Failed to delete profil: $error");
+    }
   }
 
   /// Updates the name of the profil.
   Future setName(BuildContext context, int id, String name) async {
     if (name == null || name.isEmpty)
       throw ArgumentError("Name must not be null or empty.");
-    await _updateProfil(id, <String, Object>{nameColumn: name});
-    context.showConfirmNotification(
-      icon: EvaIcons.personOutline,
-      message: Strings.profilWasUpdated,
-    );
+    try {
+      await _updateProfil(id, <String, Object>{nameColumn: name});
+      context.showConfirmNotification(
+        icon: EvaIcons.personOutline,
+        message: Strings.profilWasUpdated,
+      );
+    } catch (error) {
+      context.showErrorNotification(Strings.failedUpdatingProfil);
+      throw StateError("[ProfilProvider]: Failed to update profil: $error");
+    }
   }
 
   /// Updates the location at the given [index] of the current profil.
