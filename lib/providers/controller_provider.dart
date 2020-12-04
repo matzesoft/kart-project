@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
-import 'package:kart_project/providers/serial_port/serial_port.dart';
+import 'package:kart_project/interfaces/serial_interface/serial_interface.dart';
 
 final Byte startByte = Byte("66");
 
@@ -57,7 +57,7 @@ class ControllerProvider extends ChangeNotifier {
 }
 
 class ControllerInterface {
-  SerialPort _serialPort = SerialPort();
+  SerialInterface _serialPort = SerialInterface();
 
   ControllerInterface() {
     _serialPort.openSerialPort();

@@ -7,8 +7,16 @@ typedef _system_cmd = Int32 Function(Pointer<Utf8> command);
 typedef _SystemCmd = int Function(Pointer<Utf8> command);
 
 /// Uses `dart:ffi` to run system commands.
-int runSystemCmd(String cmd) {
-  final lib = DynamicLibrary.open(_libName);
-  final systemCmd = lib.lookupFunction<_system_cmd, _SystemCmd>("system");
-  return systemCmd(Utf8.toUtf8(cmd));
+class CmdInterface {
+  Function _systemCmd;
+
+  CmdInterface() {
+    final lib = DynamicLibrary.open(_libName);
+    _systemCmd = lib.lookupFunction<_system_cmd, _SystemCmd>("system");
+  }
+
+  /// Runs the given command by the system.
+  int runCmd(String cmd) {
+    return _systemCmd(Utf8.toUtf8(cmd));
+  }
 }

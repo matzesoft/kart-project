@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kart_project/interfaces/serial_interface/serial_interface.dart';
 import 'package:kart_project/providers/controller_provider.dart';
-import 'package:kart_project/providers/serial_port/serial_port.dart';
 import 'package:kart_project/extensions.dart';
 
 class TestSerial extends StatefulWidget {

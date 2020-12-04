@@ -1,5 +1,5 @@
 import 'package:ffi/ffi.dart';
-import 'package:kart_project/providers/serial_port/serial_native.dart';
+import 'package:kart_project/interfaces/serial_interface/serial_native.dart';
 
 /// Takes a 2 digits long hex number. If the [value] is longer, only the last
 /// two digits will be used. [integer] returns the [value] in decimal format.

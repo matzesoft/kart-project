@@ -1,4 +1,4 @@
-import 'package:kart_project/interfaces/pwm_port/pwm_native.dart';
+import 'package:kart_project/interfaces/pwm_interface/pwm_native.dart';
 
 /// Communicates with [PwmNative] to use the PWM pins on the Raspberry Pi.
 class PwmInterface {
