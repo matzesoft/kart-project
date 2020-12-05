@@ -36,6 +36,10 @@ class Strings {
   static String get giveName => _strings['give_name'];
   static String get safe => _strings['safe'];
   static String get locationWasSaved => _strings['location_was_saved'];
+  static String get wrongPincode => _strings['wrong_pincode'];
+  static String get unlocked => _strings['unlocked'];
+  static String get projectName => _strings['project_name'];
+  static String get projectSlogan => _strings['project_slogan'];
 
   static final Map<String, String> _strings = {
     "profiles": "Profile",
@@ -75,5 +79,10 @@ class Strings {
     "give_name": "Gebe einen Namen ein.",
     "safe": "Speichern",
     "location_was_saved": "Ort wurde gespeichert",
+    "wrong_pincode": "Falscher Pincode",
+    "unlocked": "Entsperrt",
+    "project_name": "Kärrele",
+    "project_slogan":
+        "Ein selbst gebautes E-Kart, geplant und gebaut von zwei Brüdern.",
   };
 }

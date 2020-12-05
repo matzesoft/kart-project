@@ -1,12 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/models/profil.dart';
+import 'package:kart_project/providers/boot_provider.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/controller_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:kart_project/widgets/dashboard/dashboard.dart';
 import 'package:kart_project/widgets/entertainment.dart';
+import 'package:kart_project/widgets/lockscreen.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
@@ -18,11 +20,15 @@ void main() {
   runApp(KartProject());
 }
 
+/// Implements all necessary providers for the project.
 class KartProject extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (context) => BootProvider(),
+        ),
         ChangeNotifierProvider(
           create: (context) => ProfilProvider(),
         ),
@@ -41,6 +47,8 @@ class KartProject extends StatelessWidget {
   }
 }
 
+/// Implements the core widget [MaterialApp]. Sets up different values like the
+/// [themeMode] and [routes]. Also takes the core widget of the [OverlaySupport].
 class Core extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -60,26 +68,34 @@ class Core extends StatelessWidget {
   }
 }
 
+/// Shows a loading screen until all necessary components are loaded.
+/// Afterwards requestes a pin of the user to unlock the kart.
 class Root extends StatelessWidget {
   static String route = "/";
 
+  /// Updates all providers which depend on profil data.
+  void _updateProviders(BuildContext context, Profil profil) {
+    context.read<MapProvider>().updateLocationsWithProfil(profil);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: Improve loading screen...
-    return Selector<ProfilProvider, bool>(
-      selector: (context, profilProvider) => profilProvider.initalized,
-      builder: (context, initalized, child) {
-        if (!initalized) return Text("Init...");
-        return child;
-      },
-      child: Selector<ProfilProvider, Profil>(
-        selector: (context, profilProvider) => profilProvider.currentProfil,
-        builder: (context, profil, child) {
-          context.read<MapProvider>().updateLocationsWithProfil(profil);
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: Consumer<ProfilProvider>(
+        builder: (context, profilProvider, child) {
+          if (!profilProvider.initalized)
+            return Text("Init..."); // TODO: Improve
+          _updateProviders(context, profilProvider.currentProfil);
           return child;
         },
-        child: Scaffold(
-          body: Row(
+        child: Selector<BootProvider, bool>(
+          selector: (context, bootProvider) => bootProvider.locked,
+          builder: (context, locked, child) {
+            if (locked) return Lockscreen();
+            return child;
+          },
+          child: Row(
             children: <Widget>[
               Expanded(
                 flex: 4,
@@ -96,70 +112,3 @@ class Root extends StatelessWidget {
     );
   }
 }
-
-/*
-class GpioTest extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _GpioTestState();
-  }
-}
-
-class _GpioTestState extends State<GpioTest> {
-  FlutterGpiod gpio;
-  GpioChip chip;
-  List<GpioLine> lines;
-  double pwmRatio = 0.5;
-  int frequence = 10;
-
-  void initState() {
-    setup();
-    super.initState();
-  }
-
-  Future setup() async {
-    gpio = await FlutterGpiod.getInstance();
-    chip = gpio.chips.singleWhere((chip) => chip.label == 'pinctrl-bcm2835');
-    lines = chip.lines;
-    await lines[23].requestOutput(initialValue: true);
-    startHeartbeat();
-  }
-
-  Future startHeartbeat() async {
-    while (true) {
-      if (pwmRatio != 0.0) {
-        lines[23].setValue(true);
-        await Future.delayed(
-          Duration(milliseconds: (pwmRatio * frequence).round()),
-        );
-      }
-      if (pwmRatio != 1.0) {
-        lines[23].setValue(false);
-        await Future.delayed(
-          Duration(milliseconds: ((1 - pwmRatio) * frequence).round()),
-        );
-      }
-    }
-  }
-
-  void onPwmRatioChanged(double value) {
-    setState(() {
-      pwmRatio = value;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Slider(
-            value: pwmRatio,
-            onChanged: onPwmRatioChanged,
-          ),
-        ],
-      ),
-    );
-  }
-}
-*/
