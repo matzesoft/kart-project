@@ -13,9 +13,9 @@ const String _profilesIndexKey = "profiles_index";
 /// Strings for the columns of the SQL database.
 const String idColumn = "id";
 const String nameColumn = "name";
-const String themeModeColumn = "theme_mode";
+const String themeSettingColumn = "theme_setting";
 const String maxSpeedColumn = "max_speed";
-const String lightBrightnessColumn = "light_brightness";
+const String maxLightBrightnessColumn = "max_light_brightness";
 // Locations
 const String location1ZoomColumn = "location1_zoom";
 const String location1LatColumn = "location1_lat";
@@ -63,13 +63,14 @@ class ProfilDatabase {
   /// Creates the Profiles table and adds the default profil to it. Gets
   /// usually called when the database is opened the first time.
   Future _createTable(Database db, int version) async {
+    print("Create table");
     await db.execute('''
       CREATE TABLE $_table (
         $idColumn INTEGER PRIMARY KEY,
         $nameColumn TEXT,
-        $themeModeColumn INTEGER,
+        $themeSettingColumn INTEGER,
         $maxSpeedColumn INTEGER,
-        $lightBrightnessColumn REAL,
+        $maxLightBrightnessColumn REAL,
 
         $location1ZoomColumn REAL,
         $location1LatColumn REAL,
@@ -79,16 +80,11 @@ class ProfilDatabase {
         $location2LngColumn REAL
       )
     ''');
-    await db.insert(
-      _table,
-      Profil(
-        id: 0,
-        name: "Standard Profil",
-        themeMode: 0,
-        maxSpeed: 80,
-        lightBrightness: 0.6,
-      ).toMap(),
-    );
+    try {
+      await db.insert(_table, Profil(0).toMap());
+    } catch (error) {
+      print(error);
+    }
   }
 
   /// Creates a profil with the given data.

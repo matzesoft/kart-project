@@ -1,29 +1,23 @@
 import 'package:kart_project/models/location.dart';
 import 'package:kart_project/providers/profil_provider/profil_database.dart';
 
-/// Indicates one Profil.
-///
-/// [themeMode] determs if the theme should adapt based on time `(value: 0)`,
-/// always be light `(value: 1)`or dark `(value: 2)`.
-///
-/// [maxSpeed] is the speed which the user is allowed to maximum drive.
-/// [lightBrightness] is the brightness the light can maximum get. Check the
-/// [LightsProvider] for more information.
+/// Indicates one Profil. For more information on the specific values check out
+/// the assosiated provider.fe
 class Profil {
   int id;
   String name;
-  int themeMode;
+  int themeSetting;
   int maxSpeed;
-  double lightBrightness;
+  double maxLightBrightness;
   Location location1;
   Location location2;
 
-  Profil({
-    this.id,
-    this.name,
-    this.themeMode,
-    this.maxSpeed,
-    this.lightBrightness,
+  Profil(
+    this.id, {
+    this.name: "Standard Profil",
+    this.themeSetting: 0,
+    this.maxSpeed: 80,
+    this.maxLightBrightness: 0.6,
     this.location1,
     this.location2,
   });
@@ -32,9 +26,9 @@ class Profil {
     var data = <String, Object>{
       idColumn: id,
       nameColumn: name,
-      themeModeColumn: themeMode,
+      themeSettingColumn: themeSetting,
       maxSpeedColumn: maxSpeed,
-      lightBrightnessColumn: lightBrightness,
+      maxLightBrightnessColumn: maxLightBrightness,
       // Locations
     };
     if (location1 != null) data.addAll(location1.toProfilMap(1));
@@ -45,9 +39,9 @@ class Profil {
   Profil.fromMap(Map<String, dynamic> profil) {
     id = profil[idColumn];
     name = profil[nameColumn];
-    themeMode = profil[themeModeColumn];
+    themeSetting = profil[themeSettingColumn];
     maxSpeed = profil[maxSpeedColumn];
-    lightBrightness = profil[lightBrightnessColumn];
+    maxLightBrightness = profil[maxLightBrightnessColumn];
     location1 = Location.fromProfilMap(1, profil);
     location2 = Location.fromProfilMap(2, profil);
   }

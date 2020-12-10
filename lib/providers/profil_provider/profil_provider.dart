@@ -9,7 +9,7 @@ import 'package:kart_project/extensions.dart';
 
 /// Lets you create, update and delete profiles.
 class ProfilProvider extends ChangeNotifier {
-  ProfilDatabase _db = ProfilDatabase();
+  final ProfilDatabase _db = ProfilDatabase();
 
   /// Indicates if the database is up and running and initalizing has been
   /// finished.
@@ -47,8 +47,8 @@ class ProfilProvider extends ChangeNotifier {
   }
 
   /// Updates the settings of the profil.
-  Future _updateProfil(int id, Map<String, Object> values) async {
-    await _db.updateProfil(id, values);
+  Future _updateProfil(Map<String, Object> values) async {
+    await _db.updateProfil(currentProfil.id, values);
     await _updateProfilesList();
     notifyListeners();
   }
@@ -67,13 +67,7 @@ class ProfilProvider extends ChangeNotifier {
       if (name == null || name.isEmpty) {
         name = "${Strings.profil} $profilId";
       }
-      Profil profil = Profil(
-        id: profilId,
-        name: name,
-        themeMode: 0,
-        maxSpeed: 80,
-        lightBrightness: 0.6,
-      );
+      Profil profil = Profil(profilId, name: name);
       await _db.createProfil(profil);
       await _updateProfilesList();
       await setProfil(profilId);
@@ -83,22 +77,17 @@ class ProfilProvider extends ChangeNotifier {
       );
     } catch (error) {
       context.showErrorNotification(Strings.failedCreatingProfil);
-      throw StateError("[ProfilProvider]: Failed to create profil: $error");
     }
   }
 
-  /// Deletes the profil. If no id is given the current profil will be deleted.
-  /// Throws an [StateError] if there are no other profiles. Switches to the
+  /// Deletes the profil. Throws an [StateError] if there are no other profiles. Switches to the
   /// first profil in the list, if requested profil is the currentUser.
-  Future deleteProfil(BuildContext context, {int id}) async {
+  Future deleteProfil(BuildContext context) async {
     if (profiles.length <= 1) {
-      throw StateError(
-        "There is at least one profil needed. Deleting all profiles is not supported.",
-      );
+      throw StateError("Deleting all profiles is not supported.");
     }
     try {
-      id ??= currentProfil.id;
-      _db.deleteProfil(id);
+      await _db.deleteProfil(currentProfil.id);
       await _updateProfilesList();
       await setProfil(profiles[0].id);
       context.read<NotificationsProvider>().showConfirmNotification(
@@ -107,28 +96,32 @@ class ProfilProvider extends ChangeNotifier {
           );
     } catch (error) {
       context.showErrorNotification(Strings.failedDeletingProfil);
-      throw StateError("[ProfilProvider]: Failed to delete profil: $error");
     }
   }
 
   /// Updates the name of the profil.
-  Future setName(BuildContext context, int id, String name) async {
-    if (name == null || name.isEmpty)
+  Future setName(BuildContext context, String name) async {
+    if (name == null || name.isEmpty) {
       throw ArgumentError("Name must not be null or empty.");
+    }
     try {
-      await _updateProfil(id, <String, Object>{nameColumn: name});
+      await _updateProfil(<String, Object>{nameColumn: name});
       context.showConfirmNotification(
         icon: EvaIcons.personOutline,
         message: Strings.profilWasUpdated,
       );
     } catch (error) {
       context.showErrorNotification(Strings.failedUpdatingProfil);
-      throw StateError("[ProfilProvider]: Failed to update profil: $error");
     }
   }
 
-  /// Updates the location at the given [index] of the current profil.
+  /// Updates the light brightness.
+  Future setLightBrightness(double lightBrightness) async {
+    await _updateProfil({maxLightBrightnessColumn: lightBrightness});
+  }
+
+  /// Updates the location at the given [index].
   Future setLocation(int index, Location location) async {
-    await _updateProfil(currentProfil.id, location.toProfilMap(index));
+    await _updateProfil(location.toProfilMap(index));
   }
 }

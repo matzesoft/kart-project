@@ -401,7 +401,6 @@ class _EditProfilDialogState extends State<EditProfilDialog> {
       });
       await widget.profilProvider.setName(
         context,
-        _profil.id,
         _controller.text,
       );
       Navigator.pop(context);
