@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:kart_project/strings.dart';
+import 'package:kart_project/widgets/settings/appearance_setting.dart';
 import 'package:kart_project/widgets/settings/profil_picture.dart';
 import 'package:kart_project/widgets/settings/profil_setting.dart';
 import 'package:kart_project/widgets/settings/test_serial.dart';
@@ -22,7 +23,7 @@ List<Setting> get settings {
     Setting(
       title: Strings.lightAndDisplay,
       icon: EvaIcons.bulbOutline,
-      content: LightAndDisplaySetting(),
+      content: AppeareanceSetting(),
     ),
     Setting(
       title: Strings.about,
@@ -242,13 +243,6 @@ class DriveSetting extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: Remove after testing
     return Text("Drive Setting");
-  }
-}
-
-class LightAndDisplaySetting extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Text("Light And Display Setting");
   }
 }
 

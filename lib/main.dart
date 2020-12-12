@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:kart_project/models/profil.dart';
+import 'package:kart_project/design/theme.dart';
+import 'package:kart_project/extensions.dart';
+import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/providers/boot_provider.dart';
-import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/controller_provider.dart';
+import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:kart_project/widgets/dashboard/dashboard.dart';
@@ -12,43 +14,62 @@ import 'package:kart_project/widgets/lockscreen.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
-import 'package:kart_project/design/theme.dart';
-import 'package:kart_project/extensions.dart';
 
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
   runApp(KartProject());
 }
 
-/// Implements all necessary providers for the project.
+/// Implements all necessary providers for the project. Shows a dark loading
+/// screen until the database is loaded up and the
 class KartProject extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => BootProvider(),
+    return ChangeNotifierProvider(
+      create: (context) => ProfilProvider(),
+      child: Selector<ProfilProvider, bool>(
+        selector: (context, profilProvider) => profilProvider.initalized,
+        builder: (context, initalized, child) {
+          if (!initalized) return Container(color: Colors.black);
+          return child;
+        },
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => BootProvider(),
+            ),
+            ChangeNotifierProxyProvider2<ProfilProvider, BootProvider,
+                AppearanceProvider>(
+              create: (context) => AppearanceProvider(context),
+              update: (_, profilProvider, bootProvider, appearanceProvider) {
+                return appearanceProvider.update(
+                  profilProvider.currentProfil,
+                  bootProvider.locked,
+                );
+              },
+            ),
+            ChangeNotifierProxyProvider<ProfilProvider, MapProvider>(
+              create: (context) => MapProvider(context),
+              update: (_, profilProvider, mapProvider) {
+                return mapProvider.update(profilProvider.currentProfil);
+              },
+            ),
+            ChangeNotifierProvider(
+              create: (context) => ControllerProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => NotificationsProvider(),
+            ),
+          ],
+          child: Core(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => ProfilProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ControllerProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => MapProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => NotificationsProvider(),
-        ),
-      ],
-      child: Core(),
+      ),
     );
   }
 }
 
 /// Implements the core widget [MaterialApp]. Sets up different values like the
-/// [themeMode] and [routes]. Also takes the core widget of the [OverlaySupport].
+/// [ThemeMode] and [routes]. Also takes the core widget of the [OverlaySupport].
 class Core extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -57,7 +78,7 @@ class Core extends StatelessWidget {
         title: 'Kart Project',
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.light,
+        themeMode: context.watch<AppearanceProvider>().themeMode,
         initialRoute: Root.route,
         routes: {
           Root.route: (context) => Root(),
@@ -73,40 +94,27 @@ class Core extends StatelessWidget {
 class Root extends StatelessWidget {
   static String route = "/";
 
-  /// Updates all providers which depend on profil data.
-  void _updateProviders(BuildContext context, Profil profil) {
-    context.read<MapProvider>().updateLocationsWithProfil(profil);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      body: Consumer<ProfilProvider>(
-        builder: (context, profilProvider, child) {
-          if (!profilProvider.initalized)
-            return Text("Init..."); // TODO: Improve
-          _updateProviders(context, profilProvider.currentProfil);
+      body: Selector<BootProvider, bool>(
+        selector: (context, bootProvider) => bootProvider.locked,
+        builder: (context, locked, child) {
+          if (locked) return Lockscreen();
           return child;
         },
-        child: Selector<BootProvider, bool>(
-          selector: (context, bootProvider) => bootProvider.locked,
-          builder: (context, locked, child) {
-            if (locked) return Lockscreen();
-            return child;
-          },
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                flex: 4,
-                child: Dashboard(),
-              ),
-              Expanded(
-                flex: 7,
-                child: Entertainment(),
-              ),
-            ],
-          ),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              flex: 4,
+              child: Dashboard(),
+            ),
+            Expanded(
+              flex: 7,
+              child: Entertainment(),
+            ),
+          ],
         ),
       ),
     );

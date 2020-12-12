@@ -8,6 +8,14 @@ import 'package:kart_project/strings.dart';
 import 'package:kart_project/extensions.dart';
 
 /// Lets you create, update and delete profiles.
+///
+/// Only calls its listeners if the profil is switched. If there are changes to
+/// the values in the DB, [notifyListeners] will only be called if the changes
+/// are about the profil directely. For example the name of the profil.
+///
+/// Because the providers using the profil data are also saving theier values in
+/// own local variables, it would be unnecessary to call the listeners by the
+/// provider itself and the [ProfilProvider].
 class ProfilProvider extends ChangeNotifier {
   final ProfilDatabase _db = ProfilDatabase();
 
@@ -46,11 +54,10 @@ class ProfilProvider extends ChangeNotifier {
     );
   }
 
-  /// Updates the settings of the profil.
+  /// Updates the settings of the profil. Does NOT call [notifyListeners]!
   Future _updateProfil(Map<String, Object> values) async {
     await _db.updateProfil(currentProfil.id, values);
     await _updateProfilesList();
-    notifyListeners();
   }
 
   /// Sets the new profil.
@@ -106,6 +113,7 @@ class ProfilProvider extends ChangeNotifier {
     }
     try {
       await _updateProfil(<String, Object>{nameColumn: name});
+      notifyListeners();
       context.showConfirmNotification(
         icon: EvaIcons.personOutline,
         message: Strings.profilWasUpdated,
@@ -115,7 +123,10 @@ class ProfilProvider extends ChangeNotifier {
     }
   }
 
-  /// Updates the light brightness.
+  Future setThemeMode(int themeMode) async {
+    await _updateProfil({themeModeColumn: themeMode});
+  }
+
   Future setLightBrightness(double lightBrightness) async {
     await _updateProfil({maxLightBrightnessColumn: lightBrightness});
   }

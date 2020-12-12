@@ -19,21 +19,21 @@ class PwmInterface {
     _init();
   }
 
-  /// Sets the [dutyCycle] of the [pin]. Only pins 12, 13, 18 and 19 are allowed
-  /// as pins. [dutyCycle] must be between 0 and 1024.
+  /// Sets the duty cycle of the [pin]. Only pins 12, 13, 18 and 19 are allowed
+  /// as pins. [factor] must be between 0 and 1.
   ///
   /// If not already happend, the mode of the [pin] will be set to [PWM_OUTPUT].
-  void setDutyCycle(int pin, int dutyCycle) {
+  void setDutyCycle(int pin, double factor) {
     _init();
-    if (!(pin == 12 || pin == 13 || pin == 18 || pin == 19))
+    if (!_pins.containsKey(pin)) {
       throw ArgumentError(
         'Pin $pin does not support PWM, only pins 12, 13, 18 and 19 do. To check which pin '
         'to choose go to https://pinout.xyz/. The PwmProvider uses the deafult BCM pins.',
       );
-    if (dutyCycle > 1024 || dutyCycle < 0)
-      throw RangeError.range(dutyCycle, 0, 1024, "duty cycle");
-
+    }
     if (!_pins[pin]) _pwmNative.pinMode(pin, PWM_OUTPUT);
+
+    int dutyCycle = (factor * PWM_RANGE).round();
     _pwmNative.pwmWrite(pin, dutyCycle);
   }
 

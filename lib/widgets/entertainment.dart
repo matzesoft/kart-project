@@ -35,6 +35,7 @@ class Clock extends StatefulWidget {
 }
 
 class _ClockState extends State<Clock> {
+  Timer _timer;
   String time = "";
 
   void setClock() {
@@ -44,12 +45,18 @@ class _ClockState extends State<Clock> {
   @override
   void initState() {
     setClock();
-    Timer.periodic(Duration(milliseconds: 2000), (_) {
+    _timer = Timer.periodic(Duration(milliseconds: 2000), (_) {
       setState(() {
         setClock();
       });
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override

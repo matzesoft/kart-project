@@ -28,6 +28,18 @@ class MapProvider extends ChangeNotifier {
   Location location1;
   Location location2;
 
+  MapProvider(BuildContext context) {
+    Profil profil = context.profil().currentProfil;
+    _updateLocationsWithProfil(profil);
+  }
+
+  /// Updates the [MapProvider] with the data of the [profil] and returns the
+  /// object back. This is normally called inside a [ProxyProvider]s update method.
+  MapProvider update(Profil profil) {
+    _updateLocationsWithProfil(profil);
+    return this;
+  }
+
   /// Sets and updates the location values based on the [index]. Only updates
   /// its listeners if there is a change and [notify] is set to true.
   void _setLocation(int index, Location location, {bool notify: true}) {
@@ -73,13 +85,6 @@ class MapProvider extends ChangeNotifier {
     }
   }
 
-  /// Sets the location values to the ones of the [profil]. Gets normally
-  /// called when the profil has changed.
-  void updateLocationsWithProfil(Profil profil) {
-    _setLocation(1, profil.location1, notify: false);
-    _setLocation(2, profil.location2, notify: false);
-  }
-
   /// Returns the path to the mapdata based on the theme.
   String mapPath(BuildContext context) {
     if (Theme.of(context).brightness == Brightness.dark) return _darkMapPath;
@@ -93,5 +98,12 @@ class MapProvider extends ChangeNotifier {
     }
     if (index == 1) return location1;
     return location2;
+  }
+
+  /// Sets the location values to the ones of the [profil]. Gets normally
+  /// called when the profil has changed.
+  void _updateLocationsWithProfil(Profil profil) {
+    _setLocation(1, profil.location1, notify: false);
+    _setLocation(2, profil.location2, notify: false);
   }
 }

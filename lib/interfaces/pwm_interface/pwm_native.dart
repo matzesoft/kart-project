@@ -8,6 +8,8 @@ const int PWM_OUTPUT = 2;
 /// Value given by wiringPi to change the PWM mode to mark:space.
 const int PWM_MODE_MS = 0;
 
+const int PWM_RANGE = 1024;
+
 /// WiringPi Native: `wiringPiSetupGpio(void);`
 typedef wiring_pi_setup_gpio = Int32 Function();
 typedef WiringPiSetupGpio = int Function();

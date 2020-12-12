@@ -166,6 +166,7 @@ class AppTheme {
         ),
         canvasColor: Colors.grey[800],
         cardTheme: CardTheme(
+          color: Colors.grey[900],
           elevation: 12.0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),

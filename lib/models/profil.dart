@@ -6,7 +6,7 @@ import 'package:kart_project/providers/profil_provider/profil_database.dart';
 class Profil {
   int id;
   String name;
-  int themeSetting;
+  int themeMode;
   int maxSpeed;
   double maxLightBrightness;
   Location location1;
@@ -15,7 +15,7 @@ class Profil {
   Profil(
     this.id, {
     this.name: "Standard Profil",
-    this.themeSetting: 0,
+    this.themeMode: 1,
     this.maxSpeed: 80,
     this.maxLightBrightness: 0.6,
     this.location1,
@@ -26,7 +26,7 @@ class Profil {
     var data = <String, Object>{
       idColumn: id,
       nameColumn: name,
-      themeSettingColumn: themeSetting,
+      themeModeColumn: themeMode,
       maxSpeedColumn: maxSpeed,
       maxLightBrightnessColumn: maxLightBrightness,
       // Locations
@@ -39,7 +39,7 @@ class Profil {
   Profil.fromMap(Map<String, dynamic> profil) {
     id = profil[idColumn];
     name = profil[nameColumn];
-    themeSetting = profil[themeSettingColumn];
+    themeMode = profil[themeModeColumn];
     maxSpeed = profil[maxSpeedColumn];
     maxLightBrightness = profil[maxLightBrightnessColumn];
     location1 = Location.fromProfilMap(1, profil);

@@ -1,8 +1,10 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
-import 'package:kart_project/providers/lights_provider.dart';
+import 'package:kart_project/providers/appearance_provider.dart';
+import 'package:kart_project/providers/boot_provider.dart';
 import 'package:kart_project/strings.dart';
+import 'package:kart_project/extensions.dart';
 
 class ControlCenter extends StatefulWidget {
   @override
@@ -10,18 +12,17 @@ class ControlCenter extends StatefulWidget {
 }
 
 class _ControlCenterState extends State<ControlCenter> {
-  LightState state = LightState.off;
-
-  void _toggleCruiseControl() async {
+  void toggleCruiseControl() async {
     // TODO: Implement
   }
 
-  void _hoot() async {
+  void hoot() async {
     // TODO: Implement
   }
 
-  void _lock() {
-    //TODO: Implement
+  void lock() {
+    //TODO: Implement boot dialog
+    context.read<BootProvider>().lock();
   }
 
   @override
@@ -37,26 +38,7 @@ class _ControlCenterState extends State<ControlCenter> {
               children: <Widget>[
                 Expanded(
                   flex: 1,
-                  child: ControlCenterLightSwitch(
-                    onPressed: () {
-                      if (state != LightState.off) {
-                        setState(() {
-                          state == LightState.on
-                              ? state = LightState.dimmed
-                              : state = LightState.on;
-                        });
-                      }
-                    },
-                    onLongPress: () {
-                      setState(() {
-                        state == LightState.off
-                            ? state = LightState.dimmed
-                            : state = LightState.off;
-                      });
-                    },
-                    state: state,
-                    icon: EvaIcons.sunOutline,
-                  ),
+                  child: LightSwitch(),
                 ),
                 Expanded(
                   flex: 1,
@@ -64,16 +46,15 @@ class _ControlCenterState extends State<ControlCenter> {
                     children: <Widget>[
                       Expanded(
                         child: ControlCenterButton(
-                          onPressed: _hoot,
+                          onPressed: hoot,
                           icon: EvaIcons.volumeDownOutline,
                         ),
                       ),
                       // TODO: Improve transition
                       Expanded(
                         child: ControlCenterButton(
-                          onPressed: _toggleCruiseControl,
-                          icon: EvaIcons.arrowheadRightOutline,
-                          selected: false, //TODO: Add Provider data
+                          onPressed: lock,
+                          icon: EvaIcons.lockOutline,
                         ),
                       ),
                       /*
@@ -109,22 +90,28 @@ class _ControlCenterState extends State<ControlCenter> {
   }
 }
 
-class ControlCenterLightSwitch extends StatelessWidget {
-  final Function onPressed;
-  final Function onLongPress;
-  final IconData icon;
-  final LightState state;
-  final EdgeInsets margin;
-  final EdgeInsets padding;
+class LightSwitch extends StatefulWidget {
+  @override
+  _LightSwitchState createState() => _LightSwitchState();
+}
 
-  ControlCenterLightSwitch({
-    @required this.onPressed,
-    @required this.onLongPress,
-    @required this.icon,
-    this.state: LightState.off,
-    this.margin: const EdgeInsets.all(6.0),
-    this.padding: const EdgeInsets.all(8.0),
-  });
+class _LightSwitchState extends State<LightSwitch> {
+  AppearanceProvider _appearance;
+  LightState state;
+
+  void onPress() {
+    if (state != LightState.off) {
+      state == LightState.on
+          ? _appearance.setLightState(LightState.dimmed)
+          : _appearance.setLightState(LightState.on);
+    }
+  }
+
+  void onLongPress() {
+    state == LightState.off
+        ? _appearance.setLightState(LightState.dimmed)
+        : _appearance.setLightState(LightState.off);
+  }
 
   Color _highlightColor(BuildContext context) {
     if (state != LightState.off) return Theme.of(context).backgroundColor;
@@ -146,23 +133,25 @@ class ControlCenterLightSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _appearance = context.watch<AppearanceProvider>();
+    state = _appearance.lightState;
     return SizedBox.expand(
       child: Padding(
-        padding: margin,
+        padding: EdgeInsets.all(6.0),
         child: Material(
           borderRadius: BorderRadius.circular(AppTheme.borderRadius),
           color: _backgroundColor(context),
           child: InkWell(
-            onTap: onPressed,
+            onTap: onPress,
             onLongPress: onLongPress,
             borderRadius: BorderRadius.circular(AppTheme.borderRadius),
             child: Padding(
-              padding: padding,
+              padding: EdgeInsets.all(8.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Icon(
-                    icon,
+                    EvaIcons.sunOutline,
                     size: 36,
                     color: _highlightColor(context),
                   ),

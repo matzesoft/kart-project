@@ -13,7 +13,7 @@ const String _profilesIndexKey = "profiles_index";
 /// Strings for the columns of the SQL database.
 const String idColumn = "id";
 const String nameColumn = "name";
-const String themeSettingColumn = "theme_setting";
+const String themeModeColumn = "theme_mode";
 const String maxSpeedColumn = "max_speed";
 const String maxLightBrightnessColumn = "max_light_brightness";
 // Locations
@@ -68,7 +68,7 @@ class ProfilDatabase {
       CREATE TABLE $_table (
         $idColumn INTEGER PRIMARY KEY,
         $nameColumn TEXT,
-        $themeSettingColumn INTEGER,
+        $themeModeColumn INTEGER,
         $maxSpeedColumn INTEGER,
         $maxLightBrightnessColumn REAL,
 
