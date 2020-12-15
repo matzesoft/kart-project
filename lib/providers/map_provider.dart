@@ -35,8 +35,10 @@ class MapProvider extends ChangeNotifier {
 
   /// Updates the [MapProvider] with the data of the [profil] and returns the
   /// object back. This is normally called inside a [ProxyProvider]s update method.
+  /// Does update all listeners.
   MapProvider update(Profil profil) {
     _updateLocationsWithProfil(profil);
+    notifyListeners();
     return this;
   }
 
@@ -101,7 +103,7 @@ class MapProvider extends ChangeNotifier {
   }
 
   /// Sets the location values to the ones of the [profil]. Gets normally
-  /// called when the profil has changed.
+  /// called when the profil has changed. Does not update any listeners.
   void _updateLocationsWithProfil(Profil profil) {
     _setLocation(1, profil.location1, notify: false);
     _setLocation(2, profil.location2, notify: false);
