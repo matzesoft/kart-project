@@ -104,8 +104,7 @@ class MomentaryConsumption extends StatelessWidget {
             decoration: ShapeDecoration(
               color: Theme.of(context).canvasColor,
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(AppTheme.borderRadius),
+                borderRadius: BorderRadius.circular(AppTheme.borderRadius),
               ),
             ),
             child: Row(
@@ -121,10 +120,8 @@ class MomentaryConsumption extends StatelessWidget {
                         color: Colors.green,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
-                            topLeft:
-                                Radius.circular(AppTheme.borderRadius),
-                            bottomLeft:
-                                Radius.circular(AppTheme.borderRadius),
+                            topLeft: Radius.circular(AppTheme.borderRadius),
+                            bottomLeft: Radius.circular(AppTheme.borderRadius),
                           ),
                         ),
                       ),
@@ -142,10 +139,8 @@ class MomentaryConsumption extends StatelessWidget {
                         color: Colors.blue[600],
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
-                            topRight:
-                                Radius.circular(AppTheme.borderRadius),
-                            bottomRight:
-                                Radius.circular(AppTheme.borderRadius),
+                            topRight: Radius.circular(AppTheme.borderRadius),
+                            bottomRight: Radius.circular(AppTheme.borderRadius),
                           ),
                         ),
                       ),
@@ -175,7 +170,7 @@ class Battery extends StatefulWidget {
 }
 
 class _BatteryState extends State<Battery> {
-  final Duration _animationDuration = Duration(milliseconds: 300);
+  final _animationDuration = Duration(milliseconds: 300);
   double _batteryPercentageBefore = 1.0;
   double _batteryPercentage = 0.4;
 
