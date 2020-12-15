@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 class NotificationsProvider extends ChangeNotifier {
+  final _duration = Duration(milliseconds: 2500);
+
   /// Should confirm the user quickly if the requested process was sucessfull.
   /// For example when deleting a profil or changing a setting.
   void showConfirmNotification({IconData icon, String message}) {
@@ -13,7 +15,7 @@ class NotificationsProvider extends ChangeNotifier {
           message: message,
         );
       },
-      duration: Duration(milliseconds: 2500),
+      duration: _duration,
       position: NotificationPosition.bottom,
     );
   }
@@ -28,7 +30,7 @@ class NotificationsProvider extends ChangeNotifier {
           message: message,
         );
       },
-      duration: Duration(milliseconds: 2500),
+      duration: _duration,
       position: NotificationPosition.bottom,
     );
   }
