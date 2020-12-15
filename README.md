@@ -32,4 +32,4 @@ This project is not even near to finish but I already want to thank @ardera as t
 who already helped me in various situations.
 
 The current goal is to finish the different interfaces needed to cummincate with all the necessary devices. If you already found some bad code,
-something to improve or just have a question about the project at all feel free to open an issue or write an [e-mail](mailto:matzesoft.sup@gmail.com).
+something to improve or just have a question about the project at all feel free to open an issue or write an [e-mail](mailto:matzesoft@gmail.com).
