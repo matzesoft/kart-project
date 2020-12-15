@@ -63,7 +63,6 @@ class ProfilDatabase {
   /// Creates the Profiles table and adds the default profil to it. Gets
   /// usually called when the database is opened the first time.
   Future _createTable(Database db, int version) async {
-    print("Create table");
     await db.execute('''
       CREATE TABLE $_table (
         $idColumn INTEGER PRIMARY KEY,
@@ -80,11 +79,7 @@ class ProfilDatabase {
         $location2LngColumn REAL
       )
     ''');
-    try {
-      await db.insert(_table, Profil(0).toMap());
-    } catch (error) {
-      print(error);
-    }
+    await db.insert(_table, Profil(0).toMap());
   }
 
   /// Creates a profil with the given data.

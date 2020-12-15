@@ -23,7 +23,7 @@ List<Setting> get settings {
     Setting(
       title: Strings.lightAndDisplay,
       icon: EvaIcons.bulbOutline,
-      content: AppeareanceSetting(),
+      content: AppearanceSetting(),
     ),
     Setting(
       title: Strings.about,

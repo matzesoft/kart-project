@@ -40,6 +40,13 @@ class Strings {
   static String get unlocked => _strings['unlocked'];
   static String get projectName => _strings['project_name'];
   static String get projectSlogan => _strings['project_slogan'];
+  static String get appearance => _strings['appearance'];
+  static String get lightMode => _strings['light_mode'];
+  static String get darkMode => _strings['dark_mode'];
+  static String get light => _strings['light'];
+  static String get setMaxLightBrightness =>
+      _strings['set_max_light_brightness'];
+  static String get changeAppTheme => _strings['change_app_theme'];
 
   static final Map<String, String> _strings = {
     "profiles": "Profile",
@@ -84,5 +91,12 @@ class Strings {
     "project_name": "Kärrele",
     "project_slogan":
         "Ein selbst gebautes E-Kart, geplant und gebaut von zwei Brüdern.",
+    "appearance": "Erscheinungsbild",
+    "light_mode": "Hell",
+    "dark_mode": "Dunkel",
+    "light": "Licht",
+    "set_max_light_brightness":
+        "Stelle die maximale Helligkeit der Scheinwerfer ein.",
+    "change_app_theme": "Ändere das Thema der App",
   };
 }

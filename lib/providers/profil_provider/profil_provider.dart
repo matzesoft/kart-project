@@ -127,8 +127,8 @@ class ProfilProvider extends ChangeNotifier {
     await _updateProfil({themeModeColumn: themeMode});
   }
 
-  Future setLightBrightness(double lightBrightness) async {
-    await _updateProfil({maxLightBrightnessColumn: lightBrightness});
+  Future setMaxLightBrightness(double brightness) async {
+    await _updateProfil({maxLightBrightnessColumn: brightness});
   }
 
   /// Updates the location at the given [index].

@@ -77,6 +77,10 @@ class AppTheme {
         ),
         primaryColor: Colors.blueAccent[700],
         scaffoldBackgroundColor: Colors.grey[200],
+        sliderTheme: SliderThemeData(
+          activeTrackColor: Colors.blueAccent[700],
+          thumbColor: Colors.blueAccent[700],
+        ),
         snackBarTheme: SnackBarThemeData(
           backgroundColor: Colors.white,
           elevation: 12.0,
