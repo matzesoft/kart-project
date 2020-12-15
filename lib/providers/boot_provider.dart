@@ -11,7 +11,8 @@ class BootProvider extends ChangeNotifier {
   final CmdInterface _cmdInterface = CmdInterface();
 
   /// If true the user has to input a pin code to unlock the kart.
-  bool locked = true;
+  bool _locked = true;
+  bool get locked => _locked;
 
   /// Checks if the given [pin] is correct. If correct [locked] will be set to
   /// false and true is returned.
@@ -25,7 +26,7 @@ class BootProvider extends ChangeNotifier {
       return false;
     }
 
-    locked = false;
+    _locked = false;
     notifications.showConfirmNotification(
       icon: EvaIcons.unlockOutline,
       message: Strings.unlocked,
@@ -35,12 +36,11 @@ class BootProvider extends ChangeNotifier {
   }
 
   void lock() {
-    // TODO: Implement
-    locked = true;
+    _locked = true;
     notifyListeners();
   }
 
-  void powerOff() {
+  Future powerOff(BuildContext context) async {
     // TODO: Implement Providers
     _cmdInterface.runCmd('sudo poweroff');
   }

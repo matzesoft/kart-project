@@ -94,6 +94,10 @@ class Core extends StatelessWidget {
 class Root extends StatelessWidget {
   static String route = "/";
 
+  CrossFadeState getPage(bool locked) {
+    return locked ? CrossFadeState.showFirst : CrossFadeState.showSecond;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,8 +105,12 @@ class Root extends StatelessWidget {
       body: Selector<BootProvider, bool>(
         selector: (context, bootProvider) => bootProvider.locked,
         builder: (context, locked, child) {
-          if (locked) return Lockscreen();
-          return child;
+          return AnimatedCrossFade(
+            firstChild: Lockscreen(),
+            secondChild: child,
+            crossFadeState: getPage(locked),
+            duration: Duration(milliseconds: 300),
+          );
         },
         child: Row(
           children: <Widget>[
