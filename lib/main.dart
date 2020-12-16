@@ -8,9 +8,8 @@ import 'package:kart_project/providers/controller_provider.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
-import 'package:kart_project/widgets/dashboard/dashboard.dart';
-import 'package:kart_project/widgets/entertainment.dart';
 import 'package:kart_project/widgets/lockscreen.dart';
+import 'package:kart_project/widgets/main/main.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
@@ -94,10 +93,6 @@ class Core extends StatelessWidget {
 class Root extends StatelessWidget {
   static String route = "/";
 
-  CrossFadeState getPage(bool locked) {
-    return locked ? CrossFadeState.showFirst : CrossFadeState.showSecond;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,25 +100,10 @@ class Root extends StatelessWidget {
       body: Selector<BootProvider, bool>(
         selector: (context, bootProvider) => bootProvider.locked,
         builder: (context, locked, child) {
-          return AnimatedCrossFade(
-            firstChild: Lockscreen(),
-            secondChild: child,
-            crossFadeState: getPage(locked),
-            duration: Duration(milliseconds: 300),
-          );
+          if (locked) return Lockscreen();
+          return child;
         },
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              flex: 4,
-              child: Dashboard(),
-            ),
-            Expanded(
-              flex: 7,
-              child: Entertainment(),
-            ),
-          ],
-        ),
+        child: Main(),
       ),
     );
   }

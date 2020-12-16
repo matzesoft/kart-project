@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/design/custom_list_tile.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/strings.dart';
-import 'package:kart_project/widgets/dashboard/control_center.dart';
+import 'package:kart_project/widgets/main/control_center.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
 
 /// Padding each element/widget should have.

@@ -20,7 +20,7 @@ class _ControlCenterState extends State<ControlCenter> {
     // TODO: Implement
   }
 
-  void lock() {
+  void powerOptions() {
     //TODO: Implement boot dialog
     context.read<BootProvider>().lock();
   }
@@ -53,8 +53,8 @@ class _ControlCenterState extends State<ControlCenter> {
                       // TODO: Improve transition
                       Expanded(
                         child: ControlCenterButton(
-                          onPressed: lock,
-                          icon: EvaIcons.lockOutline,
+                          onPressed: powerOptions,
+                          icon: EvaIcons.powerOutline,
                         ),
                       ),
                       /*
