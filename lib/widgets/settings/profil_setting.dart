@@ -10,7 +10,7 @@ import 'package:kart_project/widgets/settings/profil_picture.dart';
 import 'package:kart_project/extensions.dart';
 
 /// Lets you create, switch, edit and delete profiles. Consists of a header
-/// which shows the [CurrentProfil] and a [GridView] with a list of all profiles.
+/// which shows the [_CurrentProfil] and a [GridView] with a list of all profiles.
 class ProfilSetting extends StatefulWidget {
   @override
   _ProfilSettingState createState() => _ProfilSettingState();
@@ -25,7 +25,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
   Future _createProfil() async {
     showDialog(
       context: context,
-      builder: (context) => CreateProfilDialog(_profilProvider),
+      builder: (context) => _CreateProfilDialog(_profilProvider),
     );
   }
 
@@ -40,7 +40,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
   Future _editProfil(Profil profil) async {
     showDialog(
       context: context,
-      builder: (context) => EditProfilDialog(_profilProvider),
+      builder: (context) => _EditProfilDialog(_profilProvider),
     );
   }
 
@@ -48,7 +48,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
   Future _deleteProfil(Profil profil) async {
     showDialog(
       context: context,
-      builder: (context) => DeleteProfilDialog(_profilProvider),
+      builder: (context) => _DeleteProfilDialog(_profilProvider),
     );
   }
 
@@ -62,7 +62,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: CurrentProfil(
+          child: _CurrentProfil(
             _currentProfil,
             enableDeletion: _profiles.length > 1,
             editProfil: _editProfil,
@@ -81,8 +81,8 @@ class _ProfilSettingState extends State<ProfilSetting> {
               ),
               itemBuilder: (context, index) {
                 if (index == _profiles.length)
-                  return CreateProfilItem(_createProfil);
-                return ProfilItem(
+                  return _CreateProfilItem(_createProfil);
+                return _ProfilItem(
                   _profiles[index],
                   active: _profiles[index].id == _currentProfil.id,
                   setProfil: _setProfil,
@@ -99,13 +99,13 @@ class _ProfilSettingState extends State<ProfilSetting> {
 
 /// Shows which profil is currently choosen and lets you delete and edit it.
 /// Set [enableDeletion] to false to disable the delete button.
-class CurrentProfil extends StatelessWidget {
+class _CurrentProfil extends StatelessWidget {
   final Profil profil;
   final bool enableDeletion;
   final Function(Profil profil) editProfil;
   final Function(Profil profil) deleteProfil;
 
-  CurrentProfil(
+  _CurrentProfil(
     this.profil, {
     this.enableDeletion: true,
     this.editProfil,
@@ -178,12 +178,12 @@ class CurrentProfil extends StatelessWidget {
 /// Represents one profil in the grid.  If [active] is true the profil will be
 /// highlighted and the [setProfil] function disabled to prevent user from
 /// resetting the current profil.
-class ProfilItem extends StatelessWidget {
+class _ProfilItem extends StatelessWidget {
   final Profil profil;
   final bool active;
   final Function(Profil profil) setProfil;
 
-  ProfilItem(this.profil, {this.active: false, this.setProfil});
+  _ProfilItem(this.profil, {this.active: false, this.setProfil});
 
   /// Color used by the title and the icon of the setting.
   Color _textColor(BuildContext context) => active
@@ -230,10 +230,10 @@ class ProfilItem extends StatelessWidget {
 }
 
 /// Always the last item in the [GridView]. Calls [createProfil] when tapped on.
-class CreateProfilItem extends StatelessWidget {
+class _CreateProfilItem extends StatelessWidget {
   final Function createProfil;
 
-  CreateProfilItem(this.createProfil);
+  _CreateProfilItem(this.createProfil);
 
   @override
   Widget build(BuildContext context) {
@@ -263,16 +263,16 @@ class CreateProfilItem extends StatelessWidget {
 
 /// Interface for creating a new profil. If no name for the new profil is given
 /// an automatic generated name will be used.
-class CreateProfilDialog extends StatefulWidget {
+class _CreateProfilDialog extends StatefulWidget {
   final ProfilProvider profilProvider;
 
-  CreateProfilDialog(this.profilProvider);
+  _CreateProfilDialog(this.profilProvider);
 
   @override
   State<StatefulWidget> createState() => _CreateProfilDialogState();
 }
 
-class _CreateProfilDialogState extends State<CreateProfilDialog> {
+class _CreateProfilDialogState extends State<_CreateProfilDialog> {
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController _controller;
@@ -361,16 +361,16 @@ class _CreateProfilDialogState extends State<CreateProfilDialog> {
 }
 
 /// Interface to edit the profil.
-class EditProfilDialog extends StatefulWidget {
+class _EditProfilDialog extends StatefulWidget {
   final ProfilProvider profilProvider;
 
-  EditProfilDialog(this.profilProvider);
+  _EditProfilDialog(this.profilProvider);
 
   @override
   State<StatefulWidget> createState() => _EditProfilDialogState();
 }
 
-class _EditProfilDialogState extends State<EditProfilDialog> {
+class _EditProfilDialogState extends State<_EditProfilDialog> {
   final _formKey = GlobalKey<FormState>();
 
   Profil _profil;
@@ -453,16 +453,16 @@ class _EditProfilDialogState extends State<EditProfilDialog> {
 }
 
 /// Interface for deleting a profil.
-class DeleteProfilDialog extends StatefulWidget {
+class _DeleteProfilDialog extends StatefulWidget {
   final ProfilProvider profilProvider;
 
-  DeleteProfilDialog(this.profilProvider);
+  _DeleteProfilDialog(this.profilProvider);
 
   @override
   _DeleteProfilDialogState createState() => _DeleteProfilDialogState();
 }
 
-class _DeleteProfilDialogState extends State<DeleteProfilDialog> {
+class _DeleteProfilDialogState extends State<_DeleteProfilDialog> {
   Profil _profil;
 
   /// Set to true when work is in progress. Normaly used to check wether to show
