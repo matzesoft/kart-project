@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/interfaces/cmd_interface.dart';
 import 'package:kart_project/pin.dart';
 import 'package:kart_project/extensions.dart';
+import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/strings.dart';
 
@@ -35,13 +36,15 @@ class BootProvider extends ChangeNotifier {
     return true;
   }
 
+  /// Sets [locked] to true.
   void lock() {
     _locked = true;
     notifyListeners();
   }
 
+  /// Shuts down the raspberry pi.
   Future powerOff(BuildContext context) async {
-    // TODO: Implement Providers
+    context.read<AppearanceProvider>().powerOff();
     _cmdInterface.runCmd('sudo poweroff');
   }
 }

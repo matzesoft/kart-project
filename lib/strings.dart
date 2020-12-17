@@ -47,6 +47,9 @@ class Strings {
   static String get setMaxLightBrightness =>
       _strings['set_max_light_brightness'];
   static String get changeAppTheme => _strings['change_app_theme'];
+  static String get lock => _strings['lock'];
+  static String get powerOff => _strings['power_off'];
+  static String get turningOff => _strings['turning_off'];
 
   static final Map<String, String> _strings = {
     "profiles": "Profile",
@@ -98,5 +101,8 @@ class Strings {
     "set_max_light_brightness":
         "Stelle die maximale Helligkeit der Scheinwerfer ein.",
     "change_app_theme": "Ändere das Thema der App",
+    "lock": "Sperren",
+    "power_off": "Ausschalten",
+    "turning_off": "Wird ausgeschalten..."
   };
 }

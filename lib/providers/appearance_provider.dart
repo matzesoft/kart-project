@@ -112,6 +112,11 @@ class AppearanceProvider extends ChangeNotifier {
     if (locked == true && lightState == LightState.on)
       setLightState(LightState.dimmed, notify: false);
   }
+
+  /// Should be called when the software wants to shutdown.
+  void powerOff() {
+    setLightState(LightState.off, notify: false);
+  }
 }
 
 class LightController {
