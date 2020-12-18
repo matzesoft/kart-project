@@ -23,7 +23,7 @@ We had the idea of having multiple profiles, so when you are using the kart, all
 kids are driving with the kart because you should be able to shrink the maximum speed.
 
 ### Map
-We are also planning to add a map and already made it in some way with the [flutter_map](https://pub.dev/packages/flutter_map#offline-maps) package.
+We are also planning to add a map and already made it in some way with the [flutter_map](https://pub.dev/packages/flutter_map) package.
 
 ![Screenshot](./screenshots/2020_07_23.jpeg)
 
