@@ -24,13 +24,16 @@ class PwmInterface {
   ///
   /// If not already happend, the mode of the [pin] will be set to [PWM_OUTPUT].
   void setDutyCycle(int pin, double factor) {
-    _init();
     if (!_pins.containsKey(pin)) {
       throw ArgumentError(
         'Pin $pin does not support PWM, only pins 12, 13, 18 and 19 do. To check which pin '
         'to choose go to https://pinout.xyz/. The PwmProvider uses the deafult BCM pins.',
       );
     }
+    if (factor < 0 || factor > 1) {
+      throw RangeError("Factor must be set between 0 and 1.");
+    }
+    _init();
     if (!_pins[pin]) _pwmNative.pinMode(pin, PWM_OUTPUT);
 
     int dutyCycle = (factor * PWM_RANGE).round();
