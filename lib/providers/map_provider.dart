@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:kart_project/models/location.dart';
 import 'package:kart_project/models/profil.dart';
-import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/strings.dart';
@@ -45,7 +44,7 @@ class MapProvider extends ChangeNotifier {
   /// Sets and updates the location values based on the [index]. Only updates
   /// its listeners if there is a change and [notify] is set to true.
   void _setLocation(int index, Location location, {bool notify: true}) {
-    if (!location.compare(_locationOfIndex(index))) {
+    if (!location.equals(_locationOfIndex(index))) {
       if (index == 1) location1 = location;
       if (index == 2) location2 = location;
       if (notify) notifyListeners();
@@ -53,17 +52,18 @@ class MapProvider extends ChangeNotifier {
   }
 
   /// Updates the location values to the current bounds. The [index] defines if
-  /// [location1] or [location2] should be used.
+  /// [location1] or [location2] should be used. Informs the user when trying to
+  /// save the home coordinates.
   Future setCurrentLocation(BuildContext context, int index) async {
-    context.read<NotificationsProvider>().showConfirmNotification(
-          icon: EvaIcons.pinOutline,
-          message: Strings.locationWasSaved,
-        );
     Location location = Location(
       zoom: controller.zoom,
       coordinates: controller.center,
     );
     _setLocation(index, location);
+    context.showNotification(
+      icon: EvaIcons.pinOutline,
+      message: Strings.locationWasSaved,
+    );
     await context.read<ProfilProvider>().setLocation(index, location);
   }
 
@@ -80,8 +80,11 @@ class MapProvider extends ChangeNotifier {
   /// Moves to [location1] or [location2] based on the [index].
   void toLocation(BuildContext context, int index) {
     Location location = _locationOfIndex(index);
-    if (location == null) {
-      // TODO: Add notification
+    if (location.isNull) {
+      context.showInformNotification(
+        icon: EvaIcons.pinOutline,
+        message: Strings.saveLocationExplanation,
+      );
     } else {
       _moveToLocation(location);
     }

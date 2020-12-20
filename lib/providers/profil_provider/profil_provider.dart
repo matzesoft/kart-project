@@ -2,7 +2,6 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kart_project/models/location.dart';
 import 'package:kart_project/models/profil.dart';
-import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/profil_provider/profil_database.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/extensions.dart';
@@ -78,7 +77,7 @@ class ProfilProvider extends ChangeNotifier {
       await _db.createProfil(profil);
       await _updateProfilesList();
       await setProfil(profilId);
-      context.showConfirmNotification(
+      context.showNotification(
         icon: EvaIcons.plusOutline,
         message: Strings.profilWasCreated,
       );
@@ -97,10 +96,10 @@ class ProfilProvider extends ChangeNotifier {
       await _db.deleteProfil(currentProfil.id);
       await _updateProfilesList();
       await setProfil(profiles[0].id);
-      context.read<NotificationsProvider>().showConfirmNotification(
-            icon: EvaIcons.trash2Outline,
-            message: Strings.profilWasDeleted,
-          );
+      context.showNotification(
+        icon: EvaIcons.trash2Outline,
+        message: Strings.profilWasDeleted,
+      );
     } catch (error) {
       context.showErrorNotification(Strings.failedDeletingProfil);
     }
@@ -114,7 +113,7 @@ class ProfilProvider extends ChangeNotifier {
     try {
       await _updateProfil(<String, Object>{nameColumn: name});
       notifyListeners();
-      context.showConfirmNotification(
+      context.showNotification(
         icon: EvaIcons.personOutline,
         message: Strings.profilWasUpdated,
       );

@@ -36,6 +36,8 @@ class Strings {
   static String get giveName => _strings['give_name'];
   static String get safe => _strings['safe'];
   static String get locationWasSaved => _strings['location_was_saved'];
+  static String get saveLocationExplanation =>
+      _strings['save_location_explanation'];
   static String get wrongPincode => _strings['wrong_pincode'];
   static String get unlocked => _strings['unlocked'];
   static String get projectName => _strings['project_name'];
@@ -49,9 +51,10 @@ class Strings {
   static String get changeAppTheme => _strings['change_app_theme'];
   static String get lock => _strings['lock'];
   static String get powerOff => _strings['power_off'];
-  static String get turningOff => _strings['turning_off'];
+  static String get poweringOff => _strings['powering_off'];
+  static String get reboot => _strings['reboot'];
 
-  static final Map<String, String> _strings = {
+  static const Map<String, String> _strings = {
     "profiles": "Profile",
     "profil": "Profil",
     "drive": "Fahren",
@@ -89,6 +92,8 @@ class Strings {
     "give_name": "Gebe einen Namen ein.",
     "safe": "Speichern",
     "location_was_saved": "Ort wurde gespeichert",
+    "save_location_explanation":
+        "Noch kein Ort gespeichert. Tippe dafür lange auf eines der Standort-Symbole.",
     "wrong_pincode": "Falscher Pincode",
     "unlocked": "Entsperrt",
     "project_name": "Kärrele",
@@ -103,6 +108,7 @@ class Strings {
     "change_app_theme": "Ändere das Thema der App",
     "lock": "Sperren",
     "power_off": "Ausschalten",
-    "turning_off": "Wird ausgeschalten..."
+    "powering_off": "Wird ausgeschalten...",
+    "reboot": "Neustart",
   };
 }

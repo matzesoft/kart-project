@@ -7,12 +7,14 @@ class Location {
   double zoom;
   LatLng coordinates;
 
+  bool get isNull => (zoom == null && coordinates == null) ? true : false;
+
   Location({@required this.zoom, @required this.coordinates});
 
   /// Compares two locations and returns true if they are the same.
   /// In some conditions the default `==`-operator might not work so you can use
   /// this method.
-  bool compare(Location second) {
+  bool equals(Location second) {
     if (second == null) return false;
     if ((zoom != second.zoom) || (coordinates != second.coordinates)) {
       return false;

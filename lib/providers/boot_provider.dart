@@ -4,7 +4,6 @@ import 'package:kart_project/interfaces/cmd_interface.dart';
 import 'package:kart_project/pin.dart';
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/providers/appearance_provider.dart';
-import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/strings.dart';
 
 /// Provides methods to unlock, lock or shutdown the kart.
@@ -18,9 +17,8 @@ class BootProvider extends ChangeNotifier {
   /// Checks if the given [pin] is correct. If correct [locked] will be set to
   /// false and true is returned.
   bool unlock(BuildContext context, String pin) {
-    final notifications = context.read<NotificationsProvider>();
     if (pin != Pin.pin) {
-      notifications.showConfirmNotification(
+      context.showNotification(
         icon: EvaIcons.closeOutline,
         message: Strings.wrongPincode,
       );
@@ -28,7 +26,7 @@ class BootProvider extends ChangeNotifier {
     }
 
     _locked = false;
-    notifications.showConfirmNotification(
+    context.showNotification(
       icon: EvaIcons.unlockOutline,
       message: Strings.unlocked,
     );
@@ -42,9 +40,20 @@ class BootProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Shuts down the raspberry pi.
+  /// Shuts down the RaspberryPi.
   Future powerOff(BuildContext context) async {
-    context.read<AppearanceProvider>().powerOff();
+    _powerOffProviders(context);
     _cmdInterface.runCmd('sudo poweroff');
+  }
+
+  /// Reboots the RaspberryPi
+  Future reboot(BuildContext context) async {
+    _powerOffProviders(context);
+    _cmdInterface.runCmd('sudo reboot'); // Test
+  }
+
+  /// Calls all providers to update their values for power off.
+  Future _powerOffProviders(BuildContext context) async {
+    context.read<AppearanceProvider>().powerOff();
   }
 }

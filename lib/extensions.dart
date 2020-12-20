@@ -16,14 +16,19 @@ extension ProviderExtensions<T> on BuildContext {
 
   /// Shows a error message using the [NotificationsProvider].
   void showErrorNotification(String message) {
-    this.read<NotificationsProvider>().showErrorNotification(
+    this.read<NotificationsProvider>().showErrorNotification(message);
+  }
+
+  void showInformNotification({IconData icon, String message}) {
+    this.read<NotificationsProvider>().showInformNotification(
+          icon: icon,
           message: message,
         );
   }
 
   /// Shows a confirm notification using the [NotificationsProvider].
-  void showConfirmNotification({IconData icon, String message}) {
-    this.read<NotificationsProvider>().showConfirmNotification(
+  void showNotification({IconData icon, String message}) {
+    this.read<NotificationsProvider>().showSimpleNotification(
           icon: icon,
           message: message,
         );
