@@ -179,6 +179,7 @@ class AppTheme {
         cursorColor: Colors.blueAccent[100],
         dialogTheme: DialogTheme(
           elevation: 12.0,
+          backgroundColor: Colors.grey[900],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),

@@ -1,7 +1,5 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:kart_project/design/loading_interface.dart';
-import 'package:kart_project/design/sized_alert_dialog.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/providers/boot_provider.dart';
@@ -22,11 +20,8 @@ class _ControlCenterState extends State<ControlCenter> {
     // TODO: Implement
   }
 
-  void powerOptions() {
-    showDialog(
-      context: context,
-      builder: (context) => BootOptionsDialog(),
-    );
+  void lock() {
+    context.read<BootProvider>().lock();
   }
 
   @override
@@ -57,8 +52,8 @@ class _ControlCenterState extends State<ControlCenter> {
                       // TODO: Improve transition
                       Expanded(
                         child: _ControlCenterButton(
-                          onPressed: powerOptions,
-                          icon: EvaIcons.powerOutline,
+                          onPressed: lock,
+                          icon: EvaIcons.lockOutline,
                         ),
                       ),
                       /*
@@ -212,97 +207,6 @@ class _ControlCenterButton extends StatelessWidget {
                     ? Theme.of(context).backgroundColor
                     : Theme.of(context).iconTheme.color,
               ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class BootOptionsDialog extends StatefulWidget {
-  @override
-  _BootOptionsDialogState createState() => _BootOptionsDialogState();
-}
-
-class _BootOptionsDialogState extends State<BootOptionsDialog> {
-  /// Set to true when work is in progress. Normaly used to check wether to show
-  /// a [LoadingInterface] or not.
-  bool _processing = false;
-
-  void lock(BuildContext context) {
-    context.read<BootProvider>().lock();
-    Navigator.pop(context);
-  }
-
-  Future powerOff(BuildContext context) async {
-    setState(() {
-      _processing = true;
-    });
-    await context.read<BootProvider>().powerOff(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_processing) {
-      return LoadingInterface(
-        message: Strings.turningOff,
-      ).dialogInterface();
-    }
-    return SizedAlertDialog(
-      content: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _BootOption(
-            title: Strings.lock,
-            icon: EvaIcons.lockOutline,
-            onTap: () {
-              lock(context);
-            },
-          ),
-          _BootOption(
-            title: Strings.powerOff,
-            icon: EvaIcons.powerOutline,
-            onTap: () {
-              powerOff(context);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BootOption extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final Function onTap;
-
-  _BootOption({this.title, this.icon, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsets.all(4.0),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(icon),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(title),
-                )
-              ],
             ),
           ),
         ),
