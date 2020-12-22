@@ -54,7 +54,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
 
   @override
   Widget build(BuildContext context) {
-    _profilProvider = context.watch<ProfilProvider>();
+    _profilProvider = context.profil();
     _profiles = _profilProvider.profiles;
     _currentProfil = _profilProvider.currentProfil;
 

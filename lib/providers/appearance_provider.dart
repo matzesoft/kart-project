@@ -5,6 +5,7 @@ import 'package:kart_project/interfaces/pwm_interface/pwm_interface.dart';
 import 'package:kart_project/models/profil.dart';
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/providers/boot_provider.dart';
+import 'package:provider/provider.dart';
 
 /// Brightness when the [LightState] is set to [LightState.dimmed].
 const double dimmedLightBrightness = 0.3;

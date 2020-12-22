@@ -4,7 +4,7 @@ import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/providers/boot_provider.dart';
 import 'package:kart_project/strings.dart';
-import 'package:kart_project/extensions.dart';
+import 'package:provider/provider.dart';
 
 class ControlCenter extends StatefulWidget {
   @override

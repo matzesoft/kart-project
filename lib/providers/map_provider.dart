@@ -64,7 +64,7 @@ class MapProvider extends ChangeNotifier {
       icon: EvaIcons.pinOutline,
       message: Strings.locationWasSaved,
     );
-    await context.read<ProfilProvider>().setLocation(index, location);
+    await context.profil().setLocation(index, location);
   }
 
   /// Moves the map to the given [location].

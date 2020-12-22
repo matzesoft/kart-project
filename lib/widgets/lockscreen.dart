@@ -4,7 +4,7 @@ import 'package:kart_project/design/loading_interface.dart';
 import 'package:kart_project/design/sized_alert_dialog.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/boot_provider.dart';
-import 'package:kart_project/extensions.dart';
+import 'package:provider/provider.dart';
 import 'package:kart_project/strings.dart';
 
 class Lockscreen extends StatelessWidget {

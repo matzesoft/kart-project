@@ -5,6 +5,7 @@ import 'package:kart_project/pin.dart';
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/strings.dart';
+import 'package:provider/provider.dart';
 
 /// Provides methods to unlock, lock or shutdown the kart.
 class BootProvider extends ChangeNotifier {
