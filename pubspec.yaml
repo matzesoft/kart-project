@@ -20,15 +20,15 @@ dependencies:
 
   # Platform specific
   ffi: ^0.1.3
-  flutter_gpiod: ^0.1.0+3
+  flutter_gpiod: ^0.2.0
 
   # Database
-  sqflite_common_ffi: ^1.1.0+1
-  shared_preferences: ^0.5.8
+  sqflite_common_ffi: ^1.1.1+1
+  shared_preferences: ^0.5.12+4
 
   # Map
   latlong: ^0.6.1
-  flutter_map: ^0.9.0
+  flutter_map: ^0.10.1+1
 
 
 dev_dependencies:
