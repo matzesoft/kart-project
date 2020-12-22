@@ -29,7 +29,7 @@
 /build/
 
 # Project related
-/map/
+/assets/map
 /lib/pin.dart
 
 # Web related
