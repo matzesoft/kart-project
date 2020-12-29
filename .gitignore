@@ -29,8 +29,12 @@
 /build/
 
 # Project related
-/assets/map
 /lib/pin.dart
+/assets/map/OSMBrightBW_Dark
+/assets/map/OSMBrightBW_Light
+/assets/map/MapBWDark.mbtiles
+/assets/map/MapBWLight.mbtiles
+/assets/map/template_osm-bright.zip
 
 # Web related
 lib/generated_plugin_registrant.dart

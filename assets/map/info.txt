@@ -1,0 +1,9 @@
+-----------
+Map Options
+-----------
+center: 		48.5268, 8.5642
+zoom: 		    14.0
+minZoom: 	    11.0
+maxZoom: 	    18.00
+swPanBoundary: 	48.2932, 8.0804
+nePanBoundary: 	48.7824, 9.0967
