@@ -46,6 +46,14 @@ class ControllerProvider extends ChangeNotifier {
     _controller.sendCommand(Byte("42"));
   }
 
+  // TODO: Remove after testing
+  void everyCmd() {
+    for (int i = 30; i < 256; i++) {
+      String value = i.toRadixString(16);
+      _controller.sendCommand(Byte(value));
+    }
+  }
+
   List<DataPackage> getData() {
     return _controller.readData();
   }
@@ -93,12 +101,14 @@ class ControllerInterface {
   void sendCommand(Byte cmd) {
     final package = DataPackage(cmd: cmd);
     final bytes = package.asList(verifiy: true);
+    print(bytes.toString());
     for (int i = 0; i < bytes.length; i++) {
       _serialPort.sendHex(bytes[i]);
     }
   }
 }
 
+// TODO: Make sure DataPackage values are always two digits long.
 /// Data package of the GoldenMotor Protocol.
 /// Learn more at: https://github.com/SunnyWolf/goldenmotor_protocol
 class DataPackage {

@@ -22,6 +22,10 @@ class _TestSerialState extends State<TestSerial> {
     motorProvider.getEcho();
   }
 
+  void everyCmd() {
+    motorProvider.everyCmd();
+  }
+
   Future getBytesOn() async {
     setState(() {
       dataPackagesOn = motorProvider.getData();
@@ -78,6 +82,12 @@ class _TestSerialState extends State<TestSerial> {
             echo();
           },
           child: Text("Echo"),
+        ),
+        RaisedButton(
+          onPressed: () {
+            everyCmd();
+          },
+          child: Text("Every CMD"),
         ),
         Row(
           children: [
