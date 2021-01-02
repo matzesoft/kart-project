@@ -3,6 +3,7 @@ class Strings {
   static String get profil => _strings['profil'];
   static String get drive => _strings['drive'];
   static String get lightAndDisplay => _strings['light_and_display'];
+  static String get audio => _strings['audio'];
   static String get about => _strings['about'];
   static String get on => _strings['on'];
   static String get off => _strings['off'];
@@ -53,12 +54,23 @@ class Strings {
   static String get powerOff => _strings['power_off'];
   static String get poweringOff => _strings['powering_off'];
   static String get reboot => _strings['reboot'];
+  static String get hearMusic => _strings['hear_music'];
+  static String get connectWithBluetooth => _strings['connect_with_bluetooth'];
+  static String get connectWithBluetoothExplanation =>
+      _strings['connect_with_bluetooth_explanation'];
+  static String get multipleDevices => _strings['multiple_devices'];
+  static String get multipleDevicesExplanation =>
+      _strings['multiple_devices_explanation'];
+  static String get musicControl => _strings['music_control'];
+  static String get musicControlExplanation =>
+      _strings['music_control_explanation'];
 
   static const Map<String, String> _strings = {
     "profiles": "Profile",
     "profil": "Profil",
     "drive": "Fahren",
-    "light_and_display": "Licht und Anzeige",
+    "light_and_display": "Licht & Anzeige",
+    "audio": "Audio",
     "about": "Über",
     "on": "An",
     "off": "Aus",
@@ -110,5 +122,20 @@ class Strings {
     "power_off": "Ausschalten",
     "powering_off": "Wird ausgeschalten...",
     "reboot": "Neustart",
+    "connect_with_bluetooth": "Per Bluetooth verbinden",
+    "connect_with_bluetooth_explanation":
+        "Stelle als Erstes sicher, dass aktuell "
+            "keine Geräte verbunden sind. Öffne dann die Bluetooth Einstellungen "
+            "deines Geräts und verbinde dich mit 'Raspberry Pi'.",
+    "multiple_devices": "Mehrere Geräte",
+    "multiple_devices_explanation":
+        "Es kann immer nur ein Gerät Musik abspielen lassen, es können jedoch "
+            "mehrere gleichzeitig verbunden sein. Um das Gerät zu wechseln pausiere "
+            "die Musik und starte sie auf dem gewünschten Gerät.",
+    "music_control": "Musiksteuerung",
+    "music_control_explanation":
+        "Um die Lautstärke zu ändern oder das Lied zu wechseln musst du dein "
+            "Gerät verwenden.",
+    "hear_music": "Musik hören",
   };
 }

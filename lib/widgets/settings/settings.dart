@@ -4,6 +4,7 @@ import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/appearance_setting.dart';
+import 'package:kart_project/widgets/settings/audio_setting.dart';
 import 'package:kart_project/widgets/settings/profil_picture.dart';
 import 'package:kart_project/widgets/settings/profil_setting.dart';
 import 'package:kart_project/widgets/settings/test_serial.dart';
@@ -24,6 +25,11 @@ List<Setting> get settings {
       title: Strings.lightAndDisplay,
       icon: EvaIcons.bulbOutline,
       content: AppearanceSetting(),
+    ),
+    Setting(
+      title: Strings.audio,
+      icon: EvaIcons.musicOutline,
+      content: AudioSetting(),
     ),
     Setting(
       title: Strings.about,
