@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:kart_project/interfaces/pwm_interface/pwm_interface.dart';
+import 'package:kart_project/interfaces/pwm_interface.dart';
 import 'package:kart_project/models/profil.dart';
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/providers/boot_provider.dart';
@@ -121,17 +121,17 @@ class AppearanceProvider extends ChangeNotifier {
 }
 
 class LightController {
-  final _pwm = PwmInterface();
+  final _pwm = PwmInterface(_lightPwmPin);
 
-  double _getDutyCyle(double factor) => sin(factor * (pi / 2));
+  double _getPwmRatio(double factor) => sin(factor * (pi / 2));
 
   /// Sets the duty cycle of the [_lightPwmPin] to the given [factor].
   void setLight(double factor) {
     // TODO: Implement animation
-    _setDutyCycle(factor);
+    _setPwmRatio(factor);
   }
 
-  void _setDutyCycle(double factor) {
-    _pwm.setDutyCycle(_lightPwmPin, _getDutyCyle(factor));
+  void _setPwmRatio(double factor) {
+    _pwm.setPwmRatio(_getPwmRatio(factor));
   }
 }
