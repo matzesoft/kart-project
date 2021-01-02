@@ -7,8 +7,8 @@ import 'package:kart_project/extensions.dart';
 import 'package:kart_project/strings.dart';
 import 'package:latlong/latlong.dart';
 
-const String _lightMapPath = "/home/pi/data/map_light/{z}/{x}/{y}.png";
-const String _darkMapPath = "/home/pi/data/map_dark/{z}/{x}/{y}.png";
+const String _lightMapPath = "/home/pi/data/map/map_light/{z}/{x}/{y}.png";
+const String _darkMapPath = "/home/pi/data/map/map_dark/{z}/{x}/{y}.png";
 
 final _home = Location(zoom: 14.0, coordinates: LatLng(48.5268, 8.5642));
 
