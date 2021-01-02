@@ -124,7 +124,7 @@ class _BootOptionsDialogState extends State<BootOptionsDialog> {
           ),
           _BootOption(
             title: Strings.reboot,
-            icon: EvaIcons.syncOutline,
+            icon: EvaIcons.refreshOutline,
             onTap: () {
               reboot(context);
             },
