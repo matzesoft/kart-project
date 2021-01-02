@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:kart_project/models/location.dart';
 import 'package:kart_project/models/profil.dart';
-import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/strings.dart';
 import 'package:latlong/latlong.dart';

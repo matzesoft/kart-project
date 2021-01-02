@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
-import 'package:kart_project/extensions.dart';
 import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/providers/boot_provider.dart';
 import 'package:kart_project/providers/controller_provider.dart';

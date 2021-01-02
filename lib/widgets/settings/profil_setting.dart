@@ -7,7 +7,7 @@ import 'package:kart_project/models/profil.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/profil_picture.dart';
-import 'package:kart_project/extensions.dart';
+import 'package:provider/provider.dart';
 
 /// Lets you create, switch, edit and delete profiles. Consists of a header
 /// which shows the [_CurrentProfil] and a [GridView] with a list of all profiles.
@@ -54,7 +54,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
 
   @override
   Widget build(BuildContext context) {
-    _profilProvider = context.profil();
+    _profilProvider = context.watch<ProfilProvider>();
     _profiles = _profilProvider.profiles;
     _currentProfil = _profilProvider.currentProfil;
 
