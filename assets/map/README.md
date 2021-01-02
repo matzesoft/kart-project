@@ -3,7 +3,7 @@
 Here is how to use the map data of this project in your own `flutter-pi` app.
 
 ### Download the data
-Extract the Zip and place it and the path you want. The data is on Google Drive and takes about 3.5GB:
+Extract the Zip and place it at the path you want. The data is on Google Drive and takes about 3.5GB:
 https://drive.google.com/file/d/153wxV6dhEK_cmEMHaGnxOh_uefwPiz8W/view?usp=sharing
 
 ### Code implementation
