@@ -2,6 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/appearance_provider.dart';
+import 'package:kart_project/providers/audio_provider.dart';
 import 'package:kart_project/providers/boot_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class _ControlCenterState extends State<ControlCenter> {
   }
 
   void hoot() async {
-    // TODO: Implement
+    context.read<AudioProvider>().playHootSound();
   }
 
   void lock() {

@@ -3,7 +3,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-class NotificationsProvider extends ChangeNotifier {
+class NotificationsProvider {
   /// Defines if currently a notification is shown on screen.
   bool _notificationOnScreen = false;
 
