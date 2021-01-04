@@ -8,15 +8,22 @@ typedef _SystemCmd = int Function(Pointer<Utf8> command);
 
 /// Uses `dart:ffi` to run system commands.
 class CmdInterface {
-  Function _systemCmd;
+  static DynamicLibrary _dyLib;
+  static Function _systemCmd;
 
   CmdInterface() {
-    final lib = DynamicLibrary.open(_libName);
-    _systemCmd = lib.lookupFunction<_system_cmd, _SystemCmd>("system");
+    _dyLib ??= DynamicLibrary.open(_libName);
+    _systemCmd ??= _dyLib.lookupFunction<_system_cmd, _SystemCmd>("system");
   }
 
-  /// Runs the given command by the system.
-  int runCmd(String cmd) {
-    return _systemCmd(Utf8.toUtf8(cmd));
+  /// Runs the given command by the system. Does not wait for the command to finish.
+  void runCmd(String cmd) {
+    // This disables the output. If you remove this, flutter-pi will wait for
+    // the command to finish until its updating its UI again.
+    cmd += ' &>/dev/null &';
+
+    final cmdPointer = Utf8.toUtf8(cmd);
+    _systemCmd(cmdPointer);
+    free(cmdPointer);
   }
 }
