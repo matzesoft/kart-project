@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/plugin_api.dart';
 import 'package:intl/intl.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:map/map.dart';
 
 class Entertainment extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _EntertainmentState extends State<Entertainment> {
       floatingActionButton: LocationControls(),
       body: Stack(
         children: [
-          Map(),
+          MapWidget(),
           Clock(),
         ],
       ),
@@ -139,6 +139,61 @@ class LocationButton extends StatelessWidget {
   }
 }
 
+class MapWidget extends StatefulWidget {
+  @override
+  _MapWidgetState createState() => _MapWidgetState();
+}
+
+class _MapWidgetState extends State<MapWidget> {
+  MapProvider _mapProvider;
+  Offset _dragStart;
+  double _scaleStart = 1.0;
+
+  void _onScaleStart(ScaleStartDetails details) {
+    _dragStart = details.focalPoint;
+    _scaleStart = 1.0;
+  }
+
+  void _onScaleUpdate(ScaleUpdateDetails details) {
+    final double scaleDiff = details.scale - _scaleStart;
+    _scaleStart = details.scale;
+
+    if (scaleDiff > 0) {
+      _mapProvider.increaseZoomLevel();
+    } else if (scaleDiff < 0) {
+      _mapProvider.decreaseZoomLevel();
+    } else {
+      final now = details.focalPoint;
+      final diff = now - _dragStart;
+      _dragStart = now;
+      _mapProvider.dragMap(diff.dx, diff.dy);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<MapProvider>(
+      builder: (context, mapProvider, child) {
+        _mapProvider = mapProvider;
+        return GestureDetector(
+          onScaleStart: _onScaleStart,
+          onScaleUpdate: _onScaleUpdate,
+          child: Map(
+            controller: _mapProvider.controller,
+            builder: (context, x, y, z) {
+              return Image.asset(
+                mapProvider.mapPath(context, x, y, z),
+                fit: BoxFit.cover,
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+}
+
+/*
 class Map extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -158,3 +213,4 @@ class Map extends StatelessWidget {
     );
   }
 }
+*/

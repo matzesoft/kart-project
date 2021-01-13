@@ -27,8 +27,8 @@ dependencies:
   shared_preferences: ^0.5.12+4
 
   # Map
-  latlong: ^0.6.1
-  flutter_map: ^0.10.1+1
+  map: ^0.2.0+1
+  latlng: ^0.0.2
 
 
 dev_dependencies:

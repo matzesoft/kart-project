@@ -31,11 +31,11 @@
 
 # Project related
 /lib/pin.dart
-/assets/map/OSMBrightBW_Dark
-/assets/map/OSMBrightBW_Light
-/assets/map/MapBWDark.mbtiles
-/assets/map/MapBWLight.mbtiles
 /assets/map/template_osm-bright.zip
+/assets/map/map_bw.osm.pbf
+/assets/map/TileMill Export/
+/assets/map/TileMill Projects/
+/assets/map/.map_bw.osm.pbf.icloud
 
 # Web related
 lib/generated_plugin_registrant.dart

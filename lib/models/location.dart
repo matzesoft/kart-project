@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:kart_project/providers/profil_provider/profil_database.dart';
-import 'package:latlong/latlong.dart';
+import 'package:latlng/latlng.dart';
 
 /// Takes a [zoom] level and coordinates of a location.
 class Location {

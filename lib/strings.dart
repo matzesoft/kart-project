@@ -33,6 +33,8 @@ class Strings {
   static String get failedCreatingProfil => _strings['failed_creating_profil'];
   static String get failedDeletingProfil => _strings['failed_deleting_profil'];
   static String get failedUpdatingProfil => _strings['failed_updating_profil'];
+  static String get failedSettingLocation =>
+      _strings['failed_setting_locations'];
   static String get editProfil => _strings['edit_profil'];
   static String get giveName => _strings['give_name'];
   static String get safe => _strings['safe'];
@@ -100,6 +102,7 @@ class Strings {
     "failed_creating_profil": "Erstellen des Profils fehlgeschlagen",
     "failed_deleting_profil": "Löschen des Profils fehlgeschlagen",
     "failed_updating_profil": "Aktualisieren des Profils fehlgeschlagen",
+    "failed_setting_locations": "Speichern des Orts fehlgeschlagen",
     "edit_profil": "Profil bearbeiten",
     "give_name": "Gebe einen Namen ein.",
     "safe": "Speichern",
