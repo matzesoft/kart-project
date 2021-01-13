@@ -7,6 +7,7 @@ import 'package:kart_project/widgets/settings/appearance_setting.dart';
 import 'package:kart_project/widgets/settings/audio_setting.dart';
 import 'package:kart_project/widgets/settings/profil_picture.dart';
 import 'package:kart_project/widgets/settings/profil_setting.dart';
+import 'package:kart_project/widgets/settings/test_gpios.dart';
 import 'package:kart_project/widgets/settings/test_serial.dart';
 import 'package:provider/provider.dart';
 
@@ -41,6 +42,11 @@ List<Setting> get settings {
       title: "Serielle Schnittstelle",
       icon: EvaIcons.archiveOutline,
       content: TestSerial(),
+    ),
+    Setting(
+      title: "GPIOs",
+      icon: EvaIcons.radioButtonOnOutline,
+      content: TestGpios(),
     ),
   ];
 }

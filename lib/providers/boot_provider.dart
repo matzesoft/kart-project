@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 /// Provides methods to unlock, lock or shutdown the kart.
 class BootProvider extends ChangeNotifier {
-  final CmdInterface _cmdInterface = CmdInterface();
+  final _cmdInterface = CmdInterface();
 
   /// If true the user has to input a pin code to unlock the kart.
   bool _locked = true;

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/interfaces/pwm_interface.dart';
 import 'package:kart_project/models/profil.dart';
 import 'package:kart_project/extensions.dart';
@@ -9,9 +10,6 @@ import 'package:provider/provider.dart';
 
 /// Brightness when the [LightState] is set to [LightState.dimmed].
 const double dimmedLightBrightness = 0.3;
-
-/// Pin the front light is connected to.
-const int _lightPwmPin = 12;
 
 /// Possible states of the light.
 enum LightState {
@@ -121,7 +119,13 @@ class AppearanceProvider extends ChangeNotifier {
 }
 
 class LightController {
-  final _pwm = PwmInterface(_lightPwmPin);
+  GpioInterface _gpios;
+  PwmInterface _pwm;
+
+  LightController() {
+    _gpios = GpioInterface();
+    _pwm = PwmInterface(_gpios.frontLight);
+  }
 
   double _getPwmRatio(double factor) => sin(factor * (pi / 2));
 

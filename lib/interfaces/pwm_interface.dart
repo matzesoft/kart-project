@@ -1,13 +1,9 @@
 import 'package:flutter_gpiod/flutter_gpiod.dart';
 
-/// Label of the default RaspberryPi GPIO chip.
-const String _gpioChip = 'pinctrl-bcm2835';
-const String _gpioConsumer = 'KartProject_PWM';
-
 /// Enables you to use software PWM on the given pin.
 class PwmInterface {
   /// Acess to the GPIO pin.
-  GpioLine _line;
+  GpioLine _gpio;
 
   /// Set to true if clock is running.
   bool _active = false;
@@ -18,12 +14,7 @@ class PwmInterface {
   /// Duration of one period in milliseconds. Default is 5.
   int periodDuration;
 
-  PwmInterface(int pin, {this.periodDuration: 5}) {
-    final gpioChips = FlutterGpiod.instance.chips;
-    final chip = gpioChips.singleWhere((c) => c.label == _gpioChip);
-    _line = chip.lines[pin];
-    _line.requestOutput(consumer: _gpioConsumer, initialValue: false);
-  }
+  PwmInterface(GpioLine gpio, {this.periodDuration: 5}) {}
 
   /// Sets the ratio of the period.
   void setPwmRatio(double newRatio) {
@@ -42,13 +33,13 @@ class PwmInterface {
     _active = true;
     while (_active) {
       if (_ratio != 0.0) {
-        _line.setValue(true);
+        _gpio.setValue(true);
         await Future.delayed(
           Duration(milliseconds: _calcDelay(_ratio)),
         );
       }
       if (_ratio != 1.0) {
-        _line.setValue(false);
+        _gpio.setValue(false);
         await Future.delayed(
           Duration(milliseconds: _calcDelay(1 - _ratio)),
         );

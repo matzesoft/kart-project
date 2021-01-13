@@ -29,3 +29,10 @@ extension ProviderExtensions<T> on BuildContext {
         );
   }
 }
+
+extension FlutterGpiodExtensions on GpioLine {
+  void toggle() {
+    final value = this.getValue();
+    this.setValue(!value);
+  }
+}
