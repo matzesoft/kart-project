@@ -29,36 +29,46 @@ class GpioInterface {
   }
 
   GpioLine get eLock {
-    _requestOutput(_eLockPin, true);
+    _requestOutput(_eLockPin, init: true);
     return _gpios[_eLockPin];
   }
 
   GpioLine get cruise {
-    _requestOutput(_cruisePin, true);
+    _requestOutput(_cruisePin, init: true);
     return _gpios[_cruisePin];
   }
 
+  GpioLine get fan {
+    _requestOutput(_fanPin);
+    return _gpios[_fanPin];
+  }
+
+  GpioLine get backLight {
+    _requestOutput(_backLightPin);
+    return _gpios[_backLightPin];
+  }
+
   GpioLine get ledBlue {
-    _requestOutput(_ledBluePin, false);
+    _requestOutput(_ledBluePin);
     return _gpios[_ledBluePin];
   }
 
   GpioLine get ledGreen {
-    _requestOutput(_ledGreenPin, false);
+    _requestOutput(_ledGreenPin);
     return _gpios[_ledGreenPin];
   }
 
   GpioLine get ledRed {
-    _requestOutput(_ledRedPin, false);
+    _requestOutput(_ledRedPin);
     return _gpios[_ledRedPin];
   }
 
   GpioLine get frontLight {
-    _requestOutput(_frontLightPin, false);
+    _requestOutput(_frontLightPin);
     return _gpios[_frontLightPin];
   }
 
-  void _requestOutput(int pin, bool init) {
+  void _requestOutput(int pin, {bool init: false}) {
     final gpio = _gpios[pin];
     if (!gpio.requested)
       gpio.requestOutput(initialValue: init, consumer: _gpioConsumer);
