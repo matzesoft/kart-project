@@ -4,7 +4,6 @@ import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/providers/audio_provider.dart';
 import 'package:kart_project/providers/boot_provider.dart';
-import 'package:kart_project/providers/controller_provider.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
@@ -52,9 +51,6 @@ class KartProject extends StatelessWidget {
               update: (_, profilProvider, mapProvider) {
                 return mapProvider.update(profilProvider.currentProfil);
               },
-            ),
-            ChangeNotifierProvider(
-              create: (context) => ControllerProvider(),
             ),
             Provider(
               create: (context) => NotificationsProvider(),
