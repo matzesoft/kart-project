@@ -1,9 +1,9 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
-import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/providers/audio_provider.dart';
 import 'package:kart_project/providers/boot_provider.dart';
+import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -96,21 +96,21 @@ class _LightSwitch extends StatefulWidget {
 }
 
 class _LightSwitchState extends State<_LightSwitch> {
-  AppearanceProvider _appearance;
+  LightProvider light;
   LightState state;
 
   void onPress() {
     if (state != LightState.off) {
       state == LightState.on
-          ? _appearance.setLightState(LightState.dimmed)
-          : _appearance.setLightState(LightState.on);
+          ? light.setLightState(LightState.dimmed)
+          : light.setLightState(LightState.on);
     }
   }
 
   void onLongPress() {
     state == LightState.off
-        ? _appearance.setLightState(LightState.dimmed)
-        : _appearance.setLightState(LightState.off);
+        ? light.setLightState(LightState.dimmed)
+        : light.setLightState(LightState.off);
   }
 
   Color _highlightColor(BuildContext context) {
@@ -133,40 +133,45 @@ class _LightSwitchState extends State<_LightSwitch> {
 
   @override
   Widget build(BuildContext context) {
-    _appearance = context.watch<AppearanceProvider>();
-    state = _appearance.lightState;
-    return SizedBox.expand(
-      child: Padding(
-        padding: EdgeInsets.all(6.0),
-        child: Material(
-          borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-          color: _backgroundColor(context),
-          child: InkWell(
-            onTap: onPress,
-            onLongPress: onLongPress,
-            borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    EvaIcons.sunOutline,
-                    size: 36,
-                    color: _highlightColor(context),
+    return Consumer<LightProvider>(
+      builder: (context, lightProvider, _) {
+        this.light = lightProvider;
+        this.state = light.lightState;
+
+        return SizedBox.expand(
+          child: Padding(
+            padding: EdgeInsets.all(6.0),
+            child: Material(
+              borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+              color: _backgroundColor(context),
+              child: InkWell(
+                onTap: onPress,
+                onLongPress: onLongPress,
+                borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        EvaIcons.sunOutline,
+                        size: 36,
+                        color: _highlightColor(context),
+                      ),
+                      Text(
+                        _text(),
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                              color: _highlightColor(context),
+                            ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    _text(),
-                    style: Theme.of(context).textTheme.bodyText2.copyWith(
-                          color: _highlightColor(context),
-                        ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

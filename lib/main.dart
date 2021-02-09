@@ -4,6 +4,7 @@ import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/providers/audio_provider.dart';
 import 'package:kart_project/providers/boot_provider.dart';
+import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
@@ -36,11 +37,17 @@ class KartProject extends StatelessWidget {
             ChangeNotifierProvider(
               create: (context) => BootProvider(),
             ),
-            ChangeNotifierProxyProvider2<ProfilProvider, BootProvider,
-                AppearanceProvider>(
+            ChangeNotifierProxyProvider<ProfilProvider, AppearanceProvider>(
               create: (context) => AppearanceProvider(context),
-              update: (_, profilProvider, bootProvider, appearanceProvider) {
-                return appearanceProvider.update(
+              update: (_, profilProvider, appearanceProvider) {
+                return appearanceProvider.update(profilProvider.currentProfil);
+              },
+            ),
+            ChangeNotifierProxyProvider2<ProfilProvider, BootProvider,
+                LightProvider>(
+              create: (context) => LightProvider(context),
+              update: (_, profilProvider, bootProvider, lightProvider) {
+                return lightProvider.update(
                   profilProvider.currentProfil,
                   bootProvider.locked,
                 );
