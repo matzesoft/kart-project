@@ -84,11 +84,6 @@ class _BootOptionsDialogState extends State<BootOptionsDialog> {
   /// a [LoadingInterface] or not.
   bool _processing = false;
 
-  void lock(BuildContext context) {
-    context.read<BootProvider>().lock();
-    Navigator.pop(context);
-  }
-
   Future powerOff(BuildContext context) async {
     setState(() {
       _processing = true;
