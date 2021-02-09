@@ -8,12 +8,13 @@ typedef _SystemCmd = int Function(Pointer<Utf8> command);
 
 /// Uses `dart:ffi` to run system commands.
 class CmdInterface {
-  static DynamicLibrary _dyLib;
   static Function _systemCmd;
 
   CmdInterface() {
-    _dyLib ??= DynamicLibrary.open(_libName);
-    _systemCmd ??= _dyLib.lookupFunction<_system_cmd, _SystemCmd>("system");
+    if (_systemCmd == null) {
+      final dyLib = DynamicLibrary.open(_libName);
+      _systemCmd ??= dyLib.lookupFunction<_system_cmd, _SystemCmd>("system");
+    }
   }
 
   /// Runs the given command by the system. Does not wait for the command to finish.
