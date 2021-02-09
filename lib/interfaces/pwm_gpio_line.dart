@@ -1,7 +1,7 @@
 import 'package:flutter_gpiod/flutter_gpiod.dart';
 
 /// Enables you to use software PWM on the given pin.
-class PwmInterface {
+class PwmGpioLine {
   /// Acess to the GPIO pin.
   GpioLine _gpio;
 
@@ -14,7 +14,7 @@ class PwmInterface {
   /// Duration of one period in milliseconds. Default is 5.
   int periodDuration;
 
-  PwmInterface(GpioLine gpio, {this.periodDuration: 5}) {}
+  PwmGpioLine(this._gpio, {this.periodDuration: 5});
 
   /// Sets the ratio of the period.
   void setPwmRatio(double newRatio) {
