@@ -15,9 +15,35 @@ class BootProvider extends ChangeNotifier {
   /// If true the user has to input a pin code to unlock the kart.
   bool get locked => _locked;
 
-  /// Checks if the given [pin] is correct. If correct [locked] will be set to
-  /// false and true is returned.
-  bool unlock(BuildContext context, String pin) {
+  /// Sets [locked] to true.
+  void lock() {
+    _locked = true;
+    notifyListeners();
+  }
+
+  /// If [pin] correct [locked] will be set to false.
+  void unlock(BuildContext context, String pin) {
+    if (checkPin(context, pin)) {
+      _locked = false;
+      context.showNotification(
+        icon: EvaIcons.unlockOutline,
+        message: Strings.unlocked,
+      );
+      notifyListeners();
+    }
+  }
+
+  /// Calls [_powerOffProviders] and exits to the Linux command line.
+  void exitToCmd(BuildContext context, String pin) {
+    if (checkPin(context, pin)) {
+      throw UnimplementedError();
+      // TODO: Implement
+      _powerOffProviders(context);
+    }
+  }
+
+  /// Returns true if the [pin] is correct. Shows a notification if not.
+  bool checkPin(BuildContext context, String pin) {
     if (pin != Pin.pin) {
       context.showNotification(
         icon: EvaIcons.closeOutline,
@@ -25,20 +51,7 @@ class BootProvider extends ChangeNotifier {
       );
       return false;
     }
-
-    _locked = false;
-    context.showNotification(
-      icon: EvaIcons.unlockOutline,
-      message: Strings.unlocked,
-    );
-    notifyListeners();
     return true;
-  }
-
-  /// Sets [locked] to true.
-  void lock() {
-    _locked = true;
-    notifyListeners();
   }
 
   /// Shuts down the RaspberryPi.

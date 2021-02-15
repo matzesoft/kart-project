@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/loading_interface.dart';
+import 'package:kart_project/design/number_pad.dart';
 import 'package:kart_project/design/sized_alert_dialog.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/boot_provider.dart';
@@ -8,6 +9,11 @@ import 'package:provider/provider.dart';
 import 'package:kart_project/strings.dart';
 
 class Lockscreen extends StatelessWidget {
+  /// Calls the unlock method in the [BootProvider] with the pin of the [NumberPad]
+  void unlock(BuildContext context, String pin) {
+    context.read<BootProvider>().unlock(context, pin);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -16,7 +22,11 @@ class Lockscreen extends StatelessWidget {
           child: WelcomeMessage(),
         ),
         Expanded(
-          child: NumberPad(),
+          child: NumberPad(
+            onConfirm: (String pin) {
+              unlock(context, pin);
+            },
+          ),
         ),
       ],
     );
@@ -161,136 +171,6 @@ class _BootOption extends StatelessWidget {
                   child: Text(title),
                 )
               ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class NumberPad extends StatefulWidget {
-  @override
-  _NumberPadState createState() => _NumberPadState();
-}
-
-class _NumberPadState extends State<NumberPad> {
-  TextEditingController controller = TextEditingController();
-
-  /// Adds the given number to the [pinInput]. If the [pinInput] is as long as
-  /// the requested pin it will be checked. If the pin is wrong [widget.clear] is called.
-  void addNumber(int number) {
-    controller.text += number.toString();
-  }
-
-  /// Removes the last number from the [pinInput].
-  void removeNumber() {
-    String pinInput = controller.text;
-    if (pinInput.length > 0) {
-      pinInput = pinInput.substring(0, pinInput.length - 1);
-    }
-    controller.text = pinInput;
-  }
-
-  void unlock() {
-    if (!context.read<BootProvider>().unlock(context, controller.text)) {
-      controller.clear();
-    }
-  }
-
-  Widget lockButtonWithText(int index) {
-    return _LockButton.withText(
-      onTap: () => addNumber(index),
-      text: index.toString(),
-    );
-  }
-
-  /// Creates a row of [_LockButton]. [startPoint] defines the number of the
-  /// first item.
-  Widget lockButtonRow(int startPoint, {int length: 3}) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(
-        length,
-        (index) => lockButtonWithText(startPoint + index),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8.0),
-          width: 160.0,
-          child: TextField(
-            readOnly: true,
-            controller: controller,
-            obscureText: true,
-            style: TextStyle(fontSize: 26.0),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Column(
-          children: [
-            lockButtonRow(7),
-            lockButtonRow(4),
-            lockButtonRow(1),
-          ],
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _LockButton(
-              onTap: () => unlock(),
-              child: Icon(EvaIcons.checkmarkOutline),
-            ),
-            lockButtonWithText(0),
-            _LockButton(
-              onTap: () => removeNumber(),
-              child: Icon(EvaIcons.arrowIosBackOutline),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-/// Circular button which can be used in numberpads.
-class _LockButton extends StatelessWidget {
-  static const _borderRadius = 90.0;
-  static const _size = 80.0;
-  final Function onTap;
-  final Widget child;
-
-  _LockButton({this.onTap, this.child});
-
-  _LockButton.withText({this.onTap, String text})
-      : child = Text(
-          text,
-          style: TextStyle(fontSize: 26.0),
-        );
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        height: _size,
-        width: _size,
-        child: Material(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: BorderRadius.circular(_borderRadius),
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(_borderRadius),
-            child: Container(
-              padding: EdgeInsets.all(24.0),
-              alignment: Alignment.center,
-              child: child,
             ),
           ),
         ),
