@@ -25,6 +25,8 @@ dependencies:
     path: ../wiring_pi_i2c
   wiring_pi_serial:
     path: ../wiring_pi_serial
+  wiring_pi_soft_pwm:
+    path: ../wiring_pi_soft_pwm
   ads1x15_rpi:
     path: ../ads1x15_rpi
 

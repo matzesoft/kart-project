@@ -1,20 +1,18 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/extensions.dart';
-import 'package:kart_project/interfaces/pwm_gpio_line.dart';
+import 'package:kart_project/interfaces/light_controller.dart';
 import 'package:kart_project/models/profil.dart';
 import 'package:kart_project/providers/boot_provider.dart';
 import 'package:provider/provider.dart';
 
 /// Brightness when the [LightState] is set to [LightState.dimmed].
-const double dimmedLightBrightness = 0.3;
+const DIMMED_LIGHT_BRIGHTNESS = 0.3;
 
 /// Possible states of the light.
 enum LightState {
   off,
 
-  /// Brightness will always be set to [dimmedLightBrightness].
+  /// Brightness will always be set to [DIMMED_LIGHT_BRIGHTNESS].
   dimmed,
 
   /// Brightness will be set to the [_maxLightBrightness] saved in the profil.
@@ -64,7 +62,7 @@ class LightProvider extends ChangeNotifier {
     if (state == LightState.off) {
       setLightBrightness(0.0);
     } else if (state == LightState.dimmed) {
-      setLightBrightness(dimmedLightBrightness);
+      setLightBrightness(DIMMED_LIGHT_BRIGHTNESS);
     } else if (state == LightState.on) {
       setLightBrightness(_maxLightBrightness);
     }
@@ -102,30 +100,5 @@ class LightProvider extends ChangeNotifier {
   /// Should be called when the software wants to shutdown.
   void powerOff() {
     setLightState(LightState.off, notify: false);
-  }
-}
-
-class LightController {
-  GpioInterface _gpios;
-  PwmGpioLine _pwm;
-
-  LightController() {
-    _gpios = GpioInterface();
-    final gpio = _gpios.frontLight;
-    _pwm = PwmGpioLine(gpio);
-  }
-
-  /// Sets the duty cycle of the [_lightPwmPin] to the given [factor].
-  void setLight(double factor) {
-    // TODO: Implement animation
-    _setPwmRatio(factor);
-  }
-
-  /// Because of hardware reasons, the brightness of the lights is changing much
-  /// faster in higher ranges. By recalculating the factor with the sine, the
-  /// factor fits better to the actual behavior.
-  void _setPwmRatio(double factor) {
-    factor = sin(factor * (pi / 2));
-    _pwm.setPwmRatio(factor);
   }
 }

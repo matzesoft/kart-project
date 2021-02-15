@@ -371,6 +371,13 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
+  wiring_pi_soft_pwm:
+    dependency: "direct main"
+    description:
+      path: "../wiring_pi_soft_pwm"
+      relative: true
+    source: path
+    version: "0.1.0"
   xdg_directories:
     dependency: transitive
     description:

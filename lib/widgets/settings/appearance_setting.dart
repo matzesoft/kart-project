@@ -87,11 +87,13 @@ class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
     light.setLightBrightness(value);
   }
 
-  /// Updates the value in the databse to value of the slider and resets the
-  /// light state.
+  /// Updates the value in the databse to value of the slider. Waits a short time
+  /// to show the user his current settings and resets to the [state] after it.
   void onChangeEnd(BuildContext context, double value) {
     light.setMaxLightBrightness(value, context: context);
-    light.setLightState(state);
+    Future.delayed(Duration(seconds: 2), () {
+      light.setLightState(state);
+    });
   }
 
   @override
@@ -102,7 +104,7 @@ class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
 
         return Slider(
           value: sliderValue,
-          min: dimmedLightBrightness,
+          min: DIMMED_LIGHT_BRIGHTNESS,
           max: 1.0,
           onChangeStart: (_) {
             onChangeStart();
