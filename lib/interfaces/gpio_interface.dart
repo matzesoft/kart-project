@@ -4,15 +4,15 @@ import 'package:flutter_gpiod/flutter_gpiod.dart';
 const String _gpioChip = 'pinctrl-bcm2835';
 const String _gpioConsumer = 'KartProject';
 
-const int _brakeInputPin = 7;
-const int _eLockPin = 9;
-const int _cruisePin = 11;
-const int _fanPin = 10;
-const int _backLightPin = 1;
-const int _ledBluePin = 21;
-const int _ledGreenPin = 20;
-const int _ledRedPin = 16;
-const int _frontLightPin = 12;
+const int BRAKE_INPUT_PIN = 7;
+const int ELOCK_PIN = 9;
+const int CRUISE_PIN = 11;
+const int FAN_PIN = 10;
+const int BACK_LIGHT_PIN = 1;
+const int LED_BLUE_PIN = 21;
+const int LED_GREEN_PIN = 20;
+const int LED_RED_PIN = 16;
+const int FRONT_LIGHT_PIN = 12;
 
 /// Defines which GPIOs are used for what purpose
 class GpioInterface {
@@ -27,15 +27,15 @@ class GpioInterface {
     }
   }
 
-  GpioLine get brakeInput => _requestInput(_brakeInputPin);
-  GpioLine get eLock => _requestOutput(_eLockPin, init: true);
-  GpioLine get cruise => _requestOutput(_cruisePin, init: true);
-  GpioLine get fan => _requestOutput(_fanPin);
-  GpioLine get backLight => _requestOutput(_backLightPin);
-  GpioLine get ledBlue => _requestOutput(_ledBluePin);
-  GpioLine get ledGreen => _requestOutput(_ledGreenPin);
-  GpioLine get ledRed => _requestOutput(_ledRedPin);
-  GpioLine get frontLight => _requestOutput(_frontLightPin);
+  GpioLine get brakeInput => _requestInput(BRAKE_INPUT_PIN);
+  GpioLine get eLock => _requestOutput(ELOCK_PIN, init: true);
+  GpioLine get cruise => _requestOutput(CRUISE_PIN, init: true);
+  GpioLine get fan => _requestOutput(FAN_PIN);
+  GpioLine get backLight => _requestOutput(BACK_LIGHT_PIN);
+  GpioLine get ledBlue => _requestOutput(LED_BLUE_PIN);
+  GpioLine get ledGreen => _requestOutput(LED_GREEN_PIN);
+  GpioLine get ledRed => _requestOutput(LED_RED_PIN);
+  GpioLine get frontLight => _requestOutput(FRONT_LIGHT_PIN);
 
   /// Checks if the gpio is already requested and requests a new output if not.
   /// [init] defines the value the GPIO should be set to.

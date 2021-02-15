@@ -1,7 +1,7 @@
 import 'package:ffi/ffi.dart';
 import 'dart:ffi';
 
-const String _libName = "libc.so.6";
+const String _LIB_NAME = "libc.so.6";
 
 typedef _system_cmd = Int32 Function(Pointer<Utf8> command);
 typedef _SystemCmd = int Function(Pointer<Utf8> command);
@@ -12,7 +12,7 @@ class CmdInterface {
 
   CmdInterface() {
     if (_systemCmd == null) {
-      final dyLib = DynamicLibrary.open(_libName);
+      final dyLib = DynamicLibrary.open(_LIB_NAME);
       _systemCmd ??= dyLib.lookupFunction<_system_cmd, _SystemCmd>("system");
     }
   }

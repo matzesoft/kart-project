@@ -24,11 +24,11 @@ class Profil {
 
   Map<String, Object> toMap() {
     var data = <String, Object>{
-      idColumn: id,
-      nameColumn: name,
-      themeModeColumn: themeMode,
-      maxSpeedColumn: maxSpeed,
-      maxLightBrightnessColumn: maxLightBrightness,
+      ID_COLUMN: id,
+      NAME_COLUMN: name,
+      THEME_MODE_COLUMN: themeMode,
+      MAX_SPEED_COLUMN: maxSpeed,
+      MAX_LIHGT_BRIGHTNESS_COLUMN: maxLightBrightness,
       // Locations
     };
     if (location1 != null) data.addAll(location1.toProfilMap(1));
@@ -37,11 +37,11 @@ class Profil {
   }
 
   Profil.fromMap(Map<String, dynamic> profil) {
-    id = profil[idColumn];
-    name = profil[nameColumn];
-    themeMode = profil[themeModeColumn];
-    maxSpeed = profil[maxSpeedColumn];
-    maxLightBrightness = profil[maxLightBrightnessColumn];
+    id = profil[ID_COLUMN];
+    name = profil[NAME_COLUMN];
+    themeMode = profil[THEME_MODE_COLUMN];
+    maxSpeed = profil[MAX_SPEED_COLUMN];
+    maxLightBrightness = profil[MAX_LIHGT_BRIGHTNESS_COLUMN];
     location1 = Location.fromProfilMap(1, profil);
     location2 = Location.fromProfilMap(2, profil);
   }

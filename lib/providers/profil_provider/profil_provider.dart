@@ -111,7 +111,7 @@ class ProfilProvider extends ChangeNotifier {
       throw ArgumentError("Name must not be null or empty.");
     }
     try {
-      await _updateProfil(<String, Object>{nameColumn: name});
+      await _updateProfil(<String, Object>{NAME_COLUMN: name});
       notifyListeners();
       context.showNotification(
         icon: EvaIcons.personOutline,
@@ -123,11 +123,11 @@ class ProfilProvider extends ChangeNotifier {
   }
 
   Future setThemeMode(int themeMode) async {
-    await _updateProfil({themeModeColumn: themeMode});
+    await _updateProfil({THEME_MODE_COLUMN: themeMode});
   }
 
   Future setMaxLightBrightness(double brightness) async {
-    await _updateProfil({maxLightBrightnessColumn: brightness});
+    await _updateProfil({MAX_LIHGT_BRIGHTNESS_COLUMN: brightness});
   }
 
   /// Updates the location at the given [index].

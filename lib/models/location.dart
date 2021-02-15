@@ -29,15 +29,15 @@ class Location {
     }
     if (index == 2) {
       return <String, Object>{
-        location2ZoomColumn: zoom,
-        location2LatColumn: coordinates.latitude,
-        location2LngColumn: coordinates.longitude,
+        LOCATION2_ZOOM_COLUMN: zoom,
+        LOCATION2_LAT_COLUMN: coordinates.latitude,
+        LOCATION2_LNG_COLUMN: coordinates.longitude,
       };
     }
     return <String, Object>{
-      location1ZoomColumn: zoom,
-      location1LatColumn: coordinates.latitude,
-      location1LngColumn: coordinates.longitude,
+      LOCATION1_ZOOM_COLUMN: zoom,
+      LOCATION1_LAT_COLUMN: coordinates.latitude,
+      LOCATION1_LNG_COLUMN: coordinates.longitude,
     };
   }
 
@@ -47,24 +47,24 @@ class Location {
       throw ArgumentError("Index must be 1 or 2.");
     }
     if (index == 1) {
-      if (profil[location1ZoomColumn] != null) {
-        zoom = profil[location1ZoomColumn];
+      if (profil[LOCATION1_ZOOM_COLUMN] != null) {
+        zoom = profil[LOCATION1_ZOOM_COLUMN];
       }
-      if ((profil[location1LatColumn] != null) &&
-          (profil[location1LngColumn] != null)) {
+      if ((profil[LOCATION1_LAT_COLUMN] != null) &&
+          (profil[LOCATION1_LNG_COLUMN] != null)) {
         coordinates = LatLng(
-          profil[location1LatColumn],
-          profil[location1LngColumn],
+          profil[LOCATION1_LAT_COLUMN],
+          profil[LOCATION1_LNG_COLUMN],
         );
       }
     } else {
-      if (profil[location2ZoomColumn] != null)
-        zoom = profil[location2ZoomColumn];
-      if ((profil[location2LatColumn] != null) &&
-          (profil[location2LngColumn] != null)) {
+      if (profil[LOCATION2_ZOOM_COLUMN] != null)
+        zoom = profil[LOCATION2_ZOOM_COLUMN];
+      if ((profil[LOCATION2_LAT_COLUMN] != null) &&
+          (profil[LOCATION2_LNG_COLUMN] != null)) {
         coordinates = LatLng(
-          profil[location2LatColumn],
-          profil[location2LngColumn],
+          profil[LOCATION2_LAT_COLUMN],
+          profil[LOCATION2_LNG_COLUMN],
         );
       }
     }

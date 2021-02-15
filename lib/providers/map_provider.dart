@@ -7,8 +7,8 @@ import 'package:kart_project/extensions.dart';
 import 'package:kart_project/strings.dart';
 import 'package:latlng/latlng.dart';
 
-const String _lightMapPath = "/home/pi/data/map/map_light";
-const String _darkMapPath = "/home/pi/data/map/map_dark";
+const _LIGHT_MAP_PATH = "/home/pi/data/map/map_light";
+const String _DARK_MAP_PATH = "/home/pi/data/map/map_dark";
 
 final _home = Location(zoom: 14.0, coordinates: LatLng(48.5268, 8.5642));
 
@@ -126,8 +126,8 @@ class MapProvider extends ChangeNotifier {
 
   /// Returns the path to the mapdata based on the theme.
   String mapPath(BuildContext context, int x, int y, int z) {
-    String path = _lightMapPath;
-    if (Theme.of(context).brightness == Brightness.dark) path = _darkMapPath;
+    String path = _LIGHT_MAP_PATH;
+    if (Theme.of(context).brightness == Brightness.dark) path = _DARK_MAP_PATH;
     path += "/$z/$x/$y.png";
     return path;
   }
