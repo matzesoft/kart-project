@@ -6,6 +6,12 @@ import 'package:kart_project/providers/profil_provider/profil_database.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/extensions.dart';
 
+enum ProfilsState {
+  notInitalized,
+  initalized,
+  failedToLoadDB,
+}
+
 /// Lets you create, update and delete profiles.
 ///
 /// Only calls its listeners if the profil is switched. If there are changes to
@@ -17,13 +23,15 @@ import 'package:kart_project/extensions.dart';
 /// provider itself and the [ProfilProvider].
 class ProfilProvider extends ChangeNotifier {
   final ProfilDatabase _db = ProfilDatabase();
+  List<Profil> _profiles;
+  ProfilsState _state = ProfilsState.notInitalized;
+
+  /// List of all profiles.
+  List<Profil> get profiles => _profiles;
 
   /// Indicates if the database is up and running and initalizing has been
   /// finished.
-  bool initalized = false;
-
-  /// List of all profiles.
-  List<Profil> profiles;
+  ProfilsState get state => _state;
 
   /// Returns the current profil.
   Profil get currentProfil {
@@ -36,18 +44,24 @@ class ProfilProvider extends ChangeNotifier {
     _init();
   }
 
-  /// Initalizes the database.
+  /// Initalizes the database. Sets [state] to [ProfilsState.failedToLoadDB] if
+  /// database crashed.
   Future _init() async {
-    await _db.initDatabase();
-    await _updateProfilesList();
-    initalized = true;
-    notifyListeners();
+    try {
+      await _db.initDatabase();
+      await _updateProfilesList();
+      _state = ProfilsState.initalized;
+    } catch (error) {
+      _state = ProfilsState.failedToLoadDB;
+    } finally {
+      notifyListeners();
+    }
   }
 
   /// Updates the [profiles] proberty.
   Future _updateProfilesList() async {
     List<Map> query = await _db.getProfilesList();
-    profiles = List.generate(
+    _profiles = List.generate(
       query.length,
       (index) => Profil.fromMap(query.elementAt(index)),
     );
@@ -60,8 +74,10 @@ class ProfilProvider extends ChangeNotifier {
   }
 
   /// Sets the new profil.
-  Future setProfil(int id) async {
-    await _db.setProfil(id);
+  Future setProfil(BuildContext context, int id) async {
+    await _db.setProfil(id).catchError((error) {
+      context.showErrorNotification(Strings.failedSettingProfil);
+    });
     notifyListeners();
   }
 
@@ -76,7 +92,7 @@ class ProfilProvider extends ChangeNotifier {
       Profil profil = Profil(profilId, name: name);
       await _db.createProfil(profil);
       await _updateProfilesList();
-      await setProfil(profilId);
+      await setProfil(context, profilId);
       context.showNotification(
         icon: EvaIcons.plusOutline,
         message: Strings.profilWasCreated,
@@ -95,7 +111,7 @@ class ProfilProvider extends ChangeNotifier {
     try {
       await _db.deleteProfil(currentProfil.id);
       await _updateProfilesList();
-      await setProfil(profiles[0].id);
+      await setProfil(context, profiles[0].id);
       context.showNotification(
         icon: EvaIcons.trash2Outline,
         message: Strings.profilWasDeleted,

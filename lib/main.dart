@@ -8,6 +8,7 @@ import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
+import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/lockscreen.dart';
 import 'package:kart_project/widgets/main/main.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
@@ -19,18 +20,28 @@ void main() {
   runApp(KartProject());
 }
 
-/// Implements all necessary providers for the project. Shows a dark loading
-/// screen until the database is loaded up and the
+/// Implements all necessary providers for the project.
+///
+/// Shows a dark loading screen until the database is initalized. Shows a
+/// splashscreen when failed to load the necessary database.
 class KartProject extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => ProfilProvider(),
-      child: Selector<ProfilProvider, bool>(
-        selector: (context, profilProvider) => profilProvider.initalized,
-        builder: (context, initalized, child) {
-          if (!initalized) return Container(color: Colors.black);
-          return child;
+      child: Selector<ProfilProvider, ProfilsState>(
+        selector: (context, profilProvider) => profilProvider.state,
+        builder: (context, state, child) {
+          if (state == ProfilsState.notInitalized) {
+            return Container(color: Colors.black);
+          } else if (state == ProfilsState.failedToLoadDB) {
+            return MaterialApp(
+              theme: AppTheme.lightTheme,
+              home: Scaffold(body: Text(Strings.failedLoadingDatabase)),
+            );
+          } else {
+            return child;
+          }
         },
         child: MultiProvider(
           providers: [

@@ -32,7 +32,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
   /// Switches the profil. Shows an [LoadingInterface] as long as processing.
   Future _setProfil(Profil profil) async {
     LoadingInterface.dialog(context, message: Strings.profilIsSwitched);
-    await _profilProvider.setProfil(profil.id);
+    await _profilProvider.setProfil(context, profil.id);
     Navigator.pop(context);
   }
 

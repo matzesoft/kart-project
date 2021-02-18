@@ -33,6 +33,9 @@ class Strings {
   static String get failedCreatingProfil => _STRINGS['failed_creating_profil'];
   static String get failedDeletingProfil => _STRINGS['failed_deleting_profil'];
   static String get failedUpdatingProfil => _STRINGS['failed_updating_profil'];
+  static String get failedSettingProfil => _STRINGS['failed_setting_profil'];
+  static String get failedLoadingDatabase =>
+      _STRINGS['failed_loading_database'];
   static String get failedSettingLocation =>
       _STRINGS['failed_setting_locations'];
   static String get editProfil => _STRINGS['edit_profil'];
@@ -102,7 +105,10 @@ class Strings {
     "failed_creating_profil": "Erstellen des Profils fehlgeschlagen",
     "failed_deleting_profil": "Löschen des Profils fehlgeschlagen",
     "failed_updating_profil": "Aktualisieren des Profils fehlgeschlagen",
+    "failed_setting_profil": "Festlegen des Profils fehlgeschlagen",
     "failed_setting_locations": "Speichern des Orts fehlgeschlagen",
+    "failed_loading_database": "Laden der Datenbank fehlgeschlagen. Die App "
+        "kann nur mit einer Datenbank funktionieren.",
     "edit_profil": "Profil bearbeiten",
     "give_name": "Gebe einen Namen ein.",
     "safe": "Speichern",
