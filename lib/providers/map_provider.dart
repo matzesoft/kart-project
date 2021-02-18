@@ -47,8 +47,7 @@ class MapProvider extends ChangeNotifier {
   }
 
   /// Updates the location values to the current bounds. The [index] defines if
-  /// [location1] or [location2] should be used. Informs the user when trying to
-  /// save the home coordinates.
+  /// [location1] or [location2] should be used.
   Future setCurrentLocation(BuildContext context, int index) async {
     try {
       Location location = Location(
