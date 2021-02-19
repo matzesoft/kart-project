@@ -7,20 +7,11 @@ Bounds:		7.4625,47.4689,10.6265,49.8415
 -------------------
 Map Export Settings
 -------------------
-VERSION1
 center: 		48.5268, 8.5642
 zoom: 		14.0
 minZoom: 	11.0
 maxZoom: 	18.0
 swPanBoundary: 	48.2932, 8.0804
 nePanBoundary: 	48.7824, 9.0967
+tileMill:	8.0804,48.2932,9.0967,48.7824
 Tiles:		534,363 tiles
-
-VERSION2
-center: 		48.5268, 8.5642
-zoom: 		14.0
-minZoom: 	11.0
-maxZoom: 	18.0
-swPanBoundary: 	48.15, 7.90
-nePanBoundary: 	48.90, 9.30
-Tiles:		1,125,330 tiles
