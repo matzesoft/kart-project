@@ -21,14 +21,8 @@ dependencies:
   # Platform specific
   ffi: ^0.1.3
   flutter_gpiod: ^0.2.0
-  wiring_pi_i2c:
-    path: ../wiring_pi_i2c
-  wiring_pi_serial:
-    path: ../wiring_pi_serial
   wiring_pi_soft_pwm:
     path: ../wiring_pi_soft_pwm
-  ads1x15_rpi:
-    path: ../ads1x15_rpi
 
   # Database
   sqflite_common_ffi: ^1.1.1+1
