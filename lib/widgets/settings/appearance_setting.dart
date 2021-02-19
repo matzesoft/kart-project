@@ -69,7 +69,7 @@ class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
   /// Sets the [sliderValue] to the current maximumm light brightness.
   @override
   void initState() {
-    sliderValue = context.read<LightProvider>().maxLightBrightness;
+    sliderValue = context.read<LightProvider>().fromtMaxBrightness;
     super.initState();
   }
 
@@ -84,7 +84,7 @@ class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
     setState(() {
       sliderValue = value;
     });
-    light.setLightBrightness(value);
+    light.frontLight.setLight(value);
   }
 
   /// Updates the value in the databse to value of the slider. Waits a short time
@@ -104,7 +104,7 @@ class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
 
         return Slider(
           value: sliderValue,
-          min: DIMMED_LIGHT_BRIGHTNESS,
+          min: FRONT_DIMMED_BRIGHTNESS,
           max: 1.0,
           onChangeStart: (_) {
             onChangeStart();
