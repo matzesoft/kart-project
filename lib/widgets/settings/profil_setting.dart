@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/design/loading_interface.dart';
 import 'package:kart_project/design/sized_alert_dialog.dart';
 import 'package:kart_project/design/theme.dart';
-import 'package:kart_project/models/profil.dart';
 import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/profil_picture.dart';

@@ -1,28 +1,28 @@
-import 'package:kart_project/models/profil.dart';
+import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-const String _DB_PATH = "/home/pi/data/kart_project.db";
-const int _DB_VERSION = 1;
-const String _TABLE = "Profiles";
+const _DB_PATH = "/home/pi/data/kart_project.db";
+const _DB_VERSION = 1;
+const _TABLE = "Profiles";
 
-const String _CURRENT_PROFIL_KEY = "current_profil";
-const String _PROFILES_INDEX_KEY = "profiles_index";
+const _CURRENT_PROFIL_KEY = "current_profil";
+const _PROFILES_INDEX_KEY = "profiles_index";
 
 /// Strings for the columns of the SQL database.
-const String ID_COLUMN = "id";
-const String NAME_COLUMN = "name";
-const String THEME_MODE_COLUMN = "theme_mode";
-const String MAX_SPEED_COLUMN = "max_speed";
-const String MAX_LIHGT_BRIGHTNESS_COLUMN = "max_light_brightness";
+const ID_COLUMN = "id";
+const NAME_COLUMN = "name";
+const THEME_MODE_COLUMN = "theme_mode";
+const MAX_LIHGT_BRIGHTNESS_COLUMN = "max_light_brightness";
+const LIGHT_STRIP_COLOR_COLUMN = "light_strip_color_column";
 // Locations
-const String LOCATION1_ZOOM_COLUMN = "location1_zoom";
-const String LOCATION1_LAT_COLUMN = "location1_lat";
-const String LOCATION1_LNG_COLUMN = "location1_lng";
-const String LOCATION2_ZOOM_COLUMN = "location2_zoom";
-const String LOCATION2_LAT_COLUMN = "location2_lat";
-const String LOCATION2_LNG_COLUMN = "location2_lng";
+const LOCATION1_ZOOM_COLUMN = "location1_zoom";
+const LOCATION1_LAT_COLUMN = "location1_lat";
+const LOCATION1_LNG_COLUMN = "location1_lng";
+const LOCATION2_ZOOM_COLUMN = "location2_zoom";
+const LOCATION2_LAT_COLUMN = "location2_lat";
+const LOCATION2_LNG_COLUMN = "location2_lng";
 
 /// Manages the database of the profiles. Lets you init, create, update and
 /// delete profiles.
@@ -68,8 +68,8 @@ class ProfilDatabase {
         $ID_COLUMN INTEGER PRIMARY KEY,
         $NAME_COLUMN TEXT,
         $THEME_MODE_COLUMN INTEGER,
-        $MAX_SPEED_COLUMN INTEGER,
         $MAX_LIHGT_BRIGHTNESS_COLUMN REAL,
+        $LIGHT_STRIP_COLOR_COLUMN TEXT,
 
         $LOCATION1_ZOOM_COLUMN REAL,
         $LOCATION1_LAT_COLUMN REAL,

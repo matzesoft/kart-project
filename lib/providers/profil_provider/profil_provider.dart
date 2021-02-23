@@ -1,7 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/widgets.dart';
-import 'package:kart_project/models/location.dart';
-import 'package:kart_project/models/profil.dart';
+import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/profil_provider/profil_database.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/extensions.dart';
@@ -146,8 +145,59 @@ class ProfilProvider extends ChangeNotifier {
     await _updateProfil({MAX_LIHGT_BRIGHTNESS_COLUMN: brightness});
   }
 
-  /// Updates the location at the given [index].
-  Future setLocation(int index, Location location) async {
-    await _updateProfil(location.toProfilMap(index));
+  Future setLocation(Map<String, dynamic> location) async {
+    await _updateProfil(location);
+  }
+
+  Future setLightStripColor(String color) async {
+    await _updateProfil({LIGHT_STRIP_COLOR_COLUMN: color});
+  }
+}
+
+
+/// Indicates one Profil. For more information on the specific values check out
+/// the assosiated provider.fe
+class Profil {
+  int id;
+  String name;
+  int themeMode;
+  int maxSpeed;
+  double maxLightBrightness;
+  String lightStripColor;
+  Location location1;
+  Location location2;
+
+  Profil(
+    this.id, {
+    this.name: "Standard Profil",
+    this.themeMode: 1,
+    this.maxSpeed: 80,
+    this.maxLightBrightness: 0.6,
+    this.location1,
+    this.location2,
+  });
+
+  Map<String, Object> toMap() {
+    var data = <String, Object>{
+      ID_COLUMN: id,
+      NAME_COLUMN: name,
+      THEME_MODE_COLUMN: themeMode,
+      MAX_LIHGT_BRIGHTNESS_COLUMN: maxLightBrightness,
+      LIGHT_STRIP_COLOR_COLUMN: lightStripColor,
+      // Locations
+    };
+    if (location1 != null) data.addAll(location1.toProfilMap(1));
+    if (location2 != null) data.addAll(location2.toProfilMap(2));
+    return data;
+  }
+
+  Profil.fromMap(Map<String, dynamic> profil) {
+    id = profil[ID_COLUMN];
+    name = profil[NAME_COLUMN];
+    themeMode = profil[THEME_MODE_COLUMN];
+    maxLightBrightness = profil[MAX_LIHGT_BRIGHTNESS_COLUMN];
+    lightStripColor = profil[LIGHT_STRIP_COLOR_COLUMN];
+    location1 = Location.fromProfilMap(1, profil);
+    location2 = Location.fromProfilMap(2, profil);
   }
 }

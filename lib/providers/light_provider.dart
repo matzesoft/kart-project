@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gpiod/flutter_gpiod.dart';
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
-import 'package:kart_project/models/profil.dart';
 import 'package:kart_project/providers/boot_provider.dart';
+import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:wiring_pi_soft_pwm/wiring_pi_soft_pwm.dart';
 
@@ -224,3 +224,5 @@ class BackLightController {
     _pwmGpio.write(value);
   }
 }
+
+class LightStripController {}

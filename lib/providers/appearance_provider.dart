@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:kart_project/models/profil.dart';
 import 'package:kart_project/extensions.dart';
+import 'package:kart_project/providers/profil_provider/profil_provider.dart';
 import 'package:provider/provider.dart';
 
 /// Provides methods to change the appearance of the kart.
