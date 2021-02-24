@@ -1,15 +1,15 @@
 # Service file which starts the KartProject on boot. This file should be
 # included under '/etc/systemd/system/'. To initalize it run the following
 # commands:
-# chmod 644 /etc/systemd/system/kart_project.service
-# systemctl enable kart_project.service
+# sudo systemctl enable kart-project
+# sudo systemctl start kart-project
 
 [Unit]
 Description=Runs the KartProject.
 
 [Service]
 Type=simple
-ExecStart=/bin/bash sudo ~/sdks/flutter-pi/out/flutter-pi ~/projects/kart_project
+ExecStart=sudo /home/pi/run.sh
 
 [Install]
 WantedBy=multi-user.target
