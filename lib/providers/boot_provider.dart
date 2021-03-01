@@ -33,14 +33,13 @@ class BootProvider extends ChangeNotifier {
     }
   }
 
-  /// Calls [_powerOffProviders] and exits to the Linux command line.
-  void exitToCmd(BuildContext context, String pin) {
-    if (checkPin(context, pin)) {
-      throw UnimplementedError();
-      // TODO: Implement
-      _powerOffProviders(context);
-    }
-  }
+  // Think about funtionality and need of the function
+  // /// Calls [_powerOffProviders] and exits to the Linux command line.
+  // void disableAppAndQuit(BuildContext context, String pin) {
+  //   if (checkPin(context, pin)) {
+  //     _cmdInterface.runCmd('pkill flutter-pi');
+  //   }
+  // }
 
   /// Returns true if the [pin] is correct. Shows a notification if not.
   bool checkPin(BuildContext context, String pin) {

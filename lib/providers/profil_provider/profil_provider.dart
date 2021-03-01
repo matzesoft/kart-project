@@ -46,6 +46,7 @@ class ProfilProvider extends ChangeNotifier {
   /// Initalizes the database. Sets [state] to [ProfilsState.failedToLoadDB] if
   /// database crashed.
   Future _init() async {
+    Profil._controller = this;
     try {
       await _db.initDatabase();
       await _updateProfilesList();
@@ -58,6 +59,9 @@ class ProfilProvider extends ChangeNotifier {
   }
 
   /// Updates the [profiles] proberty.
+  /// This method should be removed because profil should update its instances
+  /// by itsself.
+  @deprecated
   Future _updateProfilesList() async {
     List<Map> query = await _db.getProfilesList();
     _profiles = List.generate(
@@ -66,10 +70,12 @@ class ProfilProvider extends ChangeNotifier {
     );
   }
 
-  /// Updates the settings of the profil. Does NOT call [notifyListeners]!
-  Future _updateProfil(Map<String, Object> values) async {
+  /// Updates the settings of the profil. Only notifys listeners when [notify]
+  /// is true.
+  Future _updateProfil(Map<String, Object> values, {bool notify: false}) async {
     await _db.updateProfil(currentProfil.id, values);
     await _updateProfilesList();
+    if (notify) notifyListeners();
   }
 
   /// Sets the new profil.
@@ -119,45 +125,12 @@ class ProfilProvider extends ChangeNotifier {
       context.showErrorNotification(Strings.failedDeletingProfil);
     }
   }
-
-  /// Updates the name of the profil.
-  Future setName(BuildContext context, String name) async {
-    if (name == null || name.isEmpty) {
-      throw ArgumentError("Name must not be null or empty.");
-    }
-    try {
-      await _updateProfil(<String, Object>{NAME_COLUMN: name});
-      notifyListeners();
-      context.showNotification(
-        icon: EvaIcons.personOutline,
-        message: Strings.profilWasUpdated,
-      );
-    } catch (error) {
-      context.showErrorNotification(Strings.failedUpdatingProfil);
-    }
-  }
-
-  Future setThemeMode(int themeMode) async {
-    await _updateProfil({THEME_MODE_COLUMN: themeMode});
-  }
-
-  Future setMaxLightBrightness(double brightness) async {
-    await _updateProfil({MAX_LIHGT_BRIGHTNESS_COLUMN: brightness});
-  }
-
-  Future setLocation(Map<String, dynamic> location) async {
-    await _updateProfil(location);
-  }
-
-  Future setLightStripColor(String color) async {
-    await _updateProfil({LIGHT_STRIP_COLOR_COLUMN: color});
-  }
 }
 
-
 /// Indicates one Profil. For more information on the specific values check out
-/// the assosiated provider.fe
+/// the assosiated providers.
 class Profil {
+  static ProfilProvider _controller;
   int id;
   String name;
   int themeMode;
@@ -176,6 +149,44 @@ class Profil {
     this.location1,
     this.location2,
   });
+
+  Future setName(BuildContext context, String name) async {
+    if (name == null || name.isEmpty) {
+      throw ArgumentError("Name must not be null or empty.");
+    }
+    try {
+      await _controller._updateProfil(
+        <String, Object>{NAME_COLUMN: name},
+        notify: true,
+      );
+      context.showNotification(
+        icon: EvaIcons.personOutline,
+        message: Strings.profilWasUpdated,
+      );
+    } catch (error) {
+      context.showErrorNotification(Strings.failedUpdatingProfil);
+    }
+  }
+
+  Future setThemeMode(int themeMode) async {
+    await _updateDatabase({THEME_MODE_COLUMN: themeMode});
+  }
+
+  Future setMaxLightBrightness(double brightness) async {
+    await _updateDatabase({MAX_LIHGT_BRIGHTNESS_COLUMN: brightness});
+  }
+
+  Future setLocation(Map<String, dynamic> location) async {
+    await _updateDatabase(location);
+  }
+
+  Future setLightStripColor(String color) async {
+    await _updateDatabase({LIGHT_STRIP_COLOR_COLUMN: color});
+  }
+
+  Future _updateDatabase(Map<String, Object> data) async {
+    await _controller._updateProfil(data);
+  }
 
   Map<String, Object> toMap() {
     var data = <String, Object>{
