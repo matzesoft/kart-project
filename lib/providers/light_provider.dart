@@ -26,16 +26,16 @@ enum LightState {
 /// Lets you control the lights of the kart.
 class LightProvider extends ChangeNotifier {
   Profil _profil;
-  final frontLight = FrontLightController();
-  final backLight = BackLightController();
+  FrontLightController frontLight;
+  BackLightController backLight;
+  LightStripController lightStrip;
   LightState _lightState = LightState.off;
 
-  /// The maximum brightness the light can be set to.
-  double get frontMaxBrightness => _profil.maxLightBrightness;
-  set frontMaxBrightness(double maxBrightness) =>
-      _profil.maxLightBrightness = maxBrightness;
-
   LightProvider(BuildContext context) {
+    frontLight = FrontLightController(this);
+    backLight = BackLightController(this);
+    lightStrip = LightStripController();
+
     _profil = context.profil();
     _updateLightWithLock(context.locked());
   }
@@ -57,18 +57,11 @@ class LightProvider extends ChangeNotifier {
 
   /// Updates [lightState] and sets the light brightness based on the setting.
   /// Calls the listeners if notify is true.
-  void setLightState(LightState state, {bool notify: true}) {
+  void setLightState(LightState state) {
     _lightState = state;
-    if (state == LightState.off) {
-      frontLight.setLight(0.0);
-      backLight.setLight(false);
-    } else {
-      backLight.setLight(true);
-      state == LightState.dimmed
-          ? frontLight.setLight(FRONT_DIMMED_BRIGHTNESS)
-          : frontLight.setLight(frontMaxBrightness);
-    }
-    if (notify) notifyListeners();
+    frontLight._setLightByState(state);
+    backLight._setLightByState(state);
+    notifyListeners();
   }
 
   /// Should be called if there is an change to the profil. Checks if the profil
@@ -85,47 +78,46 @@ class LightProvider extends ChangeNotifier {
   /// to [LightState.dimmed] if locked. Does not update any listeners.
   void _updateLightWithLock(bool locked) {
     if (locked == true && _lightState == LightState.on)
-      setLightState(LightState.dimmed, notify: false);
+      setLightState(LightState.dimmed);
   }
 
   /// Should be called when the software wants to shutdown.
   void powerOff() {
-    setLightState(LightState.off, notify: false);
+    setLightState(LightState.off);
   }
 }
 
+/// How long one period takes. Calculated with a frequency of `30Hz`:
+/// `1 / 30Hz = 0.03125sek`
+const _PERIOD_DURATION = Duration(milliseconds: 31);
+
+/// How much the light brightness changes per period.
+const _PERIOD_CHANGE = 0.02;
+
 /// Controls the PWM values of the front light.
 class FrontLightController {
-  /// How long one period takes. Calculated with a frequency of `30Hz`:
-  /// `1 / 30Hz = 0.03125sek`
-  static const _PERIOD_DURATION = Duration(milliseconds: 31);
-
-  /// How much the light brightness changes per period.
-  static const _PERIOD_CHANGE = 0.02;
-
-  SoftPwmGpio _pwmGpio;
+  LightProvider _controller;
+  SoftPwmGpio _pwmGpio = GpioInterface.frontLight;
   Timer _timer;
-
-  /// Current brightness of the light.
   double _currentFactor = 0.0;
+  double _endFactor; // The light should be animated to.
 
-  /// The light should be animated to when changing the [currentFactor].
-  double _endFactor;
-
-  FrontLightController() {
-    _pwmGpio = GpioInterface.frontLight;
-  }
+  FrontLightController(this._controller);
 
   /// Current brightness of the light.
   double get currentFactor => _currentFactor;
-
-  /// Sets the current factor and updates the output of the pwm GPIO.
   set currentFactor(double factor) {
     _currentFactor = factor;
     _setPwmRatio(_currentFactor);
   }
 
-  void setLight(double factor) {
+  /// The maximum brightness the light can be set to.
+  double get maxBrightness => _controller._profil.maxLightBrightness;
+  set maxBrightness(double maxBrightness) {
+    _controller._profil.maxLightBrightness = maxBrightness;
+  }
+
+  void animateLight(double factor) {
     if (_timer != null && _timer.isActive) _timer.cancel();
     _endFactor = factor;
     final difference = (_endFactor - _currentFactor);
@@ -155,32 +147,42 @@ class FrontLightController {
           });
   }
 
+  /// Animates the light dependend on the [LightState].
+  void _setLightByState(LightState state) {
+    if (state == LightState.off) {
+      animateLight(0.0);
+    } else {
+      state == LightState.dimmed
+          ? animateLight(FRONT_DIMMED_BRIGHTNESS)
+          : animateLight(maxBrightness);
+    }
+  }
+
   /// Because of hardware reasons, the brightness of the lights is changing much
   /// faster in higher ranges. By recalculating the factor with the sine, the
   /// factor fits better to the actual behavior.
   void _setPwmRatio(double factor) {
+    print("FrontLight: $factor");
     factor = sin(factor * (pi / 2));
     final value = (factor * 100).round();
     _pwmGpio.write(value);
   }
 }
 
+/// Used when [LightState] is dimmed or on and the drivers isn't braking.
+const DEFAULT_BRIGHTNESS = 0.4;
+
+/// Used when [LightState] is dimmed or on and the drivers isn't braking.
+const BRAKING_BRIGHTNESS = 1.0;
+
 class BackLightController {
-  /// Used when [LightState] is dimmed or on and the drivers isn't braking.
-  static const DEFAULT_BRIGHTNESS = 0.4;
-
-  /// Used when [LightState] is dimmed or on and the drivers isn't braking.
-  static const BRAKING_BRIGHTNESS = 1.0;
-
-  SoftPwmGpio _pwmGpio;
-  GpioLine _brakeInput;
+  LightProvider _controller;
+  SoftPwmGpio _pwmGpio = GpioInterface.backLight;
+  GpioLine _brakeInput = GpioInterface.brakeInput;
   bool _lightOn = false;
   bool _braking = false;
 
-  BackLightController() {
-    _pwmGpio = GpioInterface.backLight;
-    _brakeInput = GpioInterface.brakeInput;
-
+  BackLightController(this._controller) {
     _brakeInput.onEvent.listen(_onBrake);
   }
 
@@ -191,6 +193,15 @@ class BackLightController {
       _lightOn
           ? _setLightBrightness(DEFAULT_BRIGHTNESS)
           : _setLightBrightness(0.0);
+    }
+  }
+
+  /// Animates the light dependend on the [LightState].
+  void _setLightByState(LightState state) {
+    if (state == LightState.off) {
+      setLight(false);
+    } else {
+      setLight(true);
     }
   }
 
@@ -210,6 +221,7 @@ class BackLightController {
 
   /// Sets the brightness light with PWM.
   void _setLightBrightness(double brightness) {
+    print("BackLight: $brightness");
     final value = (brightness * 100).round();
     _pwmGpio.write(value);
   }

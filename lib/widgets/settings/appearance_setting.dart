@@ -57,7 +57,7 @@ class MaxBrightnessSlider extends StatefulWidget {
 }
 
 class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
-  LightProvider light;
+  LightProvider controller;
 
   /// Holds the current value of the slider.
   double sliderValue;
@@ -69,13 +69,13 @@ class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
   /// Sets the [sliderValue] to the current maximumm light brightness.
   @override
   void initState() {
-    sliderValue = context.read<LightProvider>().frontMaxBrightness;
+    sliderValue = context.read<LightProvider>().frontLight.maxBrightness;
     super.initState();
   }
 
   /// Sets [state] to the current light state.
   void onChangeStart() {
-    state = light.lightState;
+    state = controller.lightState;
   }
 
   /// Updates the [sliderValue] and sets the light brightness to the indicated
@@ -84,15 +84,15 @@ class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
     setState(() {
       sliderValue = value;
     });
-    light.frontLight.setLight(value);
+    controller.frontLight.animateLight(value);
   }
 
   /// Updates the value in the databse to value of the slider. Waits a short time
   /// to show the user his current settings and resets to the [state] after it.
   void onChangeEnd(BuildContext context, double value) {
-    light.frontMaxBrightness = value;
+    controller.frontLight.maxBrightness = value;
     Future.delayed(Duration(seconds: 2), () {
-      light.setLightState(state);
+      controller.setLightState(state);
     });
   }
 
@@ -100,7 +100,7 @@ class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
   Widget build(BuildContext context) {
     return Consumer<LightProvider>(
       builder: (context, lightProvider, _) {
-        this.light = lightProvider;
+        this.controller = lightProvider;
 
         return Slider(
           value: sliderValue,
