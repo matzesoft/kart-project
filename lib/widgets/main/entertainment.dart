@@ -184,6 +184,9 @@ class _MapWidgetState extends State<MapWidget> {
               return Image.asset(
                 mapProvider.mapPath(context, x, y, z),
                 fit: BoxFit.cover,
+                errorBuilder: (context, _, __) {
+                  return Container(color: Theme.of(context).backgroundColor);
+                },
               );
             },
           ),
