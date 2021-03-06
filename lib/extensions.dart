@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gpiod/flutter_gpiod.dart';
+import 'package:kart_project/providers/boot_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
-import 'package:kart_project/providers/profil_provider/profil_provider.dart';
+import 'package:kart_project/providers/profil_provider.dart';
 import 'package:provider/provider.dart';
 
 extension ProviderExtensions<T> on BuildContext {
-  /// Returns the instance of the [ProfilReader].
-  ProfilProvider profil() => this.read<ProfilProvider>();
+  /// Returns the current profil.
+  Profil profil() => this.read<ProfilProvider>().currentProfil;
+
+  /// Returns true if the kart is locked.
+  bool locked() => this.read<BootProvider>().locked;
 
   /// Shows a error message using the [NotificationsProvider].
   void showErrorNotification(String message) {

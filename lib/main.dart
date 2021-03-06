@@ -7,7 +7,7 @@ import 'package:kart_project/providers/boot_provider.dart';
 import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
-import 'package:kart_project/providers/profil_provider/profil_provider.dart';
+import 'package:kart_project/providers/profil_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/lockscreen.dart';
 import 'package:kart_project/widgets/main/main.dart';

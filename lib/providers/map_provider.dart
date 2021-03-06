@@ -1,12 +1,11 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:kart_project/providers/profil_provider/profil_provider.dart';
+import 'package:kart_project/providers/profil_provider.dart';
 import 'package:map/map.dart' hide Map;
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/strings.dart';
 import 'package:latlng/latlng.dart';
 import 'package:flutter/widgets.dart';
-import 'package:kart_project/providers/profil_provider/profil_database.dart';
 
 const _LIGHT_MAP_PATH = "/home/pi/data/map/map_light";
 const String _DARK_MAP_PATH = "/home/pi/data/map/map_dark";
@@ -19,37 +18,38 @@ final _nePanBoundary = LatLng(48.7824, 9.0967);
 final _swPanBoundary = LatLng(48.2932, 8.0804);
 
 class MapProvider extends ChangeNotifier {
-  MapController controller = MapController(location: _home.coordinates);
-  Location location1;
-  Location location2;
+  final controller = MapController(location: _home.coordinates);
+  Profil _profil;
 
   MapProvider(BuildContext context) {
-    Profil profil = context.profil().currentProfil;
-    _updateLocationsWithProfil(profil);
+    _profil = context.profil();
   }
 
-  /// Updates the [MapProvider] with the data of the [profil] and returns the
+  /// Updates the [MapProvider] with the data of the [newProfil] and returns the
   /// object back. This is normally called inside a [ProxyProvider]s update method.
-  /// Does update all listeners.
-  MapProvider update(Profil profil) {
-    _updateLocationsWithProfil(profil);
+  MapProvider update(Profil newProfil) {
+    _profil = newProfil;
     notifyListeners();
+
     return this;
   }
 
+  Location get location1 => _profil.location1;
+  set location1(Location location) => _profil.location1 = location;
+
+  Location get location2 => _profil.location2;
+  set location2(Location location) => _profil.location2 = location;
+
   /// Sets and updates the location values based on the [index]. Only updates
   /// its listeners if there is a change and [notify] is set to true.
-  void _setLocation(int index, Location location, {bool notify: true}) {
-    if (!location.equals(_locationOfIndex(index))) {
-      if (index == 1) location1 = location;
-      if (index == 2) location2 = location;
-      if (notify) notifyListeners();
-    }
+  void _setLocation(int index, Location location) {
+    if (index == 1) location1 = location;
+    if (index == 2) location2 = location;
   }
 
   /// Updates the location values to the current bounds. The [index] defines if
   /// [location1] or [location2] should be used.
-  Future setCurrentLocation(BuildContext context, int index) async {
+  void setCurrentLocation(BuildContext context, int index) {
     try {
       Location location = Location(
         zoom: controller.zoom,
@@ -60,7 +60,6 @@ class MapProvider extends ChangeNotifier {
         icon: EvaIcons.pinOutline,
         message: Strings.locationWasSaved,
       );
-      await context.profil().setLocation(location.toProfilMap(index));
     } catch (error) {
       context.showErrorNotification(Strings.failedSettingLocation);
     }
@@ -140,13 +139,6 @@ class MapProvider extends ChangeNotifier {
     if (index == 1) return location1;
     return location2;
   }
-
-  /// Sets the location values to the ones of the [profil]. Gets normally
-  /// called when the profil has changed. Does not update any listeners.
-  void _updateLocationsWithProfil(Profil profil) {
-    _setLocation(1, profil.location1, notify: false);
-    _setLocation(2, profil.location2, notify: false);
-  }
 }
 
 /// Takes a [zoom] level and coordinates of a location.
@@ -169,7 +161,7 @@ class Location {
     return true;
   }
 
-  /// Returns the data in form of a map, with the syntax of the [ProfilDatabase].
+  /// Returns the data in form of a map, with the syntax of the [ProfilsSQLHelper].
   Map<String, Object> toProfilMap(int index) {
     if (!(index == 1 || index == 2)) {
       throw ArgumentError("Index must be 1 or 2.");
@@ -188,7 +180,7 @@ class Location {
     };
   }
 
-  /// Converts the data from a map with the [ProfilDatabase] syntax.
+  /// Converts the data from a map with the [ProfilsSQLHelper] syntax.
   Location.fromProfilMap(int index, Map<String, Object> profil) {
     if (!(index == 1 || index == 2)) {
       throw ArgumentError("Index must be 1 or 2.");

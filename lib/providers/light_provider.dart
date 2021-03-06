@@ -5,7 +5,7 @@ import 'package:flutter_gpiod/flutter_gpiod.dart';
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/providers/boot_provider.dart';
-import 'package:kart_project/providers/profil_provider/profil_provider.dart';
+import 'package:kart_project/providers/profil_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:wiring_pi_soft_pwm/wiring_pi_soft_pwm.dart';
 
@@ -25,24 +25,28 @@ enum LightState {
 
 /// Lets you control the lights of the kart.
 class LightProvider extends ChangeNotifier {
+  Profil _profil;
   final frontLight = FrontLightController();
   final backLight = BackLightController();
   LightState _lightState = LightState.off;
-  double _frontMaxBrightness = 0.6;
+
+  /// The maximum brightness the light can be set to.
+  double get frontMaxBrightness => _profil.maxLightBrightness;
+  set frontMaxBrightness(double maxBrightness) =>
+      _profil.maxLightBrightness = maxBrightness;
 
   LightProvider(BuildContext context) {
-    Profil profil = context.profil().currentProfil;
-    bool locked = context.read<BootProvider>().locked;
-    _updateLightWithProfil(profil);
-    _updateLightWithLock(locked);
+    _profil = context.profil();
+    _updateLightWithLock(context.locked());
   }
 
-  /// Updates the [LightProvider] with the data of the [profil] and the
+  /// Updates the [LightProvider] with the data of the [newprofil] and the
   /// [locked] value of the [BootProvider]. Returns the back the object itself.
   /// This is normally called inside a [ProxyProvider]s update method.
   /// Does update all listeners.
-  LightProvider update(Profil profil, bool locked) {
-    _updateLightWithProfil(profil);
+  LightProvider update(Profil newProfil, bool locked) {
+    _ifProfilSwitched(newProfil);
+    _profil = newProfil;
     _updateLightWithLock(locked);
     notifyListeners();
     return this;
@@ -50,10 +54,6 @@ class LightProvider extends ChangeNotifier {
 
   /// State of the light. Could be `off`, `dimmed` or `on`.
   LightState get lightState => _lightState;
-
-  /// The maximum brightness the light can be set to. This value is specific to
-  /// each profil.
-  double get fromtMaxBrightness => _frontMaxBrightness;
 
   /// Updates [lightState] and sets the light brightness based on the setting.
   /// Calls the listeners if notify is true.
@@ -66,29 +66,19 @@ class LightProvider extends ChangeNotifier {
       backLight.setLight(true);
       state == LightState.dimmed
           ? frontLight.setLight(FRONT_DIMMED_BRIGHTNESS)
-          : frontLight.setLight(_frontMaxBrightness);
+          : frontLight.setLight(frontMaxBrightness);
     }
     if (notify) notifyListeners();
   }
 
-  /// Updates [fromtMaxBrightness]. Calls the listeners if there are changes to
-  /// [fromtMaxBrightness] and [notify] is set to true. If [context] is given,
-  /// the new theme mode setting will be also set in the profiles database.
-  void setMaxLightBrightness(double brightness,
-      {BuildContext context, bool notify: true}) {
-    if (_frontMaxBrightness != brightness) {
-      _frontMaxBrightness = brightness;
-      if (context != null) context.profil().setMaxLightBrightness(brightness);
-      if (notify) notifyListeners();
+  /// Should be called if there is an change to the profil. Checks if the profil
+  /// has switched and sets [_lightState] to dimmed if true.
+  bool _ifProfilSwitched(Profil newProfil) {
+    if (newProfil != _profil) {
+      if (_lightState == LightState.on) setLightState(LightState.dimmed);
+      return true;
     }
-  }
-
-  /// Should be called if the current profil is switched. Updates the max light
-  /// brightness and light state. Normally called by the constructor or [update]
-  /// method. Does not update any listeners.
-  void _updateLightWithProfil(Profil profil) {
-    setMaxLightBrightness(profil.maxLightBrightness, notify: false);
-    if (_lightState == LightState.on) setLightState(LightState.dimmed);
+    return false;
   }
 
   /// Called when there is a change to the lock-state. Sets the [_lightState]
