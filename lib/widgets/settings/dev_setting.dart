@@ -22,8 +22,13 @@ class DevSetting extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: KartServiceEnable(devOptions),
+              child: FlatButton(
+                onPressed: () => systemProvider.disableDevOptions(context),
+                child: Text(Strings.disable),
+                textColor: Theme.of(context).errorColor,
+              ),
             ),
+            KartServiceEnable(devOptions),
           ],
         );
       },

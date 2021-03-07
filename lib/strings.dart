@@ -1,3 +1,6 @@
+const SOFTWARE_VERSION = "0.0.1+1";
+const GITHUB_REPO_LINK = "github.com/matzesoft/kart-project";
+
 class Strings {
   static String get profiles => _STRINGS['profiles'];
   static String get profil => _STRINGS['profil'];
@@ -75,6 +78,9 @@ class Strings {
   static String get systemdService => _STRINGS['systemd_service'];
   static String get enable => _STRINGS['enable'];
   static String get disable => _STRINGS['disable'];
+  static String get software => _STRINGS['software'];
+  static String get version => _STRINGS['version'];
+  static String get openSourceOnGitHub => _STRINGS['open_source_on_github'];
 
   static const Map<String, String> _STRINGS = {
     "profiles": "Profile",
@@ -158,5 +164,8 @@ class Strings {
     "systemd_service": "Systemd Service",
     "enable": "Aktivieren",
     "disable": "Deaktivieren",
+    "software": "Software",
+    "version": "Version",
+    "open_source_on_github": "OpenSource auf GitHub",
   };
 }

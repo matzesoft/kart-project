@@ -2,6 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/profil_provider.dart';
+import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/about_setting.dart';
 import 'package:kart_project/widgets/settings/appearance_setting.dart';
@@ -20,39 +21,38 @@ class Setting {
   Setting({this.title, this.icon, this.content});
 }
 
-List<Setting> get settings {
-  return [
-    Setting(
-      title: Strings.profiles,
-      content: ProfilSetting(),
-    ),
-    Setting(
-      title: Strings.drive,
-      icon: EvaIcons.navigationOutline,
-      content: DriveSetting(),
-    ),
-    Setting(
-      title: Strings.lightAndDisplay,
-      icon: EvaIcons.bulbOutline,
-      content: AppearanceSetting(),
-    ),
-    Setting(
-      title: Strings.audio,
-      icon: EvaIcons.musicOutline,
-      content: AudioSetting(),
-    ),
-    Setting(
-      title: Strings.about,
-      icon: EvaIcons.infoOutline,
-      content: AboutSetting(),
-    ),
-    Setting(
-      title: Strings.developer,
-      icon: EvaIcons.codeOutline,
-      content: DevSetting(), // TODO: Only show when in SystemProvider
-    ),
-  ];
-}
+List<Setting> settings = [
+  Setting(
+    title: Strings.profiles,
+    content: ProfilSetting(),
+  ),
+  Setting(
+    title: Strings.drive,
+    icon: EvaIcons.navigationOutline,
+    content: DriveSetting(),
+  ),
+  Setting(
+    title: Strings.lightAndDisplay,
+    icon: EvaIcons.bulbOutline,
+    content: AppearanceSetting(),
+  ),
+  Setting(
+    title: Strings.audio,
+    icon: EvaIcons.musicOutline,
+    content: AudioSetting(),
+  ),
+  Setting(
+    title: Strings.about,
+    icon: EvaIcons.infoOutline,
+    content: AboutSetting(),
+  ),
+  // The last setting is hidden when dev options are disabled.
+  Setting(
+    title: Strings.developer,
+    icon: EvaIcons.codeOutline,
+    content: DevSetting(),
+  ),
+];
 
 /// Menu which lets you switch between Profiles, change settings
 /// or get information about the system. Consists of a [Drawer]
@@ -226,15 +226,25 @@ class Drawer extends StatelessWidget {
                     },
                   ),
                 ),
-                Column(
-                  children: List.generate(
-                    settings.length,
-                    (itemIndex) {
-                      if (itemIndex == 0)
-                        return _profilItem(context, itemIndex);
-                      return _item(context, itemIndex);
-                    },
-                  ),
+                Selector<SystemProvider, bool>(
+                  selector: (context, p) => p.devOptionsEnabled,
+                  builder: (context, devOptionsEnabled, _) {
+                    // Hides the developer settings from options when not enabled.
+                    final length = devOptionsEnabled
+                        ? settings.length
+                        : settings.length - 1;
+
+                    return Column(
+                      children: List.generate(
+                        length,
+                        (itemIndex) {
+                          if (itemIndex == 0)
+                            return _profilItem(context, itemIndex);
+                          return _item(context, itemIndex);
+                        },
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

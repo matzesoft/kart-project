@@ -8,10 +8,7 @@ class AudioSetting extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: AudioStreaming(),
-        ),
+        AudioStreaming(),
       ],
     );
   }
