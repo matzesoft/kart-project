@@ -6,7 +6,7 @@ import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/about_setting.dart';
 import 'package:kart_project/widgets/settings/appearance_setting.dart';
 import 'package:kart_project/widgets/settings/audio_setting.dart';
-import 'package:kart_project/widgets/settings/dev_settings.dart';
+import 'package:kart_project/widgets/settings/dev_setting.dart';
 import 'package:kart_project/widgets/settings/drive_setting.dart';
 import 'package:kart_project/widgets/settings/profil_picture.dart';
 import 'package:kart_project/widgets/settings/profil_setting.dart';
