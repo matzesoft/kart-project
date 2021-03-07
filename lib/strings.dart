@@ -130,8 +130,7 @@ class Strings {
     "wrong_pincode": "Falscher Pincode",
     "unlocked": "Entsperrt",
     "project_name": "Kärrele",
-    "project_slogan":
-        "Ein selbst gebautes E-Kart, geplant und gebaut von zwei Brüdern.",
+    "project_slogan": "Ein E-Kart, geplant und gebaut von zwei Brüdern.",
     "appearance": "Erscheinungsbild",
     "light_mode": "Hell",
     "dark_mode": "Dunkel",
