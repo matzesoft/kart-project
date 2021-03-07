@@ -69,6 +69,12 @@ class Strings {
   static String get musicControl => _STRINGS['music_control'];
   static String get musicControlExplanation =>
       _STRINGS['music_control_explanation'];
+  static String get developer => _STRINGS['developer'];
+  static String get devOptionsEnabled => _STRINGS['dev_options_enabled'];
+  static String get devOptionsDisabled => _STRINGS['dev_options_disabled'];
+  static String get systemdService => _STRINGS['systemd_service'];
+  static String get enable => _STRINGS['enable'];
+  static String get disable => _STRINGS['disable'];
 
   static const Map<String, String> _STRINGS = {
     "profiles": "Profile",
@@ -146,5 +152,11 @@ class Strings {
         "Um die Lautstärke zu ändern oder das Lied zu wechseln musst du dein "
             "Gerät verwenden.",
     "hear_music": "Musik hören",
+    "developer": "Entwickler",
+    "dev_options_disabled": "Entwicklereinstellungen deaktiviert",
+    "dev_options_enabled": "Entwicklereinstellungen aktiviert",
+    "systemd_service": "Systemd Service",
+    "enable": "Aktivieren",
+    "disable": "Deaktivieren",
   };
 }

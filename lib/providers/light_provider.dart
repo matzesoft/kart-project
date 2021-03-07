@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gpiod/flutter_gpiod.dart';
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
-import 'package:kart_project/providers/boot_provider.dart';
 import 'package:kart_project/providers/profil_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:wiring_pi_soft_pwm/wiring_pi_soft_pwm.dart';
@@ -34,7 +33,7 @@ class LightProvider extends ChangeNotifier {
   LightProvider(BuildContext context) {
     frontLight = FrontLightController(this);
     backLight = BackLightController(this);
-    lightStrip = LightStripController();
+    lightStrip = LightStripController(this);
 
     _profil = context.profil();
     _updateLightWithLock(context.locked());
@@ -61,6 +60,7 @@ class LightProvider extends ChangeNotifier {
     _lightState = state;
     frontLight._setLightByState(state);
     backLight._setLightByState(state);
+    lightStrip._setLightByState(state);
     notifyListeners();
   }
 
@@ -162,7 +162,6 @@ class FrontLightController {
   /// faster in higher ranges. By recalculating the factor with the sine, the
   /// factor fits better to the actual behavior.
   void _setPwmRatio(double factor) {
-    print("FrontLight: $factor");
     factor = sin(factor * (pi / 2));
     final value = (factor * 100).round();
     _pwmGpio.write(value);
@@ -196,7 +195,7 @@ class BackLightController {
     }
   }
 
-  /// Animates the light dependend on the [LightState].
+  /// Sets the light dependend on the [LightState].
   void _setLightByState(LightState state) {
     if (state == LightState.off) {
       setLight(false);
@@ -221,10 +220,20 @@ class BackLightController {
 
   /// Sets the brightness light with PWM.
   void _setLightBrightness(double brightness) {
-    print("BackLight: $brightness");
     final value = (brightness * 100).round();
     _pwmGpio.write(value);
   }
 }
 
-class LightStripController {}
+class LightStripController {
+  LightProvider _controller;
+
+  LightStripController(this._controller);
+
+  /// Sets the light dependend on the [LightState].
+  void _setLightByState(LightState state) {
+    throw UnimplementedError();
+    if (state == LightState.off) {
+    } else {}
+  }
+}

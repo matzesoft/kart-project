@@ -4,14 +4,14 @@ import 'package:kart_project/design/loading_interface.dart';
 import 'package:kart_project/design/number_pad.dart';
 import 'package:kart_project/design/sized_alert_dialog.dart';
 import 'package:kart_project/design/theme.dart';
-import 'package:kart_project/providers/boot_provider.dart';
+import 'package:kart_project/providers/system_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:kart_project/strings.dart';
 
 class Lockscreen extends StatelessWidget {
   /// Calls the unlock method in the [BootProvider] with the pin of the [NumberPad]
   void unlock(BuildContext context, String pin) {
-    context.read<BootProvider>().unlock(context, pin);
+    context.read<SystemProvider>().unlock(context, pin);
   }
 
   @override
@@ -98,14 +98,14 @@ class _BootOptionsDialogState extends State<BootOptionsDialog> {
     setState(() {
       _processing = true;
     });
-    await context.read<BootProvider>().powerOff(context);
+    await context.read<SystemProvider>().powerOff(context);
   }
 
   Future reboot(BuildContext context) async {
     setState(() {
       _processing = true;
     });
-    await context.read<BootProvider>().reboot(context);
+    await context.read<SystemProvider>().reboot(context);
   }
 
   @override

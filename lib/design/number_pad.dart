@@ -132,3 +132,18 @@ class _LockButton extends StatelessWidget {
     );
   }
 }
+
+/// Implements the [NumberPad] inside a dialog and shows it.
+class NumberPadDialog {
+  final Function(String) onConfirm;
+
+  NumberPadDialog.show(BuildContext context, {@required this.onConfirm}) {
+    showDialog(context: context, builder: _build);
+  }
+
+  Widget _build(BuildContext context) {
+    return AlertDialog(
+      content: NumberPad(onConfirm: onConfirm),
+    );
+  }
+}

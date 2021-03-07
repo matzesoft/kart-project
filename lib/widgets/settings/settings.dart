@@ -3,12 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/profil_provider.dart';
 import 'package:kart_project/strings.dart';
+import 'package:kart_project/widgets/settings/about_setting.dart';
 import 'package:kart_project/widgets/settings/appearance_setting.dart';
 import 'package:kart_project/widgets/settings/audio_setting.dart';
+import 'package:kart_project/widgets/settings/dev_settings.dart';
+import 'package:kart_project/widgets/settings/drive_setting.dart';
 import 'package:kart_project/widgets/settings/profil_picture.dart';
 import 'package:kart_project/widgets/settings/profil_setting.dart';
-import 'package:kart_project/widgets/settings/test_gpios.dart';
 import 'package:provider/provider.dart';
+
+class Setting {
+  final String title;
+  final IconData icon;
+  final Widget content;
+
+  Setting({this.title, this.icon, this.content});
+}
 
 List<Setting> get settings {
   return [
@@ -36,21 +46,12 @@ List<Setting> get settings {
       icon: EvaIcons.infoOutline,
       content: AboutSetting(),
     ),
-    // TODO: Remove after testing
     Setting(
-      title: "GPIOs",
-      icon: EvaIcons.radioButtonOnOutline,
-      content: TestGpios(),
+      title: Strings.developer,
+      icon: EvaIcons.codeOutline,
+      content: DevSetting(), // TODO: Only show when in SystemProvider
     ),
   ];
-}
-
-class Setting {
-  final String title;
-  final IconData icon;
-  final Widget content;
-
-  Setting({this.title, this.icon, this.content});
 }
 
 /// Menu which lets you switch between Profiles, change settings
@@ -241,20 +242,5 @@ class Drawer extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class DriveSetting extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: Remove after testing
-    return Text("Drive Setting");
-  }
-}
-
-class AboutSetting extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Text("About Setting");
   }
 }

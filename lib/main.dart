@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/providers/audio_provider.dart';
-import 'package:kart_project/providers/boot_provider.dart';
 import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/profil_provider.dart';
+import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/lockscreen.dart';
 import 'package:kart_project/widgets/main/main.dart';
@@ -46,7 +46,7 @@ class KartProject extends StatelessWidget {
         child: MultiProvider(
           providers: [
             ChangeNotifierProvider(
-              create: (context) => BootProvider(),
+              create: (context) => SystemProvider(),
             ),
             ChangeNotifierProxyProvider<ProfilProvider, AppearanceProvider>(
               create: (context) => AppearanceProvider(context),
@@ -54,7 +54,7 @@ class KartProject extends StatelessWidget {
                 return appearanceProvider.update(profilProvider.currentProfil);
               },
             ),
-            ChangeNotifierProxyProvider2<ProfilProvider, BootProvider,
+            ChangeNotifierProxyProvider2<ProfilProvider, SystemProvider,
                 LightProvider>(
               create: (context) => LightProvider(context),
               update: (_, profilProvider, bootProvider, lightProvider) {
@@ -114,7 +114,7 @@ class Root extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      body: Selector<BootProvider, bool>(
+      body: Selector<SystemProvider, bool>(
         selector: (context, bootProvider) => bootProvider.locked,
         builder: (context, locked, child) {
           if (locked) return Lockscreen();
