@@ -144,8 +144,8 @@ class Profil {
       _name = name;
       _update({NAME_COLUMN: name});
       context.showNotification(
-        icon: EvaIcons.personOutline,
-        message: Strings.profilWasUpdated,
+        icon: EvaIcons.editOutline,
+        message: Strings.editProfil,
       );
     } catch (error) {
       context.showErrorNotification(Strings.failedUpdatingProfil);

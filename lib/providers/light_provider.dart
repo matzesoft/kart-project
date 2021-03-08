@@ -60,7 +60,7 @@ class LightProvider extends ChangeNotifier {
     _lightState = state;
     frontLight._setLightByState(state);
     backLight._setLightByState(state);
-    lightStrip._setLightByState(state);
+    // lightStrip._setLightByState(state);
     notifyListeners();
   }
 
