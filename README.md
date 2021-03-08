@@ -4,32 +4,35 @@ A [flutter-pi](https://github.com/ardera/flutter-pi)-app running on a RaspberryP
 planned by two brothers.
 
 ## Features
-### Drive information
-For sure, you should be able to see how fast you drive and how much engery you currently need. As a controller we are using the [VEC 500 from
-Golden Motors](https://goldenmotor.com). Thanks to @SunnyWolf how has already created a [repo](https://github.com/SunnyWolf/goldenmotor_protocol)
-with commands to use to communicate with the VEC 500 over UART.
+### Driving information
+To read the current speed and range are essential for every vehicle.
+
+We are using the [KellyController KLS7245HC](https://kellycontroller.com/shop/kls-h/) to control the electric motor. This controller enables to read the driving information via CAN Bus.
 
 ### Lights control
-We are using [2760lm leds](https://www.leds.de/nichia-nfcwl060b-v2-chip-on-board-modul-2760lm-5000k-cri-80-30608.html) for lightning. Because
-2760lm is very bright, we implemented PWM with the [wiringPi Library](http://wiringpi.com). This gives us the option to dim the lights whenever
-somebody is coming along. We are also planning to make the back lights be brighter whenever you brake.
+We are building in [2760lm leds](https://www.leds.de/nichia-nfcwl060b-v2-chip-on-board-modul-2760lm-5000k-cri-80-30608.html) for lightning. By implementing PWM with the [wiringPi Library](http://wiringpi.com), you can switch between high beam and low beam.
+Another feature PWM enables is to use the backlights aswell for brakelights by increasing the brightness whenever the driver is breaking.
+
+Because we are using plexiglass for the bottom of the kart, we also added a lightstrip which colors can be controlled in the software aswell and creates a nice looking shadow on the ground.
 
 ### Music control
-We are using some old speakers to play music on the kart while driving or to hoot. Our goal is it, to be able to connect your smartphone with
-the Raspberry Pi over Bluetooth to stream audio. This is still in early states and needs some work done.
+We are using some old speakers to play music on the kart or to hoot. Playing music is enabled with Bluetooth. Any smartphone can connect and start playing. Currently it is not possible to also control the music on the display. You have to use your phone to pause or switch between songs.
 
 ### Profil options
-We had the idea of having multiple profiles, so when you are using the kart, all settings are as you left of. This is also helpful when smaller
-kids are driving with the kart because you should be able to shrink the maximum speed.
+We had the idea of having multiple profiles, so when you are using the kart, all settings are adapted to your profil.
+
+### Dark & Light theme
+Having a dark and light theme has become normal for most modern apps. So why not adding it to our kart software?
 
 ### Map
-We are also planning to add a map and already made it in some way with the [flutter_map](https://pub.dev/packages/flutter_map) package.
+We added a map using this [map](https://pub.dev/packages/map)-package. The data is saved locally on the Raspberry Pi in form of pngs. To also support dark and light theme, there are two types of data packages.
 
-![Screenshot](./screenshots/2020_07_23.jpeg)
+## Screenshots
 
 ## Still in process...
-This project is not even near to finish but I already want to thank @ardera as the creator of [flutter-pi](https://github.com/ardera/flutter-pi)
-who already helped me in various situations.
+Day for day we are moving on by developing - and we already made a big process. But there is still a lot of to do...
 
-The current goal is to finish the different interfaces needed to cummincate with all the necessary devices. If you already found some bad code,
+I already want to thank @ardera as the creator of [flutter-pi](https://github.com/ardera/flutter-pi) who already helped me in various situations.
+
+If you already found some bad code,
 something to improve or just have a question about the project at all feel free to open an issue or write an [e-mail](mailto:matzesoft@gmail.com).
