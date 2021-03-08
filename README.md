@@ -29,6 +29,14 @@ We added a map using this [map](https://pub.dev/packages/map)-package. The data 
 
 ## Screenshots
 
+### Mainscreen
+![main_light](./screenshots/main_light.png)
+![main_dark](./screenshots/main_dark.png)
+
+### Settings
+![profil_setting](./screenshots/profil_setting.png)
+![light_setting](./screenshots/light_setting.png)
+
 ## Still in process...
 Day for day we are moving on by developing - and we already made a big process. But there is still a lot of to do...
 
