@@ -20,6 +20,7 @@ class _AppearanceSettingState extends State<AppearanceSetting> {
       children: [
         LightCard(),
         ThemeModeCard(),
+        LightStrip(),
       ],
     );
   }
@@ -181,6 +182,96 @@ class _ThemeModeCardState extends State<ThemeModeCard> {
           ),
         );
       },
+    );
+  }
+}
+
+class LightStrip extends StatefulWidget {
+  @override
+  _LightStripState createState() => _LightStripState();
+}
+
+class _LightStripState extends State<LightStrip> {
+  final _colors = LIGHT_STRIP_COLORS;
+  LightStripController _controller;
+
+  void onTap(Color color) {
+    _controller.color = color;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CardWithTitle(
+      title: "Bodenbeleuchtung",
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Consumer<LightProvider>(
+              builder: (context, lightProvider, child) {
+                this._controller = lightProvider.lightStrip;
+                final selectedColor = _controller.color;
+
+                return GridView(
+                  primary: false,
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 8),
+                  children: List.generate(_colors.length, (int index) {
+                    final color = _colors[index];
+                    final selected = color == selectedColor;
+                    return LightStripColor(color, selected, onTap);
+                  }),
+                );
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Wähle die Farbe der Bodenbeleuchtung."),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LightStripColor extends StatelessWidget {
+  final bool selected;
+  final Color color;
+  final Function(Color color) onTap;
+
+  LightStripColor(this.color, this.selected, this.onTap);
+
+  Color get iconColor =>
+      color.computeLuminance() > 0.5 ? Colors.black54 : Colors.white70;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(12.0),
+      width: 55,
+      height: 55,
+      child: Material(
+        borderRadius: BorderRadius.circular(90.0),
+        color: color,
+        elevation: 6.0,
+        shadowColor: color.withOpacity(0.2),
+        child: AnimatedSwitcher(
+          duration: Duration(milliseconds: 200),
+          child: selected
+              ? Icon(
+                  EvaIcons.checkmarkOutline,
+                  color: iconColor,
+                )
+              : InkWell(
+                  borderRadius: BorderRadius.circular(90.0),
+                  onTap: () {
+                    onTap(color);
+                  },
+                ),
+        ),
+      ),
     );
   }
 }
