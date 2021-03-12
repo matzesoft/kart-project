@@ -70,7 +70,7 @@ class ProfilProvider extends ChangeNotifier {
       if (name == null || name.isEmpty) {
         name = "${Strings.profil} $profilId";
       }
-      Profil profil = Profil(profilId, provider: this, name: name);
+      Profil profil = Profil(profilId, name: name);
       profiles.add(profil);
       await _sqlHelper.createProfil(profil);
       await switchProfil(context, profilId);
@@ -112,22 +112,23 @@ class Profil {
   String _name;
   int _themeMode;
   double _maxLightBrightness;
-  String _lightStripColor;
+  int _lightStripColor;
   Location _location1;
   Location _location2;
 
   Profil(
     this._id, {
-    ProfilProvider provider,
     String name: "Standard Profil",
     ThemeMode themeMode: ThemeMode.light,
     double maxLightBrightness: 0.6,
+    int lightStripColor: 0xFFFFFFFFF,
     Location location1,
     Location location2,
   }) {
     this._name = name;
     this._themeMode = themeMode.index;
     this._maxLightBrightness = maxLightBrightness;
+    this._lightStripColor = lightStripColor;
   }
 
   /// ID of the profil in the SQL DB.
@@ -161,13 +162,13 @@ class Profil {
   double get maxLightBrightness => _maxLightBrightness;
   set maxLightBrightness(double maxBrightness) {
     _maxLightBrightness = maxBrightness;
-    _update({MAX_LIHGT_BRIGHTNESS_COLUMN: maxBrightness});
+    _update({MAX_LIHGT_BRIGHTNESS_COLUMN: _maxLightBrightness});
   }
 
-  String get lightStripColor => _lightStripColor;
-  set lightStripColor(String color) {
-    _lightStripColor = color;
-    _update({LIGHT_STRIP_COLOR_COLUMN: color});
+  Color get lightStripColor => Color(_lightStripColor);
+  set lightStripColor(Color color) {
+    _lightStripColor = color.value;
+    _update({LIGHT_STRIP_COLOR_COLUMN: _lightStripColor});
   }
 
   Location get location1 => _location1;
@@ -195,7 +196,6 @@ class Profil {
       THEME_MODE_COLUMN: _themeMode,
       MAX_LIHGT_BRIGHTNESS_COLUMN: _maxLightBrightness,
       LIGHT_STRIP_COLOR_COLUMN: _lightStripColor,
-      // Locations
     };
     if (_location1 != null) data.addAll(location1.toProfilMap(1));
     if (_location2 != null) data.addAll(location2.toProfilMap(2));
@@ -279,7 +279,7 @@ class ProfilsSQLHelper {
         $NAME_COLUMN TEXT,
         $THEME_MODE_COLUMN INTEGER,
         $MAX_LIHGT_BRIGHTNESS_COLUMN REAL,
-        $LIGHT_STRIP_COLOR_COLUMN TEXT,
+        $LIGHT_STRIP_COLOR_COLUMN INTEGER,
 
         $LOCATION1_ZOOM_COLUMN REAL,
         $LOCATION1_LAT_COLUMN REAL,

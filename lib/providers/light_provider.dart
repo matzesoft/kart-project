@@ -32,7 +32,7 @@ class LightProvider extends ChangeNotifier {
 
   LightProvider(BuildContext context) {
     frontLight = FrontLightController(this);
-    backLight = BackLightController(this);
+    backLight = BackLightController();
     lightStrip = LightStripController(this);
 
     _profil = context.profil();
@@ -60,7 +60,7 @@ class LightProvider extends ChangeNotifier {
     _lightState = state;
     frontLight._setLightByState(state);
     backLight._setLightByState(state);
-    // lightStrip._setLightByState(state);
+    lightStrip._setLightByState(state);
     notifyListeners();
   }
 
@@ -175,21 +175,22 @@ const DEFAULT_BRIGHTNESS = 0.4;
 const BRAKING_BRIGHTNESS = 1.0;
 
 class BackLightController {
-  LightProvider _controller;
   SoftPwmGpio _pwmGpio = GpioInterface.backLight;
   GpioLine _brakeInput = GpioInterface.brakeInput;
-  bool _lightOn = false;
+  bool _active = false;
   bool _braking = false;
 
-  BackLightController(this._controller) {
+  BackLightController() {
     _brakeInput.onEvent.listen(_onBrake);
   }
 
-  /// Turns on or off the back light. Ignores any requests when the drivers brakes.
-  void setLight(bool on) {
-    _lightOn = on;
+  /// Wether the backlight is on or off.
+  bool get active => _active;
+  set active(bool on) {
+    _active = on;
+    // Ignores any requests when the drivers brakes.
     if (!_braking) {
-      _lightOn
+      _active
           ? _setLightBrightness(DEFAULT_BRIGHTNESS)
           : _setLightBrightness(0.0);
     }
@@ -198,9 +199,9 @@ class BackLightController {
   /// Sets the light dependend on the [LightState].
   void _setLightByState(LightState state) {
     if (state == LightState.off) {
-      setLight(false);
+      active = false;
     } else {
-      setLight(true);
+      active = true;
     }
   }
 
@@ -213,7 +214,7 @@ class BackLightController {
       if (_braking) {
         _setLightBrightness(BRAKING_BRIGHTNESS);
       } else {
-        setLight(_lightOn);
+        active = _active;
       }
     }
   }
@@ -225,15 +226,53 @@ class BackLightController {
   }
 }
 
+const LIGHT_STRIP_COLORS = [
+  Color(0xFFD6D6D6),
+  Color(0xFF00FFFF),
+  Color(0xFFFF00FF),
+  Color(0xFFFFFF00),
+  Color(0xFFFF0000),
+  Color(0xFF00FF00),
+  Color(0xFF0000FF),
+  Color(0xFF424242),
+];
+
 class LightStripController {
   LightProvider _controller;
+  bool _active = false;
+  final _red = GpioInterface.ledRed;
+  final _green = GpioInterface.ledGreen;
+  final _blue = GpioInterface.ledBlue;
 
   LightStripController(this._controller);
 
+  Color get color => _controller._profil.lightStripColor;
+  set color(Color color) {
+    _controller._profil.lightStripColor = color;
+    _updateLightStrip();
+  }
+
+  bool get active => _active;
+  set active(bool on) {
+    _active = on;
+    _updateLightStrip();
+  }
+
+  /// Checks [active] and sets the GPIOs to the current [color] of true.
+  void _updateLightStrip() {
+    if (active) {
+      color.red > 128 ? _red.setValue(true) : _red.setValue(false);
+      color.green > 128 ? _green.setValue(true) : _green.setValue(false);
+      color.blue > 128 ? _blue.setValue(true) : _blue.setValue(false);
+    } else {
+      _red.setValue(false);
+      _green.setValue(false);
+      _blue.setValue(false);
+    }
+  }
+
   /// Sets the light dependend on the [LightState].
   void _setLightByState(LightState state) {
-    throw UnimplementedError();
-    if (state == LightState.off) {
-    } else {}
+    state == LightState.off ? active = false : active = true;
   }
 }
