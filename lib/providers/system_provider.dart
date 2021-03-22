@@ -4,7 +4,9 @@ import 'package:kart_project/interfaces/cmd_interface.dart';
 import 'package:kart_project/pin.dart';
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/providers/light_provider.dart';
+import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/strings.dart';
+import 'package:kart_project/widgets/settings/settings.dart';
 import 'package:provider/provider.dart';
 
 /// Provides methods to unlock, lock or shutdown the kart.
@@ -119,4 +121,28 @@ class DeveloperOptions {
   //     _cmdInterface.runCmd('pkill flutter-pi');
   //   }
   // }
+
+  static const _NOTIFY_ID = "TEST_ERROR";
+
+  void createTestError(BuildContext context) {
+    final error = ErrorNotification(
+      _NOTIFY_ID,
+      icon: EvaIcons.alertCircleOutline,
+      categorie: "Test",
+      title: "Testfehlermeldung",
+      message:
+          "Diese Meldung dient zum Testen der Error Notifications Schnittstelle. "
+          "Es sollte eine Nachricht hinterlegt sein, welche den Fehler genauer beschreibt.",
+      moreDetails: (context) => Navigator.pushNamed(
+        context,
+        Settings.route,
+        arguments: settings.length - 1, // Developer Options
+      ),
+    );
+    context.read<NotificationsProvider>().error.create(error);
+  }
+
+  void closeTestError(BuildContext context) {
+    context.read<NotificationsProvider>().error.close(_NOTIFY_ID);
+  }
 }

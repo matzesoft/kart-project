@@ -29,6 +29,7 @@ class DevSetting extends StatelessWidget {
               ),
             ),
             KartServiceEnable(devOptions),
+            ErrorNotificationsTest(devOptions),
           ],
         );
       },
@@ -117,6 +118,35 @@ class _TestGpiosState extends State<TestGpios> {
           onPressed: () => toggleBlueLight(),
         ),
       ],
+    );
+  }
+}
+
+class ErrorNotificationsTest extends StatelessWidget {
+  final DeveloperOptions devOptions;
+
+  ErrorNotificationsTest(this.devOptions);
+
+  @override
+  Widget build(BuildContext context) {
+    return CardWithTitle(
+      title: "Error Notifications",
+      child: Column(
+        children: [
+          FlatButton(
+            child: Text("Create Testerror"),
+            onPressed: () {
+              devOptions.createTestError(context);
+            },
+          ),
+          FlatButton(
+            child: Text("Close Testerror"),
+            onPressed: () {
+              devOptions.closeTestError(context);
+            },
+          ),
+        ],
+      ),
     );
   }
 }

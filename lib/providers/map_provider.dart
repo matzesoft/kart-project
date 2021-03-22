@@ -61,7 +61,7 @@ class MapProvider extends ChangeNotifier {
         message: Strings.locationWasSaved,
       );
     } catch (error) {
-      context.showErrorNotification(Strings.failedSettingLocation);
+      context.showExceptionNotification(Strings.failedSettingLocation);
     }
   }
 

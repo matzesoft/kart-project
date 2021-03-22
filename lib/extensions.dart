@@ -14,12 +14,12 @@ extension ProviderExtensions<T> on BuildContext {
   bool locked() => this.read<SystemProvider>().locked;
 
   /// Shows a error message using the [NotificationsProvider].
-  void showErrorNotification(String message) {
-    this.read<NotificationsProvider>().showErrorNotification(message);
+  void showExceptionNotification(String message) {
+    this.read<NotificationsProvider>().simple.showException(message);
   }
 
   void showInformNotification({IconData icon, String message}) {
-    this.read<NotificationsProvider>().showInformNotification(
+    this.read<NotificationsProvider>().simple.showInform(
           icon: icon,
           message: message,
         );
@@ -27,7 +27,7 @@ extension ProviderExtensions<T> on BuildContext {
 
   /// Shows a confirm notification using the [NotificationsProvider].
   void showNotification({IconData icon, String message}) {
-    this.read<NotificationsProvider>().showSimpleNotification(
+    this.read<NotificationsProvider>().simple.show(
           icon: icon,
           message: message,
         );

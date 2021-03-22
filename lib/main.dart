@@ -70,7 +70,7 @@ class KartProject extends StatelessWidget {
                 return mapProvider.update(profilProvider.currentProfil);
               },
             ),
-            Provider(
+            ChangeNotifierProvider(
               create: (context) => NotificationsProvider(),
             ),
             Provider(

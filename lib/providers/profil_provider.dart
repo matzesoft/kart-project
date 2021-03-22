@@ -57,7 +57,7 @@ class ProfilProvider extends ChangeNotifier {
   /// Sets the new profil.
   Future switchProfil(BuildContext context, int id) async {
     await _sqlHelper.setProfil(id).catchError((error) {
-      context.showErrorNotification(Strings.failedSettingProfil);
+      context.showExceptionNotification(Strings.failedSettingProfil);
     });
     notifyListeners();
   }
@@ -79,7 +79,7 @@ class ProfilProvider extends ChangeNotifier {
         message: Strings.profilWasCreated,
       );
     } catch (error) {
-      context.showErrorNotification(Strings.failedCreatingProfil);
+      context.showExceptionNotification(Strings.failedCreatingProfil);
     }
   }
 
@@ -99,7 +99,7 @@ class ProfilProvider extends ChangeNotifier {
         message: Strings.profilWasDeleted,
       );
     } catch (error) {
-      context.showErrorNotification(Strings.failedDeletingProfil);
+      context.showExceptionNotification(Strings.failedDeletingProfil);
     }
   }
 }
@@ -149,7 +149,7 @@ class Profil {
         message: Strings.editProfil,
       );
     } catch (error) {
-      context.showErrorNotification(Strings.failedUpdatingProfil);
+      context.showExceptionNotification(Strings.failedUpdatingProfil);
     }
   }
 

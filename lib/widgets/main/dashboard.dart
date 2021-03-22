@@ -2,9 +2,11 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/custom_list_tile.dart';
 import 'package:kart_project/design/theme.dart';
+import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/main/control_center.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
+import 'package:provider/provider.dart';
 
 /// Padding each element/widget should have.
 const EdgeInsets widgetPadding =
@@ -32,7 +34,12 @@ class Dashboard extends StatelessWidget {
                 Consumption(),
               ],
             ),
-            ControlCenter(),
+            Column(
+              children: [
+                ErrorsInterface(),
+                ControlCenter(),
+              ],
+            ),
           ],
         ),
       ),
@@ -269,6 +276,43 @@ class Consumption extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ErrorsInterface extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<NotificationsProvider>(
+      builder: (context, notifications, child) {
+        final errors = notifications.error.errors;
+        return Wrap(
+          alignment: WrapAlignment.center,
+          children: List.generate(
+            errors.length,
+            (int index) => ErrorItem(errors[index]),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ErrorItem extends StatelessWidget {
+  final ErrorNotification notification;
+
+  ErrorItem(this.notification);
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton.icon(
+      icon: Icon(notification.icon, color: Theme.of(context).errorColor),
+      label: Text(notification.categorie),
+      textColor: Theme.of(context).errorColor,
+      padding: EdgeInsets.all(4.0),
+      onPressed: () {
+        notification.moreDetails(context);
+      },
     );
   }
 }
