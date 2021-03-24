@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/providers/audio_provider.dart';
+import 'package:kart_project/providers/cooling_provider.dart';
 import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
@@ -72,6 +73,9 @@ class KartProject extends StatelessWidget {
             ),
             ChangeNotifierProvider(
               create: (context) => NotificationsProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => CoolingProvider(),
             ),
             Provider(
               create: (context) => AudioProvider(),

@@ -5,10 +5,11 @@ import 'package:wiring_pi_soft_pwm/wiring_pi_soft_pwm.dart';
 const String _gpioChip = 'pinctrl-bcm2835';
 const String _gpioConsumer = 'KartProject';
 
+const int _FAN_PIN = 17;
+const int _FAN_RPM_SPEED_PIN = 27;
 const int _BRAKE_INPUT_PIN = 7;
 const int _ELOCK_PIN = 9;
 const int _CRUISE_PIN = 11;
-const int _FAN_PIN = 10;
 const int _BACK_LIGHT_PIN = 1;
 const int _LED_BLUE_PIN = 21;
 const int _LED_GREEN_PIN = 20;
@@ -28,7 +29,9 @@ class GpioInterface {
   static GpioLine get brakeInput => _requestInput(_BRAKE_INPUT_PIN);
   static GpioLine get eLock => _requestOutput(_ELOCK_PIN, initalValue: true);
   static GpioLine get cruise => _requestOutput(_CRUISE_PIN, initalValue: true);
-  static GpioLine get fan => _requestOutput(_FAN_PIN);
+  static SoftPwmGpio get fan => _setupSoftPwm(_FAN_PIN);
+  static GpioLine get fanRpmSpeed =>
+      _requestInput(_FAN_RPM_SPEED_PIN, activeState: ActiveState.low);
   static GpioLine get ledBlue => _requestOutput(_LED_BLUE_PIN);
   static GpioLine get ledGreen => _requestOutput(_LED_GREEN_PIN);
   static GpioLine get ledRed => _requestOutput(_LED_RED_PIN);
@@ -47,13 +50,16 @@ class GpioInterface {
   }
 
   /// Checks if the gpio is already requested and requests a new input if not.
-  static GpioLine _requestInput(int pin) {
+  static GpioLine _requestInput(
+    int pin, {
+    ActiveState activeState: ActiveState.high,
+  }) {
     _gpios ??= _initGpios();
-
     final gpio = _gpios[pin];
     if (!gpio.requested)
       gpio.requestInput(
         consumer: _gpioConsumer,
+        activeState: activeState,
         triggers: {SignalEdge.falling, SignalEdge.rising},
       );
     return gpio;

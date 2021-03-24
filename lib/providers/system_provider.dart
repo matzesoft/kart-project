@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/interfaces/cmd_interface.dart';
 import 'package:kart_project/pin.dart';
 import 'package:kart_project/extensions.dart';
+import 'package:kart_project/providers/cooling_provider.dart';
 import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/strings.dart';
@@ -144,5 +145,10 @@ class DeveloperOptions {
 
   void closeTestError(BuildContext context) {
     context.read<NotificationsProvider>().error.close(_NOTIFY_ID);
+  }
+
+  void setFanOutput(BuildContext context, double value) {
+    final fan = context.read<CoolingProvider>().fan;
+    fan.output = value;
   }
 }
