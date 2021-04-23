@@ -15,6 +15,7 @@ import 'package:kart_project/widgets/main/main.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
+import 'package:kart_project/extensions.dart';
 
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
@@ -41,7 +42,7 @@ class KartProject extends StatelessWidget {
               home: Scaffold(body: Text(Strings.failedLoadingDatabase)),
             );
           } else {
-            return child;
+            return child!;
           }
         },
         child: MultiProvider(
@@ -50,25 +51,28 @@ class KartProject extends StatelessWidget {
               create: (context) => SystemProvider(),
             ),
             ChangeNotifierProxyProvider<ProfilProvider, AppearanceProvider>(
-              create: (context) => AppearanceProvider(context),
+              create: (context) => AppearanceProvider(context.profil()),
               update: (_, profilProvider, appearanceProvider) {
-                return appearanceProvider.update(profilProvider.currentProfil);
+                return appearanceProvider!.update(profilProvider.currentProfil);
               },
             ),
             ChangeNotifierProxyProvider2<ProfilProvider, SystemProvider,
                 LightProvider>(
-              create: (context) => LightProvider(context),
+              create: (context) => LightProvider(
+                context.profil(),
+                context.locked(),
+              ),
               update: (_, profilProvider, bootProvider, lightProvider) {
-                return lightProvider.update(
+                return lightProvider!.update(
                   profilProvider.currentProfil,
                   bootProvider.locked,
                 );
               },
             ),
             ChangeNotifierProxyProvider<ProfilProvider, MapProvider>(
-              create: (context) => MapProvider(context),
+              create: (context) => MapProvider(context.profil()),
               update: (_, profilProvider, mapProvider) {
-                return mapProvider.update(profilProvider.currentProfil);
+                return mapProvider!.update(profilProvider.currentProfil);
               },
             ),
             ChangeNotifierProvider(
@@ -122,7 +126,7 @@ class Root extends StatelessWidget {
         selector: (context, bootProvider) => bootProvider.locked,
         builder: (context, locked, child) {
           if (locked) return Lockscreen();
-          return child;
+          return child!;
         },
         child: Main(),
       ),

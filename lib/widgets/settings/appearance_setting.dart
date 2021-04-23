@@ -58,14 +58,14 @@ class MaxBrightnessSlider extends StatefulWidget {
 }
 
 class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
-  LightProvider controller;
+  LightProvider? controller;
 
   /// Holds the current value of the slider.
-  double sliderValue;
+  double? sliderValue;
 
   /// Holds the state of the light before moving the [Slider]. When finishing
   /// moving him, the light state will be reset to this value.
-  LightState state;
+  LightState? state;
 
   /// Sets the [sliderValue] to the current maximumm light brightness.
   @override
@@ -76,7 +76,7 @@ class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
 
   /// Sets [state] to the current light state.
   void onChangeStart() {
-    state = controller.lightState;
+    state = controller!.lightState;
   }
 
   /// Updates the [sliderValue] and sets the light brightness to the indicated
@@ -85,15 +85,15 @@ class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
     setState(() {
       sliderValue = value;
     });
-    controller.frontLight.animateLight(value);
+    controller!.frontLight.animateLight(value);
   }
 
   /// Updates the value in the databse to value of the slider. Waits a short time
   /// to show the user his current settings and resets to the [state] after it.
   void onChangeEnd(BuildContext context, double value) {
-    controller.frontLight.maxBrightness = value;
+    controller!.frontLight.maxBrightness = value;
     Future.delayed(Duration(seconds: 2), () {
-      controller.setLightState(state);
+      controller!.lightState = state!;
     });
   }
 
@@ -104,7 +104,7 @@ class _MaxBrightnessSliderState extends State<MaxBrightnessSlider> {
         this.controller = lightProvider;
 
         return Slider(
-          value: sliderValue,
+          value: sliderValue!,
           min: FRONT_DIMMED_BRIGHTNESS,
           max: 1.0,
           onChangeStart: (_) {
@@ -127,8 +127,8 @@ class ThemeModeCard extends StatefulWidget {
 }
 
 class _ThemeModeCardState extends State<ThemeModeCard> {
-  AppearanceProvider appearance;
-  ThemeMode themeMode;
+  AppearanceProvider? appearance;
+  ThemeMode? themeMode;
 
   /// Returns true if [_themeMode] is set to light and false if dark.
   bool get lightMode => themeMode == ThemeMode.light ? true : false;
@@ -140,14 +140,14 @@ class _ThemeModeCardState extends State<ThemeModeCard> {
   String get themeTitle => lightMode ? Strings.lightMode : Strings.darkMode;
 
   /// Switches the theme mode based on value of the switch.
-  void onThemeModeSwitched(BuildContext context, {bool lightMode}) {
+  void onThemeModeSwitched(BuildContext context, {bool? lightMode}) {
     ThemeMode mode;
     if (lightMode == null) {
       mode = themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
     } else {
       mode = lightMode ? ThemeMode.light : ThemeMode.dark;
     }
-    appearance.themeMode = mode;
+    appearance!.themeMode = mode;
   }
 
   @override
@@ -155,7 +155,7 @@ class _ThemeModeCardState extends State<ThemeModeCard> {
     return Consumer<AppearanceProvider>(
       builder: (context, appearanceProvider, _) {
         this.appearance = appearanceProvider;
-        this.themeMode = appearance.themeMode;
+        this.themeMode = appearance!.themeMode;
 
         return CardWithTitle(
           title: Strings.appearance,
@@ -193,10 +193,10 @@ class LightStrip extends StatefulWidget {
 
 class _LightStripState extends State<LightStrip> {
   final _colors = LIGHT_STRIP_COLORS;
-  LightStripController _controller;
+  LightStripController? _controller;
 
   void onTap(Color color) {
-    _controller.color = color;
+    _controller!.color = color;
   }
 
   @override
@@ -210,18 +210,21 @@ class _LightStripState extends State<LightStrip> {
             Consumer<LightProvider>(
               builder: (context, lightProvider, child) {
                 this._controller = lightProvider.lightStrip;
-                final selectedColor = _controller.color;
+                final selectedColor = _controller!.color;
 
                 return GridView(
                   primary: false,
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 8),
-                  children: List.generate(_colors.length, (int index) {
-                    final color = _colors[index];
-                    final selected = color == selectedColor;
-                    return LightStripColor(color, selected, onTap);
-                  }),
+                  children: List.generate(
+                    _colors.length,
+                    (int index) {
+                      final color = _colors[index];
+                      final selected = (color == selectedColor);
+                      return LightStripColor(color, selected, onTap);
+                    },
+                  ),
                 );
               },
             ),

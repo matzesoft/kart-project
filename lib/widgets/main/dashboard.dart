@@ -228,7 +228,7 @@ class _BatteryState extends State<Battery> {
                       end: _batteryPercentage,
                     ),
                     duration: _animationDuration,
-                    builder: (context, percentage, child) {
+                    builder: (context, double percentage, child) {
                       return FractionallySizedBox(
                         widthFactor: percentage,
                         child: AnimatedContainer(
@@ -310,9 +310,9 @@ class ErrorItem extends StatelessWidget {
       label: Text(notification.categorie),
       textColor: Theme.of(context).errorColor,
       padding: EdgeInsets.all(4.0),
-      onPressed: () {
-        notification.moreDetails(context);
-      },
+      onPressed: notification.moreDetails != null
+          ? () => notification.moreDetails!(context)
+          : null,
     );
   }
 }

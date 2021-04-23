@@ -88,15 +88,10 @@ class TestGpios extends StatefulWidget {
 
 class _TestGpiosState extends State<TestGpios> {
   GpioLine k1 = GpioInterface.eLock;
-  GpioLine k2 = GpioInterface.cruise;
   GpioLine blueLight = GpioInterface.ledBlue;
 
   void toggleK1() {
     k1.toggle();
-  }
-
-  void toggleK2() {
-    k2.toggle();
   }
 
   void toggleBlueLight() {
@@ -110,10 +105,6 @@ class _TestGpiosState extends State<TestGpios> {
         FlatButton(
           child: Text("K1"),
           onPressed: () => toggleK1(),
-        ),
-        FlatButton(
-          child: Text("K2"),
-          onPressed: () => toggleK2(),
         ),
         FlatButton(
           child: Text("Blue Light"),

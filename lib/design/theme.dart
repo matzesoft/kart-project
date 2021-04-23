@@ -8,8 +8,8 @@ class AppTheme {
   /// [shadowColor] so always use this when working with elevation.
   static Color shadowColor(BuildContext context) {
     if (Theme.of(context).brightness == Brightness.dark)
-      return Colors.grey[100].withOpacity(0.05);
-    return Colors.grey[500].withOpacity(0.22);
+      return Colors.grey[100]!.withOpacity(0.05);
+    return Colors.grey[500]!.withOpacity(0.22);
   }
 
   static double get elevation => 12.0;
@@ -42,7 +42,6 @@ class AppTheme {
             borderRadius: BorderRadius.circular(16.0),
           ),
         ),
-        cursorColor: Colors.blueAccent[700],
         dialogTheme: DialogTheme(
           backgroundColor: Colors.white,
           elevation: 12.0,
@@ -150,6 +149,9 @@ class AppTheme {
             color: Colors.grey[800],
           ),
         ),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: Colors.blueAccent[700],
+        ),
       );
 
   static ThemeData get darkTheme => ThemeData(
@@ -176,7 +178,6 @@ class AppTheme {
             borderRadius: BorderRadius.circular(16.0),
           ),
         ),
-        cursorColor: Colors.blueAccent[100],
         dialogTheme: DialogTheme(
           elevation: 12.0,
           backgroundColor: Colors.grey[900],
@@ -275,6 +276,9 @@ class AppTheme {
             fontWeight: FontWeight.w500,
             letterSpacing: 1.2,
           ),
+        ),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: Colors.blueAccent[100],
         ),
       );
 }

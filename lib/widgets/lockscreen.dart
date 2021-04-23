@@ -142,10 +142,10 @@ class _BootOptionsDialogState extends State<BootOptionsDialog> {
 
 class _BootOption extends StatelessWidget {
   final String title;
-  final IconData icon;
-  final Function onTap;
+  final IconData? icon;
+  final Function()? onTap;
 
-  _BootOption({this.title, this.icon, this.onTap});
+  _BootOption({this.title: "", this.icon, this.onTap});
 
   @override
   Widget build(BuildContext context) {

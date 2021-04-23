@@ -32,6 +32,5 @@ class FanController {
     // Range of fan is reducded to 40% - 100% or 0%.
     final value = (output == 0.0) ? 0 : (((output * 0.6) + 0.4) * 100).round();
     _gpio.write(value);
-    print(value);
   }
 }

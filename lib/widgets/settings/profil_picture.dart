@@ -13,16 +13,16 @@ class ProfilPicture extends StatelessWidget {
 
   ProfilPicture({
     this.active: false,
-    this.name,
+    this.name: "",
     this.size: 48,
     this.padding: const EdgeInsets.all(6.0),
     this.margin: const EdgeInsets.all(12.0),
   });
 
   /// Color used by the title and the icon of the setting.
-  Color _textColor(BuildContext context) => active
+  Color? _textColor(BuildContext context) => active
       ? Theme.of(context).accentColor
-      : Theme.of(context).textTheme.subtitle1.color;
+      : Theme.of(context).textTheme.subtitle1!.color;
 
   /// Color used by the background of the profile picture.
   Color _backgroundColor(BuildContext context) => active
@@ -43,7 +43,7 @@ class ProfilPicture extends StatelessWidget {
       padding: padding,
       child: Text(
         name[0],
-        style: Theme.of(context).textTheme.subtitle1.copyWith(
+        style: Theme.of(context).textTheme.subtitle1!.copyWith(
               fontSize: size / 2,
               color: _textColor(context),
             ),

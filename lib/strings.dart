@@ -2,85 +2,87 @@ const SOFTWARE_VERSION = "0.0.1+1";
 const GITHUB_REPO_LINK = "github.com/matzesoft/kart-project";
 
 class Strings {
-  static String get profiles => _STRINGS['profiles'];
-  static String get profil => _STRINGS['profil'];
-  static String get drive => _STRINGS['drive'];
-  static String get lightAndDisplay => _STRINGS['light_and_display'];
-  static String get audio => _STRINGS['audio'];
-  static String get about => _STRINGS['about'];
-  static String get on => _STRINGS['on'];
-  static String get off => _STRINGS['off'];
-  static String get dimmed => _STRINGS['dimmed'];
-  static String get kmh => _STRINGS['kmh'];
-  static String get range => _STRINGS['range'];
-  static String get currentProfil => _STRINGS['current_profil'];
-  static String get createProfil => _STRINGS['create_profil'];
-  static String get loading => _STRINGS['loading'];
-  static String get profilIsSwitched => _STRINGS['profil_is_switched'];
-  static String get create => _STRINGS['create'];
-  static String get typeInTheName => _STRINGS['type_in_the_name'];
-  static String get maxLengthOfName => _STRINGS['max_length_of_name'];
+  static String get profiles => _STRINGS['profiles']!;
+  static String get profil => _STRINGS['profil']!;
+  static String get drive => _STRINGS['drive']!;
+  static String get lightAndDisplay => _STRINGS['light_and_display']!;
+  static String get audio => _STRINGS['audio']!;
+  static String get about => _STRINGS['about']!;
+  static String get on => _STRINGS['on']!;
+  static String get off => _STRINGS['off']!;
+  static String get dimmed => _STRINGS['dimmed']!;
+  static String get kmh => _STRINGS['kmh']!;
+  static String get range => _STRINGS['range']!;
+  static String get currentProfil => _STRINGS['current_profil']!;
+  static String get createProfil => _STRINGS['create_profil']!;
+  static String get loading => _STRINGS['loading']!;
+  static String get profilIsSwitched => _STRINGS['profil_is_switched']!;
+  static String get create => _STRINGS['create']!;
+  static String get typeInTheName => _STRINGS['type_in_the_name']!;
+  static String get maxLengthOfName => _STRINGS['max_length_of_name']!;
   static String get leaveEmptyToUseDefaultName =>
-      _STRINGS['leave_empty_to_use_deafult_name'];
-  static String get cancel => _STRINGS['cancel'];
-  static String get delete => _STRINGS['delete'];
-  static String get deleteProfilQuestion => _STRINGS['delete_profil_question'];
-  static String get deleteProfilMessage1 => _STRINGS['delete_profil_message_0'];
-  static String get deleteProfilMessage2 => _STRINGS['delete_profil_message_1'];
-  static String get profilIsCreated => _STRINGS['profil_is_created'];
-  static String get profilIsDeleted => _STRINGS['profil_is_deleted'];
-  static String get profilIsUpdated => _STRINGS['profil_is_updated'];
-  static String get profilWasCreated => _STRINGS['profil_was_created'];
-  static String get profilWasDeleted => _STRINGS['profil_was_deleted'];
-  static String get profilWasUpdated => _STRINGS['profil_was_updated'];
-  static String get failedCreatingProfil => _STRINGS['failed_creating_profil'];
-  static String get failedDeletingProfil => _STRINGS['failed_deleting_profil'];
-  static String get failedUpdatingProfil => _STRINGS['failed_updating_profil'];
-  static String get failedSettingProfil => _STRINGS['failed_setting_profil'];
+      _STRINGS['leave_empty_to_use_deafult_name']!;
+  static String get cancel => _STRINGS['cancel']!;
+  static String get delete => _STRINGS['delete']!;
+  static String get deleteProfilQuestion => _STRINGS['delete_profil_question']!;
+  static String get deleteProfilMessage1 =>
+      _STRINGS['delete_profil_message_0']!;
+  static String get deleteProfilMessage2 =>
+      _STRINGS['delete_profil_message_1']!;
+  static String get profilIsCreated => _STRINGS['profil_is_created']!;
+  static String get profilIsDeleted => _STRINGS['profil_is_deleted']!;
+  static String get profilIsUpdated => _STRINGS['profil_is_updated']!;
+  static String get profilWasCreated => _STRINGS['profil_was_created']!;
+  static String get profilWasDeleted => _STRINGS['profil_was_deleted']!;
+  static String get profilWasUpdated => _STRINGS['profil_was_updated']!;
+  static String get failedCreatingProfil => _STRINGS['failed_creating_profil']!;
+  static String get failedDeletingProfil => _STRINGS['failed_deleting_profil']!;
+  static String get failedUpdatingProfil => _STRINGS['failed_updating_profil']!;
+  static String get failedSettingProfil => _STRINGS['failed_setting_profil']!;
   static String get failedLoadingDatabase =>
-      _STRINGS['failed_loading_database'];
+      _STRINGS['failed_loading_database']!;
   static String get failedSettingLocation =>
-      _STRINGS['failed_setting_locations'];
-  static String get editProfil => _STRINGS['edit_profil'];
-  static String get giveName => _STRINGS['give_name'];
-  static String get safe => _STRINGS['safe'];
-  static String get locationWasSaved => _STRINGS['location_was_saved'];
+      _STRINGS['failed_setting_locations']!;
+  static String get editProfil => _STRINGS['edit_profil']!;
+  static String get giveName => _STRINGS['give_name']!;
+  static String get safe => _STRINGS['safe']!;
+  static String get locationWasSaved => _STRINGS['location_was_saved']!;
   static String get saveLocationExplanation =>
-      _STRINGS['save_location_explanation'];
-  static String get wrongPincode => _STRINGS['wrong_pincode'];
-  static String get unlocked => _STRINGS['unlocked'];
-  static String get projectName => _STRINGS['project_name'];
-  static String get projectSlogan => _STRINGS['project_slogan'];
-  static String get appearance => _STRINGS['appearance'];
-  static String get lightMode => _STRINGS['light_mode'];
-  static String get darkMode => _STRINGS['dark_mode'];
-  static String get light => _STRINGS['light'];
+      _STRINGS['save_location_explanation']!;
+  static String get wrongPincode => _STRINGS['wrong_pincode']!;
+  static String get unlocked => _STRINGS['unlocked']!;
+  static String get projectName => _STRINGS['project_name']!;
+  static String get projectSlogan => _STRINGS['project_slogan']!;
+  static String get appearance => _STRINGS['appearance']!;
+  static String get lightMode => _STRINGS['light_mode']!;
+  static String get darkMode => _STRINGS['dark_mode']!;
+  static String get light => _STRINGS['light']!;
   static String get setMaxLightBrightness =>
-      _STRINGS['set_max_light_brightness'];
-  static String get changeAppTheme => _STRINGS['change_app_theme'];
-  static String get lock => _STRINGS['lock'];
-  static String get powerOff => _STRINGS['power_off'];
-  static String get poweringOff => _STRINGS['powering_off'];
-  static String get reboot => _STRINGS['reboot'];
-  static String get hearMusic => _STRINGS['hear_music'];
-  static String get connectWithBluetooth => _STRINGS['connect_with_bluetooth'];
+      _STRINGS['set_max_light_brightness']!;
+  static String get changeAppTheme => _STRINGS['change_app_theme']!;
+  static String get lock => _STRINGS['lock']!;
+  static String get powerOff => _STRINGS['power_off']!;
+  static String get poweringOff => _STRINGS['powering_off']!;
+  static String get reboot => _STRINGS['reboot']!;
+  static String get hearMusic => _STRINGS['hear_music']!;
+  static String get connectWithBluetooth => _STRINGS['connect_with_bluetooth']!;
   static String get connectWithBluetoothExplanation =>
-      _STRINGS['connect_with_bluetooth_explanation'];
-  static String get multipleDevices => _STRINGS['multiple_devices'];
+      _STRINGS['connect_with_bluetooth_explanation']!;
+  static String get multipleDevices => _STRINGS['multiple_devices']!;
   static String get multipleDevicesExplanation =>
-      _STRINGS['multiple_devices_explanation'];
-  static String get musicControl => _STRINGS['music_control'];
+      _STRINGS['multiple_devices_explanation']!;
+  static String get musicControl => _STRINGS['music_control']!;
   static String get musicControlExplanation =>
-      _STRINGS['music_control_explanation'];
-  static String get developer => _STRINGS['developer'];
-  static String get devOptionsEnabled => _STRINGS['dev_options_enabled'];
-  static String get devOptionsDisabled => _STRINGS['dev_options_disabled'];
-  static String get systemdService => _STRINGS['systemd_service'];
-  static String get enable => _STRINGS['enable'];
-  static String get disable => _STRINGS['disable'];
-  static String get software => _STRINGS['software'];
-  static String get version => _STRINGS['version'];
-  static String get openSourceOnGitHub => _STRINGS['open_source_on_github'];
+      _STRINGS['music_control_explanation']!;
+  static String get developer => _STRINGS['developer']!;
+  static String get devOptionsEnabled => _STRINGS['dev_options_enabled']!;
+  static String get devOptionsDisabled => _STRINGS['dev_options_disabled']!;
+  static String get systemdService => _STRINGS['systemd_service']!;
+  static String get enable => _STRINGS['enable']!;
+  static String get disable => _STRINGS['disable']!;
+  static String get software => _STRINGS['software']!;
+  static String get version => _STRINGS['version']!;
+  static String get openSourceOnGitHub => _STRINGS['open_source_on_github']!;
 
   static const Map<String, String> _STRINGS = {
     "profiles": "Profile",

@@ -1,5 +1,5 @@
-/// INFO
-/// 
+/// DEPRECATED CODE
+///
 /// Because the original controller was broken and we weren't happy about him,
 /// we are currently looking for a new one. This code is commented out for now.
 

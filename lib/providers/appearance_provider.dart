@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:kart_project/extensions.dart';
 import 'package:kart_project/providers/profil_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -8,9 +7,7 @@ import 'package:provider/provider.dart';
 class AppearanceProvider extends ChangeNotifier {
   Profil _profil;
 
-  AppearanceProvider(BuildContext context) {
-    _profil = context.profil();
-  }
+  AppearanceProvider(this._profil);
 
   /// Updates the [AppearanceProvider] with the data of the [newProfil]. Returns
   /// the back the object itself. This is normally called inside a [ProxyProvider]s

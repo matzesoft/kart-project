@@ -15,10 +15,10 @@ import 'package:provider/provider.dart';
 
 class Setting {
   final String title;
-  final IconData icon;
+  final IconData? icon;
   final Widget content;
 
-  Setting({this.title, this.icon, this.content});
+  Setting({required this.title, this.icon, required this.content});
 }
 
 List<Setting> settings = [
@@ -65,8 +65,8 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  /// The currently selected setting.
   int _currentIndex = 1;
+  bool _checkedArguments = false;
 
   /// Gets called when the user taps on a setting.
   void _onSettingChanged(int index) {
@@ -79,9 +79,10 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context).settings.arguments;
-    if (arguments != null) {
-      _currentIndex = arguments;
+    if (_checkedArguments != true) {
+      final dynamic arguments = ModalRoute.of(context)!.settings.arguments;
+      if (arguments != null) _currentIndex = arguments;
+      _checkedArguments = true;
     }
 
     return Scaffold(
@@ -118,12 +119,12 @@ class Drawer extends StatelessWidget {
   /// which setting.
   final Function(int index) onTap;
 
-  Drawer({this.currentIndex: 0, @required this.onTap});
+  Drawer({this.currentIndex: 0, required this.onTap});
 
   /// Color used by the title and the icon of the setting.
-  Color _textColor(BuildContext context, bool active) => active
+  Color? _textColor(BuildContext context, bool active) => active
       ? Theme.of(context).accentColor
-      : Theme.of(context).textTheme.subtitle1.color;
+      : Theme.of(context).textTheme.subtitle1!.color;
 
   /// Background color when the setting is selcted.
   Color _backgroundColor(BuildContext context, bool active) => active

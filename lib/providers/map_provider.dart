@@ -18,30 +18,30 @@ final _nePanBoundary = LatLng(48.7824, 9.0967);
 final _swPanBoundary = LatLng(48.2932, 8.0804);
 
 class MapProvider extends ChangeNotifier {
-  final controller = MapController(location: _home.coordinates);
+  final controller = MapController(location: _home.coordinates!);
   Profil _profil;
 
-  MapProvider(BuildContext context) {
-    _profil = context.profil();
-  }
+  MapProvider(this._profil);
 
   /// Updates the [MapProvider] with the data of the [newProfil] and returns the
   /// object back. This is normally called inside a [ProxyProvider]s update method.
   MapProvider update(Profil newProfil) {
     _profil = newProfil;
     notifyListeners();
-
     return this;
   }
 
-  Location get location1 => _profil.location1;
-  set location1(Location location) => _profil.location1 = location;
+  Location? get location1 => _profil.location1;
+  set location1(Location? location) {
+    if (location != null) _profil.location1 = location;
+  }
 
-  Location get location2 => _profil.location2;
-  set location2(Location location) => _profil.location2 = location;
+  Location? get location2 => _profil.location2;
+  set location2(Location? location) {
+    if (location != null) _profil.location2 = location;
+  }
 
-  /// Sets and updates the location values based on the [index]. Only updates
-  /// its listeners if there is a change and [notify] is set to true.
+  /// Sets and updates the location values based on the [index].
   void _setLocation(int index, Location location) {
     if (index == 1) location1 = location;
     if (index == 2) location2 = location;
@@ -67,8 +67,10 @@ class MapProvider extends ChangeNotifier {
 
   /// Moves the map to the given [location].
   void _moveToLocation(Location location) {
-    controller.center = location.coordinates;
-    controller.zoom = location.zoom;
+    if (!location.isEmpty) {
+      controller.center = location.coordinates!;
+      controller.zoom = location.zoom!;
+    }
   }
 
   /// Moves the map to the [_home] location.
@@ -78,8 +80,8 @@ class MapProvider extends ChangeNotifier {
 
   /// Moves to [location1] or [location2] based on the [index].
   void toLocation(BuildContext context, int index) {
-    Location location = _locationOfIndex(index);
-    if (location.isNull) {
+    Location? location = _locationOfIndex(index);
+    if (location!.isEmpty) {
       context.showInformNotification(
         icon: EvaIcons.pinOutline,
         message: Strings.saveLocationExplanation,
@@ -91,7 +93,6 @@ class MapProvider extends ChangeNotifier {
 
   /// Increases the zoom level by checking on the [_maxZoom] level.
   void increaseZoomLevel() {
-    // TODO: Test
     final newZoom = controller.zoom + 0.03;
     if (newZoom >= _maxZoom) {
       controller.zoom = _maxZoom;
@@ -132,7 +133,7 @@ class MapProvider extends ChangeNotifier {
   }
 
   /// Returns [location1] or [location2] based on the [index].
-  Location _locationOfIndex(int index) {
+  Location? _locationOfIndex(int index) {
     if (!(index == 1 || index == 2)) {
       throw ArgumentError("Index must be 1 or 2.");
     }
@@ -143,18 +144,18 @@ class MapProvider extends ChangeNotifier {
 
 /// Takes a [zoom] level and coordinates of a location.
 class Location {
-  double zoom;
-  LatLng coordinates;
+  double? zoom;
+  LatLng? coordinates;
 
-  bool get isNull => (zoom == null && coordinates == null) ? true : false;
+  bool get isEmpty => (zoom == null && coordinates == null) ? true : false;
 
-  Location({@required this.zoom, @required this.coordinates});
+  Location({required this.zoom, required this.coordinates});
 
   /// Compares two locations and returns true if they are the same.
   /// In some conditions the default `==`-operator might not work so you can use
   /// this method.
   bool equals(Location second) {
-    if (second == null) return false;
+    if (second.isEmpty) return false;
     if ((zoom != second.zoom) || (coordinates != second.coordinates)) {
       return false;
     }
@@ -162,26 +163,28 @@ class Location {
   }
 
   /// Returns the data in form of a map, with the syntax of the [ProfilsSQLHelper].
-  Map<String, Object> toProfilMap(int index) {
+  Map<String, Object>? toProfilMap(int index) {
     if (!(index == 1 || index == 2)) {
       throw ArgumentError("Index must be 1 or 2.");
     }
-    if (index == 2) {
+    if (!this.isEmpty) {
+      if (index == 2) {
+        return <String, Object>{
+          LOCATION2_ZOOM_COLUMN: zoom!,
+          LOCATION2_LAT_COLUMN: coordinates!.latitude,
+          LOCATION2_LNG_COLUMN: coordinates!.longitude,
+        };
+      }
       return <String, Object>{
-        LOCATION2_ZOOM_COLUMN: zoom,
-        LOCATION2_LAT_COLUMN: coordinates.latitude,
-        LOCATION2_LNG_COLUMN: coordinates.longitude,
+        LOCATION1_ZOOM_COLUMN: zoom!,
+        LOCATION1_LAT_COLUMN: coordinates!.latitude,
+        LOCATION1_LNG_COLUMN: coordinates!.longitude,
       };
     }
-    return <String, Object>{
-      LOCATION1_ZOOM_COLUMN: zoom,
-      LOCATION1_LAT_COLUMN: coordinates.latitude,
-      LOCATION1_LNG_COLUMN: coordinates.longitude,
-    };
   }
 
   /// Converts the data from a map with the [ProfilsSQLHelper] syntax.
-  Location.fromProfilMap(int index, Map<String, Object> profil) {
+  Location.fromProfilMap(int index, Map<String, dynamic> profil) {
     if (!(index == 1 || index == 2)) {
       throw ArgumentError("Index must be 1 or 2.");
     }

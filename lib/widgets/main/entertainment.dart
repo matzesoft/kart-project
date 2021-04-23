@@ -35,7 +35,7 @@ class Clock extends StatefulWidget {
 }
 
 class _ClockState extends State<Clock> {
-  Timer _timer;
+  Timer? _timer;
   String time = "";
 
   void setClock() {
@@ -55,7 +55,7 @@ class _ClockState extends State<Clock> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer!.cancel();
     super.dispose();
   }
 
@@ -110,9 +110,9 @@ class LocationControls extends StatelessWidget {
 
 class LocationButton extends StatelessWidget {
   final _radius = BorderRadius.circular(90.0);
-  final Widget icon;
-  final Function onPressed;
-  final Function onLongPress;
+  final Widget? icon;
+  final Function()? onPressed;
+  final Function()? onLongPress;
 
   LocationButton({this.icon, this.onPressed, this.onLongPress});
 
@@ -145,8 +145,8 @@ class MapWidget extends StatefulWidget {
 }
 
 class _MapWidgetState extends State<MapWidget> {
-  MapProvider _mapProvider;
-  Offset _dragStart;
+  MapProvider? _mapProvider;
+  Offset? _dragStart;
   double _scaleStart = 1.0;
 
   void _onScaleStart(ScaleStartDetails details) {
@@ -159,14 +159,14 @@ class _MapWidgetState extends State<MapWidget> {
     _scaleStart = details.scale;
 
     if (scaleDiff > 0) {
-      _mapProvider.increaseZoomLevel();
+      _mapProvider!.increaseZoomLevel();
     } else if (scaleDiff < 0) {
-      _mapProvider.decreaseZoomLevel();
+      _mapProvider!.decreaseZoomLevel();
     } else {
       final now = details.focalPoint;
-      final diff = now - _dragStart;
+      final diff = now - _dragStart!;
       _dragStart = now;
-      _mapProvider.dragMap(diff.dx, diff.dy);
+      _mapProvider!.dragMap(diff.dx, diff.dy);
     }
   }
 
@@ -179,7 +179,7 @@ class _MapWidgetState extends State<MapWidget> {
           onScaleStart: _onScaleStart,
           onScaleUpdate: _onScaleUpdate,
           child: Map(
-            controller: _mapProvider.controller,
+            controller: _mapProvider!.controller,
             builder: (context, x, y, z) {
               return Image.asset(
                 mapProvider.mapPath(context, x, y, z),

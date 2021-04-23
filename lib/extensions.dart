@@ -18,7 +18,10 @@ extension ProviderExtensions<T> on BuildContext {
     this.read<NotificationsProvider>().simple.showException(message);
   }
 
-  void showInformNotification({IconData icon, String message}) {
+  void showInformNotification({
+    required IconData icon,
+    required String message,
+  }) {
     this.read<NotificationsProvider>().simple.showInform(
           icon: icon,
           message: message,
@@ -26,7 +29,7 @@ extension ProviderExtensions<T> on BuildContext {
   }
 
   /// Shows a confirm notification using the [NotificationsProvider].
-  void showNotification({IconData icon, String message}) {
+  void showNotification({required IconData icon, required String message}) {
     this.read<NotificationsProvider>().simple.show(
           icon: icon,
           message: message,

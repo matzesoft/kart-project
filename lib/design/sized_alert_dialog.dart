@@ -4,9 +4,9 @@ import 'package:kart_project/design/theme.dart';
 /// [AlertDialog] which does not allows its children to be bigger than the
 /// [AppTheme.dialogSize].
 class SizedAlertDialog extends StatelessWidget {
-  final Widget title;
-  final Widget content;
-  final List<Widget> actions;
+  final Widget? title;
+  final Widget? content;
+  final List<Widget>? actions;
 
   SizedAlertDialog({
     this.title,

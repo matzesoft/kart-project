@@ -5,10 +5,10 @@ import 'package:kart_project/strings.dart';
 class LoadingInterface extends StatelessWidget {
   final String message;
 
-  LoadingInterface({this.message});
+  LoadingInterface({this.message: ""});
 
   /// Shows a dialog with a [CircularProgressIndicator] and a message.
-  LoadingInterface.dialog(BuildContext context, {this.message}) {
+  LoadingInterface.dialog(BuildContext context, {this.message: ""}) {
     showDialog(
       context: context,
       builder: (context) => dialogInterface(),

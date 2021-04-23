@@ -2,11 +2,9 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_gpiod/flutter_gpiod.dart';
-import 'package:kart_project/extensions.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/providers/profil_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:wiring_pi_soft_pwm/wiring_pi_soft_pwm.dart';
 
 /// Brightness when the [LightState] is set to [LightState.dimmed].
 const FRONT_DIMMED_BRIGHTNESS = 0.3;
@@ -24,19 +22,14 @@ enum LightState {
 
 /// Lets you control the lights of the kart.
 class LightProvider extends ChangeNotifier {
+  late final frontLight = FrontLightController(this);
+  late final backLight = BackLightController();
+  late final lightStrip = LightStripController(this);
   Profil _profil;
-  FrontLightController frontLight;
-  BackLightController backLight;
-  LightStripController lightStrip;
   LightState _lightState = LightState.off;
 
-  LightProvider(BuildContext context) {
-    frontLight = FrontLightController(this);
-    backLight = BackLightController();
-    lightStrip = LightStripController(this);
-
-    _profil = context.profil();
-    _updateLightWithLock(context.locked());
+  LightProvider(this._profil, bool locked) {
+    _updateLightWithLock(locked);
   }
 
   /// Updates the [LightProvider] with the data of the [newprofil] and the
@@ -56,7 +49,7 @@ class LightProvider extends ChangeNotifier {
 
   /// Updates [lightState] and sets the light brightness based on the setting.
   /// Calls the listeners if notify is true.
-  void setLightState(LightState state) {
+  set lightState(LightState state) {
     _lightState = state;
     frontLight._setLightByState(state);
     backLight._setLightByState(state);
@@ -68,7 +61,7 @@ class LightProvider extends ChangeNotifier {
   /// has switched and sets [_lightState] to dimmed if true.
   bool _ifProfilSwitched(Profil newProfil) {
     if (newProfil != _profil) {
-      if (_lightState == LightState.on) setLightState(LightState.dimmed);
+      if (lightState == LightState.on) lightState = LightState.dimmed;
       return true;
     }
     return false;
@@ -78,12 +71,12 @@ class LightProvider extends ChangeNotifier {
   /// to [LightState.dimmed] if locked. Does not update any listeners.
   void _updateLightWithLock(bool locked) {
     if (locked == true && _lightState == LightState.on)
-      setLightState(LightState.dimmed);
+      lightState = LightState.dimmed;
   }
 
   /// Should be called when the software wants to shutdown.
   void powerOff() {
-    setLightState(LightState.off);
+    lightState = LightState.off;
   }
 }
 
@@ -96,11 +89,11 @@ const _PERIOD_CHANGE = 0.02;
 
 /// Controls the PWM values of the front light.
 class FrontLightController {
-  LightProvider _controller;
-  SoftPwmGpio _pwmGpio = GpioInterface.frontLight;
-  Timer _timer;
+  final LightProvider _controller;
+  final _pwmGpio = GpioInterface.frontLight;
+  Timer? _timer;
   double _currentFactor = 0.0;
-  double _endFactor; // The light should be animated to.
+  double _endFactor = 0.0; // The light should be animated to.
 
   FrontLightController(this._controller);
 
@@ -118,29 +111,29 @@ class FrontLightController {
   }
 
   void animateLight(double factor) {
-    if (_timer != null && _timer.isActive) _timer.cancel();
+    if (_timer != null && _timer!.isActive) _timer!.cancel();
     _endFactor = factor;
     final difference = (_endFactor - _currentFactor);
 
     _timer = difference.isNegative
-        ? Timer.periodic(_PERIOD_DURATION, (_) {
+        ? Timer.periodic(_PERIOD_DURATION, (timer) {
             double newFactor = currentFactor;
             newFactor -= _PERIOD_CHANGE;
 
             if (newFactor <= _endFactor) {
               currentFactor = _endFactor;
-              _timer.cancel();
+              timer.cancel();
             } else {
               currentFactor = newFactor;
             }
           })
-        : Timer.periodic(_PERIOD_DURATION, (_) {
+        : Timer.periodic(_PERIOD_DURATION, (timer) {
             double newFactor = currentFactor;
             newFactor += _PERIOD_CHANGE;
 
             if (newFactor >= _endFactor) {
               currentFactor = _endFactor;
-              _timer.cancel();
+              timer.cancel();
             } else {
               currentFactor = newFactor;
             }
@@ -175,14 +168,11 @@ const DEFAULT_BRIGHTNESS = 0.4;
 const BRAKING_BRIGHTNESS = 1.0;
 
 class BackLightController {
-  SoftPwmGpio _pwmGpio = GpioInterface.backLight;
-  GpioLine _brakeInput = GpioInterface.brakeInput;
+  final _pwmGpio = GpioInterface.backLight;
   bool _active = false;
   bool _braking = false;
 
-  BackLightController() {
-    _brakeInput.onEvent.listen(_onBrake);
-  }
+  BackLightController();
 
   /// Wether the backlight is on or off.
   bool get active => _active;
@@ -206,8 +196,10 @@ class BackLightController {
   }
 
   /// Called when there is a change to the [_brakeInput] GPIO.
+  // TODO: Implement brake check with KellyController Input
   void _onBrake(SignalEvent event) {
-    final value = _brakeInput.getValue();
+    // final value = _brakeInput.getValue();
+    final value = false;
     // Check if value has changed.
     if (value != _braking) {
       _braking = value;

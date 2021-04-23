@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CardWithTitle extends StatelessWidget {
   final String title;
   final EdgeInsets margin;
-  final Widget child;
+  final Widget? child;
 
   CardWithTitle({
     this.title: "",

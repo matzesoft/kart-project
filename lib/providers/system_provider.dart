@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 class SystemProvider extends ChangeNotifier {
   final _cmdInterface = CmdInterface();
   bool _locked = true;
-  DeveloperOptions _devOptions;
+  DeveloperOptions? _devOptions;
   bool _devOptionsEnabled = false;
 
   /// If true the user has to input a pin code to unlock the kart.
@@ -25,7 +25,7 @@ class SystemProvider extends ChangeNotifier {
   DeveloperOptions get devOptions {
     if (!devOptionsEnabled) throw StateError("DevOptions not enabled.");
     _devOptions ??= DeveloperOptions._(this);
-    return _devOptions;
+    return _devOptions!;
   }
 
   /// If developer options are enabled.

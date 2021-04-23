@@ -2,23 +2,21 @@ import 'package:flutter_gpiod/flutter_gpiod.dart';
 import 'package:wiring_pi_soft_pwm/wiring_pi_soft_pwm.dart';
 
 /// Label of the default RaspberryPi GPIO chip.
-const String _gpioChip = 'pinctrl-bcm2835';
-const String _gpioConsumer = 'KartProject';
+const _gpioChip = 'pinctrl-bcm2711';
+const _gpioConsumer = 'KartProject';
 
-const int _FAN_PIN = 17;
-const int _FAN_RPM_SPEED_PIN = 27;
-const int _BRAKE_INPUT_PIN = 7;
-const int _ELOCK_PIN = 9;
-const int _CRUISE_PIN = 11;
-const int _BACK_LIGHT_PIN = 1;
-const int _LED_BLUE_PIN = 21;
-const int _LED_GREEN_PIN = 20;
-const int _LED_RED_PIN = 16;
-const int _FRONT_LIGHT_PIN = 12;
+const _FAN_PIN = 21;
+const _FAN_RPM_SPEED_PIN = 20;
+const _KELLY_OFF = 17;
+const _BACK_LIGHT_PIN = 0;
+const _LED_BLUE_PIN = 26;
+const _LED_GREEN_PIN = 19;
+const _LED_RED_PIN = 13;
+const _FRONT_LIGHT_PIN = 18;
 
 /// Defines which GPIOs are used for what purpose
 class GpioInterface {
-  static List<GpioLine> _gpios;
+  static List<GpioLine>? _gpios;
 
   static List<GpioLine> _initGpios() {
     final gpioChips = FlutterGpiod.instance.chips;
@@ -26,9 +24,7 @@ class GpioInterface {
     return chip.lines;
   }
 
-  static GpioLine get brakeInput => _requestInput(_BRAKE_INPUT_PIN);
-  static GpioLine get eLock => _requestOutput(_ELOCK_PIN, initalValue: true);
-  static GpioLine get cruise => _requestOutput(_CRUISE_PIN, initalValue: true);
+  static GpioLine get eLock => _requestOutput(_KELLY_OFF, initalValue: true);
   static SoftPwmGpio get fan => _setupSoftPwm(_FAN_PIN);
   static GpioLine get fanRpmSpeed =>
       _requestInput(_FAN_RPM_SPEED_PIN, activeState: ActiveState.low);
@@ -43,7 +39,7 @@ class GpioInterface {
   static GpioLine _requestOutput(int pin, {bool initalValue: false}) {
     _gpios ??= _initGpios();
 
-    final gpio = _gpios[pin];
+    final gpio = _gpios![pin];
     if (!gpio.requested)
       gpio.requestOutput(initialValue: initalValue, consumer: _gpioConsumer);
     return gpio;
@@ -55,7 +51,8 @@ class GpioInterface {
     ActiveState activeState: ActiveState.high,
   }) {
     _gpios ??= _initGpios();
-    final gpio = _gpios[pin];
+
+    final gpio = _gpios![pin];
     if (!gpio.requested)
       gpio.requestInput(
         consumer: _gpioConsumer,

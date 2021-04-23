@@ -18,7 +18,7 @@ enum ProfilsState {
 class ProfilProvider extends ChangeNotifier {
   final _sqlHelper = ProfilsSQLHelper();
   ProfilsState _state = ProfilsState.notInitalized;
-  List<Profil> profiles;
+  List<Profil> profiles = [];
 
   /// Returns the current profil.
   Profil get currentProfil => profiles.firstWhere(
@@ -64,7 +64,7 @@ class ProfilProvider extends ChangeNotifier {
 
   /// Creates a profil with the default settings and switches to it.
   /// If [name] is null, a default name with the profilId will be created.
-  Future createProfil(BuildContext context, {String name}) async {
+  Future createProfil(BuildContext context, {String? name}) async {
     try {
       int profilId = _sqlHelper.profilesIndex;
       if (name == null || name.isEmpty) {
@@ -107,38 +107,40 @@ class ProfilProvider extends ChangeNotifier {
 /// Indicates one Profil. For more information on the specific values check out
 /// the assosiated provider.
 class Profil {
-  static ProfilProvider _controller;
-  int _id;
-  String _name;
-  int _themeMode;
-  double _maxLightBrightness;
-  int _lightStripColor;
-  Location _location1;
-  Location _location2;
+  static ProfilProvider? _controller;
+  late int _id;
+  String _name = "Standard Profil";
+  int _themeMode = ThemeMode.light.index;
+  double _maxLightBrightness = 0.6;
+  int _lightStripColor = 0xFFFFFFFFF;
+  Location? _location1;
+  Location? _location2;
 
   Profil(
     this._id, {
-    String name: "Standard Profil",
-    ThemeMode themeMode: ThemeMode.light,
-    double maxLightBrightness: 0.6,
-    int lightStripColor: 0xFFFFFFFFF,
-    Location location1,
-    Location location2,
+    String? name,
+    ThemeMode? themeMode,
+    double? maxLightBrightness,
+    Color? lightStripColor,
+    Location? location1,
+    Location? location2,
   }) {
-    this._name = name;
-    this._themeMode = themeMode.index;
-    this._maxLightBrightness = maxLightBrightness;
-    this._lightStripColor = lightStripColor;
+    if (name != null) this._name = name;
+    if (themeMode != null) this._themeMode = themeMode.index;
+    if (maxLightBrightness != null)
+      this._maxLightBrightness = maxLightBrightness;
+    if (lightStripColor != null) this._lightStripColor = lightStripColor.value;
+    if (location1 != null) this._location1 = location1;
+    if (location2 != null) this._location2 = location2;
   }
 
   /// ID of the profil in the SQL DB.
   int get id => _id;
-
   String get name => _name;
 
   /// Sets the name of the Profil. Shows a [ErrorNotification] if failed.
   void setName(BuildContext context, String name) {
-    if (name == null || name.isEmpty) {
+    if (name.isEmpty) {
       throw ArgumentError("Name must not be null or empty.");
     }
     try {
@@ -171,22 +173,26 @@ class Profil {
     _update({LIGHT_STRIP_COLOR_COLUMN: _lightStripColor});
   }
 
-  Location get location1 => _location1;
-  set location1(Location location) {
-    _location1 = location;
-    _update(location.toProfilMap(1));
+  Location? get location1 => _location1;
+  set location1(Location? location) {
+    if (location != null) {
+      _location1 = location;
+      _update(location.toProfilMap(1)!);
+    }
   }
 
-  Location get location2 => _location2;
-  set location2(Location location) {
-    _location2 = location;
-    _update(location.toProfilMap(2));
+  Location? get location2 => _location2;
+  set location2(Location? location) {
+    if (location != null) {
+      _location2 = location;
+      _update(location.toProfilMap(2)!);
+    }
   }
 
   /// Updates the profil in the [ProfilProvider].
   void _update(Map<String, Object> sqlData) {
     print("Update Data: $sqlData");
-    _controller._updateProfil(id, sqlData);
+    _controller!._updateProfil(id, sqlData);
   }
 
   Map<String, Object> toMap() {
@@ -197,8 +203,8 @@ class Profil {
       MAX_LIHGT_BRIGHTNESS_COLUMN: _maxLightBrightness,
       LIGHT_STRIP_COLOR_COLUMN: _lightStripColor,
     };
-    if (_location1 != null) data.addAll(location1.toProfilMap(1));
-    if (_location2 != null) data.addAll(location2.toProfilMap(2));
+    if (location1 != null) data.addAll(location1!.toProfilMap(1)!);
+    if (location2 != null) data.addAll(location2!.toProfilMap(2)!);
     return data;
   }
 
@@ -237,18 +243,18 @@ const LOCATION2_LNG_COLUMN = "location2_lng";
 /// Manages the database of the profiles. Lets you init, create, update and
 /// delete profiles.
 class ProfilsSQLHelper {
-  SharedPreferences _data;
-  Database _db;
+  SharedPreferences? _data;
+  Database? _db;
 
   /// The id of the last used profil. Most important when rebooting the device to
   /// check back to the last user.
-  int get currentProfilIndex => _data.getInt(_CURRENT_PROFIL_KEY);
+  int get currentProfilIndex => _data!.getInt(_CURRENT_PROFIL_KEY)!;
 
   /// Containes information about the next to use id when creating a new profil.
   /// This is realized, by counting up by one, whenever a new profil is created.
   /// Just using the length of all profiles and adding one to it can result in
   /// various issues when profiles get deleted.
-  int get profilesIndex => _data.getInt(_PROFILES_INDEX_KEY);
+  int get profilesIndex => _data!.getInt(_PROFILES_INDEX_KEY)!;
 
   /// Opens the database and initalizes SharedPreferences.
   Future initDatabase() async {
@@ -262,11 +268,11 @@ class ProfilsSQLHelper {
     );
 
     _data = await SharedPreferences.getInstance();
-    if (!_data.containsKey(_PROFILES_INDEX_KEY)) {
-      await _data.setInt(_PROFILES_INDEX_KEY, 1);
+    if (!_data!.containsKey(_PROFILES_INDEX_KEY)) {
+      await _data!.setInt(_PROFILES_INDEX_KEY, 1);
     }
-    if (!_data.containsKey(_CURRENT_PROFIL_KEY)) {
-      await _data.setInt(_CURRENT_PROFIL_KEY, 0);
+    if (!_data!.containsKey(_CURRENT_PROFIL_KEY)) {
+      await _data!.setInt(_CURRENT_PROFIL_KEY, 0);
     }
   }
 
@@ -294,13 +300,13 @@ class ProfilsSQLHelper {
 
   /// Creates a profil with the given data.
   Future createProfil(Profil profil) async {
-    await _data.setInt(_PROFILES_INDEX_KEY, profilesIndex + 1);
-    await _db.insert(_TABLE, profil.toMap());
+    await _data!.setInt(_PROFILES_INDEX_KEY, profilesIndex + 1);
+    await _db!.insert(_TABLE, profil.toMap());
   }
 
   /// Returns a list of all profiles.
   Future<List<Profil>> getProfilesList() async {
-    final query = await _db.query(_TABLE);
+    final query = await _db!.query(_TABLE);
     return List.generate(
       query.length,
       (index) => Profil.fromMap(query.elementAt(index)),
@@ -309,7 +315,7 @@ class ProfilsSQLHelper {
 
   /// Updates the profil at the [id] with the given [values].
   Future updateProfil(int id, Map<String, Object> values) async {
-    await _db.update(
+    await _db!.update(
       _TABLE,
       values,
       where: '$ID_COLUMN = ?',
@@ -319,11 +325,11 @@ class ProfilsSQLHelper {
 
   /// Sets the current profil to the [id].
   Future setProfil(int id) async {
-    await _data.setInt(_CURRENT_PROFIL_KEY, id);
+    await _data!.setInt(_CURRENT_PROFIL_KEY, id);
   }
 
   /// Deletes the profil data at the given [id].
   Future deleteProfil(int id) async {
-    await _db.delete(_TABLE, where: '$ID_COLUMN = ?', whereArgs: [id]);
+    await _db!.delete(_TABLE, where: '$ID_COLUMN = ?', whereArgs: [id]);
   }
 }

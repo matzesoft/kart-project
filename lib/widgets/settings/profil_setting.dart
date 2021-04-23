@@ -16,22 +16,22 @@ class ProfilSetting extends StatefulWidget {
 }
 
 class _ProfilSettingState extends State<ProfilSetting> {
-  ProfilProvider profilProvider;
-  List<Profil> profiles;
-  Profil currentProfil;
+  ProfilProvider? profilProvider;
+  List<Profil> profiles = [];
+  Profil? currentProfil;
 
   /// Opens up the [CreateProfilDialog].
   Future _createProfil() async {
     showDialog(
       context: context,
-      builder: (context) => _CreateProfilDialog(profilProvider),
+      builder: (context) => _CreateProfilDialog(profilProvider!),
     );
   }
 
   /// Switches the profil. Shows an [LoadingInterface] as long as processing.
   Future _setProfil(Profil profil) async {
     LoadingInterface.dialog(context, message: Strings.profilIsSwitched);
-    await profilProvider.switchProfil(context, profil.id);
+    await profilProvider!.switchProfil(context, profil.id);
     Navigator.pop(context);
   }
 
@@ -39,7 +39,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
   Future _editProfil(Profil profil) async {
     showDialog(
       context: context,
-      builder: (context) => _EditProfilDialog(currentProfil),
+      builder: (context) => _EditProfilDialog(currentProfil!),
     );
   }
 
@@ -47,22 +47,22 @@ class _ProfilSettingState extends State<ProfilSetting> {
   Future _deleteProfil(Profil profil) async {
     showDialog(
       context: context,
-      builder: (context) => _DeleteProfilDialog(profilProvider),
+      builder: (context) => _DeleteProfilDialog(profilProvider!),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     profilProvider = context.watch<ProfilProvider>();
-    profiles = profilProvider.profiles;
-    currentProfil = profilProvider.currentProfil;
+    profiles = profilProvider!.profiles;
+    currentProfil = profilProvider!.currentProfil;
 
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: _CurrentProfil(
-            currentProfil,
+            currentProfil!,
             enableDeletion: profiles.length > 1,
             editProfil: _editProfil,
             deleteProfil: _deleteProfil,
@@ -83,7 +83,7 @@ class _ProfilSettingState extends State<ProfilSetting> {
                   return _CreateProfilItem(_createProfil);
                 return _ProfilItem(
                   profiles[index],
-                  active: profiles[index].id == currentProfil.id,
+                  active: profiles[index].id == currentProfil!.id,
                   setProfil: _setProfil,
                 );
               },
@@ -107,8 +107,8 @@ class _CurrentProfil extends StatelessWidget {
   _CurrentProfil(
     this.profil, {
     this.enableDeletion: true,
-    this.editProfil,
-    this.deleteProfil,
+    required this.editProfil,
+    required this.deleteProfil,
   });
 
   @override
@@ -182,12 +182,12 @@ class _ProfilItem extends StatelessWidget {
   final bool active;
   final Function(Profil profil) setProfil;
 
-  _ProfilItem(this.profil, {this.active: false, this.setProfil});
+  _ProfilItem(this.profil, {this.active: false, required this.setProfil});
 
   /// Color used by the title and the icon of the setting.
-  Color _textColor(BuildContext context) => active
+  Color? _textColor(BuildContext context) => active
       ? Theme.of(context).accentColor
-      : Theme.of(context).textTheme.subtitle1.color;
+      : Theme.of(context).textTheme.subtitle1!.color;
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +216,7 @@ class _ProfilItem extends StatelessWidget {
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyText1.copyWith(
+                style: Theme.of(context).textTheme.bodyText1!.copyWith(
                       color: _textColor(context),
                     ),
               ),
@@ -230,7 +230,7 @@ class _ProfilItem extends StatelessWidget {
 
 /// Always the last item in the [GridView]. Calls [createProfil] when tapped on.
 class _CreateProfilItem extends StatelessWidget {
-  final Function createProfil;
+  final Function() createProfil;
 
   _CreateProfilItem(this.createProfil);
 
@@ -273,8 +273,7 @@ class _CreateProfilDialog extends StatefulWidget {
 
 class _CreateProfilDialogState extends State<_CreateProfilDialog> {
   final _formKey = GlobalKey<FormState>();
-
-  TextEditingController _controller;
+  final _controller = TextEditingController();
 
   /// Set to true when work is in progress. Normaly used to check wether to show
   /// a [LoadingInterface] or not.
@@ -282,7 +281,6 @@ class _CreateProfilDialogState extends State<_CreateProfilDialog> {
 
   @override
   void initState() {
-    _controller = TextEditingController();
     super.initState();
   }
 
@@ -294,7 +292,7 @@ class _CreateProfilDialogState extends State<_CreateProfilDialog> {
 
   /// Creates a new profil. Sets [_processing] to true while processing.
   Future _createProfil() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       setState(() {
         _processing = true;
       });
@@ -328,6 +326,7 @@ class _CreateProfilDialogState extends State<_CreateProfilDialog> {
               autocorrect: false,
               controller: _controller,
               validator: (value) {
+                if (value == null) value = "";
                 return value.length > 30 ? Strings.maxLengthOfName : null;
               },
             ),
@@ -371,28 +370,28 @@ class _EditProfilDialog extends StatefulWidget {
 
 class _EditProfilDialogState extends State<_EditProfilDialog> {
   final _formKey = GlobalKey<FormState>();
-  Profil _profil;
-  TextEditingController _controller;
+  Profil? _profil;
+  TextEditingController? _controller;
 
   @override
   void initState() {
     _profil = widget.profil;
-    _controller = TextEditingController(text: _profil.name);
+    _controller = TextEditingController(text: _profil!.name);
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller!.dispose();
     super.dispose();
   }
 
   /// Updates the [_profil].
   void _updateProfil() {
-    if (_formKey.currentState.validate()) {
-      _profil.setName(
+    if (_formKey.currentState!.validate()) {
+      _profil!.setName(
         context,
-        _controller.text,
+        _controller!.text,
       );
       Navigator.pop(context);
     }
@@ -413,6 +412,7 @@ class _EditProfilDialogState extends State<_EditProfilDialog> {
             autocorrect: false,
             controller: _controller,
             validator: (value) {
+              if (value == null) value = "";
               if (value.isEmpty) return Strings.giveName;
               if (value.length > 30) return Strings.maxLengthOfName;
               return null;
@@ -449,7 +449,7 @@ class _DeleteProfilDialog extends StatefulWidget {
 }
 
 class _DeleteProfilDialogState extends State<_DeleteProfilDialog> {
-  Profil _profil;
+  Profil? _profil;
 
   /// Set to true when work is in progress. Normaly used to check wether to show
   /// a [LoadingInterface] or not.
@@ -466,7 +466,7 @@ class _DeleteProfilDialogState extends State<_DeleteProfilDialog> {
     setState(() {
       _processing = true;
     });
-    await widget.profilProvider.deleteProfil(context, _profil.id);
+    await widget.profilProvider.deleteProfil(context, _profil!.id);
     Navigator.pop(context);
   }
 
@@ -485,7 +485,7 @@ class _DeleteProfilDialogState extends State<_DeleteProfilDialog> {
         children: [
           Text(
             Strings.deleteProfilMessage1 +
-                _profil.name +
+                _profil!.name +
                 Strings.deleteProfilMessage2,
           ),
         ],

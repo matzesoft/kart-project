@@ -96,26 +96,26 @@ class _LightSwitch extends StatefulWidget {
 }
 
 class _LightSwitchState extends State<_LightSwitch> {
-  LightProvider light;
-  LightState state;
+  LightProvider? light;
+  LightState? state;
 
   void onPress() {
     if (state != LightState.off) {
       state == LightState.on
-          ? light.setLightState(LightState.dimmed)
-          : light.setLightState(LightState.on);
+          ? light!.lightState = LightState.dimmed
+          : light!.lightState = LightState.on;
     }
   }
 
   void onLongPress() {
     state == LightState.off
-        ? light.setLightState(LightState.dimmed)
-        : light.setLightState(LightState.off);
+        ? light!.lightState = LightState.dimmed
+        : light!.lightState = LightState.off;
   }
 
   Color _highlightColor(BuildContext context) {
     if (state != LightState.off) return Theme.of(context).backgroundColor;
-    return Theme.of(context).iconTheme.color;
+    return Theme.of(context).iconTheme.color!;
   }
 
   Color _backgroundColor(BuildContext context) {
@@ -136,7 +136,7 @@ class _LightSwitchState extends State<_LightSwitch> {
     return Consumer<LightProvider>(
       builder: (context, lightProvider, _) {
         this.light = lightProvider;
-        this.state = light.lightState;
+        this.state = light!.lightState;
 
         return SizedBox.expand(
           child: Padding(
@@ -160,7 +160,7 @@ class _LightSwitchState extends State<_LightSwitch> {
                       ),
                       Text(
                         _text(),
-                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                        style: Theme.of(context).textTheme.bodyText2!.copyWith(
                               color: _highlightColor(context),
                             ),
                       ),
@@ -177,15 +177,15 @@ class _LightSwitchState extends State<_LightSwitch> {
 }
 
 class _ControlCenterButton extends StatelessWidget {
-  final Function onPressed;
+  final Function() onPressed;
   final IconData icon;
   final bool selected;
   final EdgeInsets margin;
   final EdgeInsets padding;
 
   _ControlCenterButton({
-    @required this.onPressed,
-    @required this.icon,
+    required this.onPressed,
+    required this.icon,
     this.selected: false,
     this.margin: const EdgeInsets.all(6.0),
     this.padding: const EdgeInsets.all(8.0),

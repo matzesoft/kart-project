@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class NumberPad extends StatefulWidget {
   final Function(String) onConfirm;
 
-  NumberPad({@required this.onConfirm});
+  NumberPad({required this.onConfirm});
 
   @override
   _NumberPadState createState() => _NumberPadState();
@@ -97,12 +97,12 @@ class _NumberPadState extends State<NumberPad> {
 class _LockButton extends StatelessWidget {
   static const _BORDER_RADIUS = 90.0;
   static const _SIZE = 80.0;
-  final Function onTap;
-  final Widget child;
+  final Function()? onTap;
+  final Widget? child;
 
   _LockButton({this.onTap, this.child});
 
-  _LockButton.withText({this.onTap, String text})
+  _LockButton.withText({this.onTap, String text: ""})
       : child = Text(
           text,
           style: TextStyle(fontSize: 26.0),
@@ -137,7 +137,7 @@ class _LockButton extends StatelessWidget {
 class NumberPadDialog {
   final Function(String) onConfirm;
 
-  NumberPadDialog.show(BuildContext context, {@required this.onConfirm}) {
+  NumberPadDialog.show(BuildContext context, {required this.onConfirm}) {
     showDialog(context: context, builder: _build);
   }
 

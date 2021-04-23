@@ -3,12 +3,12 @@ import 'package:kart_project/design/theme.dart';
 
 /// Custom ListTile with better adapts to the rest of the design.
 class CustomListTile extends StatelessWidget {
-  final Function onPressed;
-  final Function onDoubleTap;
-  final Widget icon;
+  final Function()? onPressed;
+  final Function()? onDoubleTap;
+  final Widget? icon;
   final String title;
   final String subtitle;
-  final Widget trailing;
+  final Widget? trailing;
   final EdgeInsets padding;
 
   CustomListTile({

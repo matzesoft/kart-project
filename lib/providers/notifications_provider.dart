@@ -4,13 +4,8 @@ import 'package:kart_project/design/theme.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 class NotificationsProvider extends ChangeNotifier {
-  SimpleNotificationsController simple;
-  ErrorNotificationController error;
-
-  NotificationsProvider() {
-    simple = SimpleNotificationsController();
-    error = ErrorNotificationController(this);
-  }
+  late final simple = SimpleNotificationsController();
+  late final error = ErrorNotificationController(this);
 
   void notify() {
     notifyListeners();
@@ -21,17 +16,17 @@ class NotificationsProvider extends ChangeNotifier {
 /// are removed after shown and used to confirm the user a request and inform
 /// him about a exception.
 class SimpleNotificationsController {
-  Notification _notification;
+  Notification? _notification;
 
   /// Should confirm the user quickly if the requested process was sucessfull.
   /// For example when deleting a profil or changing a setting.
-  void show({IconData icon, String message}) {
+  void show({required IconData icon, required String message}) {
     _showNotification(icon: icon, message: message);
   }
 
   /// Shows a notification for 8 seconds and allows the message be longer than
   /// one line.
-  void showInform({IconData icon, String message}) {
+  void showInform({required IconData icon, required String message}) {
     _showNotification(
       icon: icon,
       message: message,
@@ -53,17 +48,17 @@ class SimpleNotificationsController {
   /// Shows a [_OvlerayNotification] at the bottom of the screen. If there is
   /// already a notification shown it will be dismissed.
   void _showNotification({
-    IconData icon,
-    String message,
+    required IconData icon,
+    required String message,
     Duration duration: const Duration(milliseconds: 2500),
-    int maxLines,
+    int maxLines: 1,
   }) async {
-    if (_notification != null && _notification.shown) {
-      _notification.tryDimiss();
+    if (_notification != null && _notification!.shown) {
+      _notification!.tryDimiss();
     }
     _notification = SimpleNotification(
         icon: icon, message: message, duration: duration, maxLines: maxLines);
-    _notification.show();
+    _notification!.show();
   }
 }
 
@@ -111,7 +106,7 @@ abstract class Notification {
   final String widgetKey;
 
   /// Entry to dismiss the notification.
-  OverlaySupportEntry _entry;
+  OverlaySupportEntry? _entry;
   bool _shown = false;
 
   Notification({
@@ -134,15 +129,12 @@ abstract class Notification {
       position: position,
     );
 
-    _entry.dismissed.whenComplete(() {
-      _shown = false;
-      print("Notification was dismissed.");
-    });
+    _entry!.dismissed.whenComplete(() => _shown = false);
   }
 
   /// Dismisses the notification if [shown].
   void tryDimiss({bool animate: true}) {
-    if (shown) _entry.dismiss(animate: animate);
+    if (shown) _entry!.dismiss(animate: animate);
   }
 
   /// Content of the notification.
@@ -221,7 +213,7 @@ class ErrorNotification extends Notification {
   final String categorie;
   final String title;
   final String message;
-  final Function(BuildContext context) moreDetails;
+  final Function(BuildContext context)? moreDetails;
 
   ErrorNotification(
     this.id, {
@@ -262,7 +254,7 @@ class ErrorNotification extends Notification {
                   title,
                   style: Theme.of(context)
                       .textTheme
-                      .headline6
+                      .headline6!
                       .copyWith(color: Theme.of(context).backgroundColor),
                 ),
               ),

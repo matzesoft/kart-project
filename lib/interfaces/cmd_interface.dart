@@ -8,12 +8,12 @@ typedef _SystemCmd = int Function(Pointer<Utf8> command);
 
 /// Uses `dart:ffi` to run system commands.
 class CmdInterface {
-  static Function _systemCmd;
+  static Function? _systemCmd;
 
   CmdInterface() {
     if (_systemCmd == null) {
       final dyLib = DynamicLibrary.open(_LIB_NAME);
-      _systemCmd ??= dyLib.lookupFunction<_system_cmd, _SystemCmd>("system");
+      _systemCmd = dyLib.lookupFunction<_system_cmd, _SystemCmd>("system");
     }
   }
 
@@ -23,8 +23,7 @@ class CmdInterface {
     // the command to finish until its updating its UI again.
     cmd += ' &>/dev/null &';
 
-    final cmdPointer = Utf8.toUtf8(cmd);
-    _systemCmd(cmdPointer);
-    free(cmdPointer);
+    final cmdPointer = cmd.toNativeUtf8();
+    _systemCmd!(cmdPointer);
   }
 }
