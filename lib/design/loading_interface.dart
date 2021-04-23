@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/sized_alert_dialog.dart';
-import 'package:kart_project/strings.dart';
 
 class LoadingInterface extends StatelessWidget {
   final String message;
@@ -41,7 +40,7 @@ class LoadingInterface extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            message != null ? message : Strings.loading,
+            message,
             style: Theme.of(context).textTheme.bodyText1,
             textAlign: TextAlign.center,
           ),
