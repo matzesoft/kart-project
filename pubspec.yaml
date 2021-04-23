@@ -1,7 +1,7 @@
 name: kart_project
 description: A flutter-pi-app running on a RaspberryPi 4, being the infotainment system for a custom builded e-kart, planned by two brothers.
 
-version: 0.1.0+1
+version: 0.2.0+1
 publish_to: none
 
 environment:

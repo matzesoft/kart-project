@@ -1,4 +1,4 @@
-const SOFTWARE_VERSION = "0.0.1+1";
+const SOFTWARE_VERSION = "0.2.0+1";
 const GITHUB_REPO_LINK = "github.com/matzesoft/kart-project";
 
 class Strings {
