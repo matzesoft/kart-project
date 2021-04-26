@@ -83,6 +83,38 @@ class Strings {
   static String get software => _STRINGS['software']!;
   static String get version => _STRINGS['version']!;
   static String get openSourceOnGitHub => _STRINGS['open_source_on_github']!;
+  // Controller Errors
+  static String get motorErrorCategorie => _STRINGS['motor_error_categorie']!;
+  static String get supplyErrorCategorie => _STRINGS['supply_error_categorie']!;
+  static String get heatErrorCategorie => _STRINGS['heat_error_categorie']!;
+  static String get communicationErrorTitle =>
+      _STRINGS['communication_error_title']!;
+  static String get communicationErrorMessage =>
+      _STRINGS['communication_error_message']!;
+  static String get identificationErrorTitle =>
+      _STRINGS['identification_error_title']!;
+  static String get identificationErrorMessage =>
+      _STRINGS['identification_error_message']!;
+  static String get lowVoltageTitle => _STRINGS['low_voltage_title']!;
+  static String get lowVoltageMessage => _STRINGS['low_voltage_message']!;
+  static String get overVoltageTitle => _STRINGS['over_voltage_title']!;
+  static String get overVoltageMessage => _STRINGS['over_voltage_message']!;
+  static String get stallErrorTitle => _STRINGS['stall_error_title']!;
+  static String get stallErrorMessage => _STRINGS['stall_error_message']!;
+  static String get generalControllerErrorTitle =>
+      _STRINGS['general_controller_error_title']!;
+  static String get generalControllerErrorMessage =>
+      _STRINGS['general_controller_error_message']!;
+  static String get controllerOverTemperatureTitle =>
+      _STRINGS['controller_over_temperature_title']!;
+  static String get controllerOverTemperatureMessage =>
+      _STRINGS['controller_over_temperature_message']!;
+  static String get throttleErrorTitle => _STRINGS['throttle_error_title']!;
+  static String get throttleErrorMessage => _STRINGS['throttle_error_message']!;
+  static String get motorOverTemperatureTitle =>
+      _STRINGS['motor_over_temperature_title']!;
+  static String get motorOverTemperatureMessage =>
+      _STRINGS['motor_over_temperature_message']!;
 
   static const Map<String, String> _STRINGS = {
     "profiles": "Profile",
@@ -168,5 +200,37 @@ class Strings {
     "software": "Software",
     "version": "Version",
     "open_source_on_github": "OpenSource auf GitHub",
+    // Controller Errors
+    "motor_error_categorie": "Motor",
+    "supply_error_categorie": "Versorgung",
+    "heat_error_categorie": "Hitze",
+    "communication_error_title":
+        "Verbindung zum Motor-Controller fehlgeschlagen",
+    "communication_error_message":
+        "Fahrdaten auslesen nicht möglich. Starte das Kart neu.",
+    "identification_error_title": "Fehler in der Motorsensorik",
+    "identification_error_message":
+        "Stellung der Motorwelle konnte nicht ermittelt werden. Starte das Kart neu.",
+    "low_voltage_title": "Versorgungsspannung zu niedrig",
+    "low_voltage_message": "Die Spannung des Akkus ist zu niedrig. "
+        "Er muss umgehend geladen werden.",
+    "over_voltage_title": "Versorgungsspannung zu hoch",
+    "over_voltage_message": "Die Spannung des Akkus ist zu hoch. "
+        "Schalte den Strom ab und überprüfe die Temperatur des Akuus.",
+    "stall_error_title": "Motor ist blockiert",
+    "stall_error_message": "Keine Motordrehung messbar. Überprüfe den Antrieb "
+        "und starte das Kart neu.",
+    "general_controller_error_title": "Motor-Controller Fehler",
+    "general_controller_error_message": "Es ist ein internern Fehler "
+        "aufgetreten. Starte das Kart neu.",
+    "controller_over_temperature_title": "Motor-Controller überhitzt",
+    "controller_over_temperature_message":
+        "Warte, bis seine Temperatur unter 80°C gefallen ist.",
+    "motor_over_temperature_title": "Motor überhitzt",
+    "motor_over_temperature_message":
+        "Warte, bis seine Temperatur wieder sinkt und fahre sparsam :D.",
+    "throttle_error_title": "Problem mit dem Gaspedal",
+    "throttle_error_message":
+        "Achte beim Einschalten darauf, kein Gas zu geben oder starte das Kart neu.",
   };
 }

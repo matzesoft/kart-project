@@ -2,6 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/custom_list_tile.dart';
 import 'package:kart_project/design/theme.dart';
+import 'package:kart_project/providers/kelly_controller/kelly_controller.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/main/control_center.dart';
@@ -62,9 +63,14 @@ class SpeedAndProfile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              Text(
-                "32", // TODO: Add API
-                style: Theme.of(context).textTheme.headline1,
+              Selector<KellyController, int>(
+                selector: (context, kellyController) => kellyController.speed,
+                builder: (context, speed, _) {
+                  return Text(
+                    speed.toString(),
+                    style: Theme.of(context).textTheme.headline1,
+                  );
+                },
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -136,25 +142,35 @@ class MomentaryConsumption extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: FractionallySizedBox(
-                    alignment: Alignment.topLeft,
-                    widthFactor: 0.6, // TODO: Animate and add API
-                    child: Container(
-                      decoration: ShapeDecoration(
-                        color: Colors.blue[600],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(AppTheme.borderRadius),
-                            bottomRight: Radius.circular(AppTheme.borderRadius),
+                Selector<KellyController, double>(
+                    selector: (context, kellyController) =>
+                        kellyController.motorCurrent,
+                    builder: (context, current, _) {
+                      final currentPercentage = (current / 400);
+
+                      return Expanded(
+                        flex: 1,
+                        child: FractionallySizedBox(
+                          alignment: Alignment.topLeft,
+                          widthFactor:
+                              currentPercentage, // TODO: Animate and add API
+                          child: Container(
+                            decoration: ShapeDecoration(
+                              color: Colors.blue[600],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topRight:
+                                      Radius.circular(AppTheme.borderRadius),
+                                  bottomRight:
+                                      Radius.circular(AppTheme.borderRadius),
+                                ),
+                              ),
+                            ),
+                            height: double.infinity,
                           ),
                         ),
-                      ),
-                      height: double.infinity,
-                    ),
-                  ),
-                ),
+                      );
+                    }),
               ],
             ),
           ),
@@ -195,9 +211,12 @@ class _BatteryState extends State<Battery> {
   Widget build(BuildContext context) {
     return Padding(
       padding: widgetPadding,
-      child: Column(
-        children: <Widget>[
-          Row(
+      child: Selector<KellyController, double>(
+        selector: (context, kellyController) => kellyController.batteryLevel,
+        builder: (context, batteryLevel, child) {
+          _batteryPercentage = batteryLevel;
+
+          return Row(
             children: <Widget>[
               Container(
                 margin: EdgeInsets.symmetric(
@@ -249,8 +268,8 @@ class _BatteryState extends State<Battery> {
                 ),
               ),
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }

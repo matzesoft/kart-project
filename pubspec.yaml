@@ -24,6 +24,8 @@ dependencies:
   flutter_gpiod: ^0.4.0-nullsafety
   wiring_pi_soft_pwm:
     path: ../wiring_pi_soft_pwm
+  linux_can:
+    path: ../linux_can/
 
   # Database
   sqflite_common_ffi: ^2.0.0
