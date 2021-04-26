@@ -94,7 +94,7 @@ packages:
       path: "../linux_can"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.1.1"
   map:
     dependency: "direct main"
     description:

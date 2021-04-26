@@ -5,7 +5,7 @@ import 'package:kart_project/providers/notifications_provider.dart';
 import 'controller_errors.dart';
 import 'kelly_can_data.dart';
 
-const _wheelDiameter = 0.33; // m // TODO: Check value!
+const _wheelDiameter = 0.33; // m
 
 const _voltageWhenCharged = 58.8;
 const _voltageWhenLow = 39.2;
@@ -42,7 +42,7 @@ class KellyController extends ChangeNotifier {
 
   int get speed {
     final rpm = _canData.rpm;
-    return (rpm * (24/112) * _wheelDiameter * pi * 60 / 1000).round();
+    return (rpm * (24 / 112) * _wheelDiameter * pi * 60 / 1000).round();
   }
 
   double get batteryLevel {
