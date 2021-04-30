@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'controller_errors.dart';
 import 'kelly_can_data.dart';
@@ -27,18 +28,9 @@ class KellyController extends ChangeNotifier {
   NotificationsProvider _notifications;
   ControllerError? _error;
 
-  ControllerError? get error => _error;
-
-  set error(ControllerError? controllerError) {
-    if (_error != controllerError) {
-      if (controllerError == null) {
-        if (error != null) _notifications.error.close(_error!.id);
-      } else {
-        _notifications.error.create(controllerError);
-      }
-      _error = controllerError;
-    }
-  }
+  final _powerGpio = GpioInterface.kellyOff;
+  final _enableMotorGpio = GpioInterface.enableMotor;
+  final _lowSpeedModeGpio = GpioInterface.lowSpeedMode;
 
   int get speed {
     final rpm = _canData.rpm;
@@ -53,19 +45,59 @@ class KellyController extends ChangeNotifier {
     return level;
   }
 
+  double get throttleSignal {
+    return _canData.throttleSignal / 0xFF;
+  }
+
   double get motorCurrent => _canData.motorCurrent;
   double get batteryVoltage => _canData.batteryVoltage;
-  int get throttleSignal => _canData.throttleSignal;
   int get controllerTemperature => _canData.controllerTemperature;
   int get motorTemperature => _canData.motorTemperature;
   MotorState get motorStateCommand => _canData.motorStateCommand;
   MotorState get motorStateFeedback => _canData.motorStateFeedback;
+  bool get isOn => _powerGpio.getValue();
+  bool get motorEnabled => _enableMotorGpio.getValue();
+  bool get ecoModusActive => _lowSpeedModeGpio.getValue();
+
+  ControllerError? get error => _error;
+  set error(ControllerError? controllerError) {
+    if (_error != controllerError) {
+      if (controllerError == null) {
+        if (error != null) _notifications.error.close(_error!.id);
+      } else {
+        _notifications.error.create(controllerError);
+      }
+      _error = controllerError;
+    }
+  }
+
+  void setPower(bool on) {
+    _powerGpio.setValue(on);
+    notifyListeners();
+  }
+
+  void enableMotor(bool locked) {
+    _enableMotorGpio.setValue(locked);
+    notifyListeners();
+  }
+
+  void setLowSpeedMode(bool active) {
+    _lowSpeedModeGpio.setValue(active);
+    notifyListeners();
+  }
 
   void _runTimer() {
     Timer.periodic(_updateFrequenz, (_) {
-      _canData.update();
-      _canData.update();
-      notifyListeners();
+      // _canData.update();
+      // _canData.update();
+      // notifyListeners();
+    });
+  }
+
+  Future restart() async {
+    setPower(false);
+    await Future.delayed(Duration(seconds: 3), () {
+      setPower(true);
     });
   }
 }

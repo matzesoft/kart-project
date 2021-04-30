@@ -160,7 +160,7 @@ class _ThemeModeCardState extends State<ThemeModeCard> {
         return CardWithTitle(
           title: Strings.appearance,
           child: Container(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(8.0),
             width: double.infinity,
             child: CustomListTile(
               icon: Icon(themeIcon),

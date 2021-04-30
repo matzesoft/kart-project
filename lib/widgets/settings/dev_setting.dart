@@ -87,7 +87,7 @@ class TestGpios extends StatefulWidget {
 }
 
 class _TestGpiosState extends State<TestGpios> {
-  GpioLine k1 = GpioInterface.eLock;
+  GpioLine k1 = GpioInterface.kellyOff;
   GpioLine blueLight = GpioInterface.ledBlue;
 
   void toggleK1() {

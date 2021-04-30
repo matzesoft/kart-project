@@ -83,6 +83,13 @@ class Strings {
   static String get software => _STRINGS['software']!;
   static String get version => _STRINGS['version']!;
   static String get openSourceOnGitHub => _STRINGS['open_source_on_github']!;
+  static String get data => _STRINGS['data']!;
+  static String get monitor => _STRINGS['monitor']!;
+  static String get power => _STRINGS['power']!;
+  static String get restartMotorController =>
+      _STRINGS['restart_motor_controller']!;
+  static String get restartingMotorController =>
+      _STRINGS['restarting_motor_controller']!;
   // Controller Errors
   static String get motorErrorCategorie => _STRINGS['motor_error_categorie']!;
   static String get supplyErrorCategorie => _STRINGS['supply_error_categorie']!;
@@ -200,6 +207,11 @@ class Strings {
     "software": "Software",
     "version": "Version",
     "open_source_on_github": "OpenSource auf GitHub",
+    "data": "Daten",
+    "monitor": "Monitor",
+    "power": "Power",
+    "restart_motor_controller": "Starte den Motor-Controller neu.",
+    "restarting_motor_controller": "Motor-Controller wird neu gestartet...",
     // Controller Errors
     "motor_error_categorie": "Motor",
     "supply_error_categorie": "Versorgung",

@@ -8,6 +8,8 @@ const _gpioConsumer = 'KartProject';
 const _FAN_PIN = 21;
 const _FAN_RPM_SPEED_PIN = 20;
 const _KELLY_OFF = 17;
+const _LOW_SPEED_MODE = 27;
+const _SAFETY_LOCK = 22;
 const _BACK_LIGHT_PIN = 0;
 const _LED_BLUE_PIN = 26;
 const _LED_GREEN_PIN = 19;
@@ -16,6 +18,8 @@ const _FRONT_LIGHT_PIN = 18;
 
 /// Defines which GPIOs are used for what purpose
 class GpioInterface {
+  GpioInterface._();
+
   static List<GpioLine>? _gpios;
 
   static List<GpioLine> _initGpios() {
@@ -24,7 +28,24 @@ class GpioInterface {
     return chip.lines;
   }
 
-  static GpioLine get eLock => _requestOutput(_KELLY_OFF, initalValue: true);
+  // Because of internals of the RelayModule by ELEGOO the `ActiveState` has
+  // to be turn around.
+  static GpioLine get kellyOff => _requestOutput(
+        _KELLY_OFF,
+        initalValue: true,
+        activeState: ActiveState.high,
+      );
+  static GpioLine get enableMotor => _requestOutput(
+        _SAFETY_LOCK,
+        initalValue: false,
+        activeState: ActiveState.low,
+      );
+  static GpioLine get lowSpeedMode => _requestOutput(
+        _LOW_SPEED_MODE,
+        initalValue: false,
+        activeState: ActiveState.low,
+      );
+
   static SoftPwmGpio get fan => _setupSoftPwm(_FAN_PIN);
   static GpioLine get fanRpmSpeed =>
       _requestInput(_FAN_RPM_SPEED_PIN, activeState: ActiveState.low);
@@ -36,12 +57,21 @@ class GpioInterface {
 
   /// Checks if the gpio is already requested and requests a new output if not.
   /// [initalValue] defines the value the GPIO should be set to.
-  static GpioLine _requestOutput(int pin, {bool initalValue: false}) {
+  static GpioLine _requestOutput(
+    int pin, {
+    bool initalValue: false,
+    ActiveState activeState: ActiveState.high,
+  }) {
     _gpios ??= _initGpios();
 
     final gpio = _gpios![pin];
-    if (!gpio.requested)
-      gpio.requestOutput(initialValue: initalValue, consumer: _gpioConsumer);
+    if (!gpio.requested) {
+      gpio.requestOutput(
+        initialValue: initalValue,
+        consumer: _gpioConsumer,
+        activeState: activeState,
+      );
+    }
     return gpio;
   }
 
@@ -53,12 +83,13 @@ class GpioInterface {
     _gpios ??= _initGpios();
 
     final gpio = _gpios![pin];
-    if (!gpio.requested)
+    if (!gpio.requested) {
       gpio.requestInput(
         consumer: _gpioConsumer,
         activeState: activeState,
         triggers: {SignalEdge.falling, SignalEdge.rising},
       );
+    }
     return gpio;
   }
 
