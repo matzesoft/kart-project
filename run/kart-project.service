@@ -1,5 +1,5 @@
 # Service file which starts the KartProject on boot. This file should be
-# included under '/etc/systemd/system/'. To initalize it run the following
+# located under '/etc/systemd/system/'. To initalize it run the following
 # commands:
 # sudo systemctl enable kart-project
 # sudo systemctl start kart-project
