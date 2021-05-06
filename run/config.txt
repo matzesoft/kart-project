@@ -1,8 +1,9 @@
 # Should be located at the bottom of '/boot/config.txt'.
 
+## Gpio Init 
+gpio=17,22,27=op,dh
+gpio=4=ip,pd
+
 ## SBC-CAN01 CAN Modul
 dtoverlay=mcp2515-can0,oscillator=16000000,interrupt=25
 dtoverlay=sp1-1cs
-
-## Gpio Init 
-gpio=17,22,27=op,dh
