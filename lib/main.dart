@@ -50,21 +50,26 @@ class KartProject extends StatelessWidget {
           providers: [
             Provider(
               create: (context) => AudioProvider(),
+              lazy: false,
             ),
             ChangeNotifierProvider(
               create: (context) => NotificationsProvider(),
+              lazy: false,
             ),
             ChangeNotifierProvider(
               create: (context) => CoolingProvider(),
+              lazy: false,
             ),
             ChangeNotifierProvider(
               create: (context) => SystemProvider(),
+              lazy: false,
             ),
             ChangeNotifierProxyProvider<ProfilProvider, AppearanceProvider>(
               create: (context) => AppearanceProvider(context.profil()),
               update: (_, profilProvider, appearanceProvider) {
                 return appearanceProvider!.update(profilProvider.currentProfil);
               },
+              lazy: false,
             ),
             ChangeNotifierProxyProvider2<ProfilProvider, SystemProvider,
                 LightProvider>(
@@ -78,12 +83,14 @@ class KartProject extends StatelessWidget {
                   bootProvider.locked,
                 );
               },
+              lazy: false,
             ),
             ChangeNotifierProxyProvider<ProfilProvider, MapProvider>(
               create: (context) => MapProvider(context.profil()),
               update: (_, profilProvider, mapProvider) {
                 return mapProvider!.update(profilProvider.currentProfil);
               },
+              lazy: false,
             ),
             ChangeNotifierProxyProvider<NotificationsProvider, KellyController>(
               create: (context) {
@@ -92,6 +99,7 @@ class KartProject extends StatelessWidget {
               update: (context, notificationProvider, kellyConroller) {
                 return kellyConroller!;
               },
+              lazy: false,
             ),
           ],
           child: Core(),
