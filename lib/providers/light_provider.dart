@@ -29,6 +29,7 @@ class LightProvider extends ChangeNotifier {
   LightState _lightState = LightState.off;
 
   LightProvider(this._profil, bool locked) {
+    lightState = LightState.off;
     _updateLightWithLock(locked);
   }
 
@@ -169,10 +170,13 @@ const BRAKING_BRIGHTNESS = 1.0;
 
 class BackLightController {
   final _pwmGpio = GpioInterface.backLight;
+  final _brakeInput = GpioInterface.brakeInput;
   bool _active = false;
   bool _braking = false;
 
-  BackLightController();
+  BackLightController() {
+    _brakeInput.onEvent.listen(_onBrake);
+  }
 
   /// Wether the backlight is on or off.
   bool get active => _active;
@@ -186,27 +190,19 @@ class BackLightController {
     }
   }
 
-  /// Sets the light dependend on the [LightState].
-  void _setLightByState(LightState state) {
-    if (state == LightState.off) {
-      active = false;
-    } else {
-      active = true;
-    }
-  }
-
   /// Called when there is a change to the [_brakeInput] GPIO.
-  // TODO: Implement brake check with KellyController Input
   void _onBrake(SignalEvent event) {
-    // final value = _brakeInput.getValue();
-    final value = false;
+    final value = _brakeInput.getValue();
+
     // Check if value has changed.
     if (value != _braking) {
       _braking = value;
       if (_braking) {
         _setLightBrightness(BRAKING_BRIGHTNESS);
       } else {
-        active = _active;
+        _active
+            ? _setLightBrightness(DEFAULT_BRIGHTNESS)
+            : _setLightBrightness(0.0);
       }
     }
   }
@@ -215,6 +211,15 @@ class BackLightController {
   void _setLightBrightness(double brightness) {
     final value = (brightness * 100).round();
     _pwmGpio.write(value);
+  }
+
+  /// Sets the light dependend on the [LightState].
+  void _setLightByState(LightState state) {
+    if (state == LightState.off) {
+      active = false;
+    } else {
+      active = true;
+    }
   }
 }
 

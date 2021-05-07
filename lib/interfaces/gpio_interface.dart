@@ -11,6 +11,7 @@ const _KELLY_OFF = 17;
 const _LOW_SPEED_MODE = 27;
 const _SAFETY_LOCK = 22;
 const _BACK_LIGHT_PIN = 0;
+const _BRAKE_INPUT = 4;
 const _LED_BLUE_PIN = 26;
 const _LED_GREEN_PIN = 19;
 const _LED_RED_PIN = 13;
@@ -53,6 +54,8 @@ class GpioInterface {
   static GpioLine get ledGreen => _requestOutput(_LED_GREEN_PIN);
   static GpioLine get ledRed => _requestOutput(_LED_RED_PIN);
   static SoftPwmGpio get backLight => _setupSoftPwm(_BACK_LIGHT_PIN);
+  static GpioLine get brakeInput =>
+      _requestInput(_BRAKE_INPUT, activeState: ActiveState.low);
   static SoftPwmGpio get frontLight => _setupSoftPwm(_FRONT_LIGHT_PIN);
 
   /// Checks if the gpio is already requested and requests a new output if not.
