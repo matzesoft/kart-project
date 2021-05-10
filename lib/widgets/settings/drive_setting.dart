@@ -146,11 +146,6 @@ class _PowerControllerState extends State<PowerController> {
                 value: controller.isOn,
                 onChanged: controller.setPower,
               ),
-              Text("Eco:"),
-              Switch(
-                value: controller.ecoModusActive,
-                onChanged: controller.setLowSpeedMode,
-              ),
               Text("Motor enabled:"),
               Switch(
                 value: controller.motorEnabled,
