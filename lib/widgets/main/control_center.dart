@@ -18,10 +18,6 @@ class _ControlCenterState extends State<ControlCenter> {
     context.read<AudioProvider>().playHootSound();
   }
 
-  void lock() {
-    context.read<SystemProvider>().lock();
-  }
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -56,10 +52,7 @@ class _ControlCenterState extends State<ControlCenter> {
                             ),
                             Expanded(
                               flex: 1,
-                              child: _ControlCenterButton(
-                                onPressed: lock,
-                                icon: EvaIcons.lockOutline,
-                              ),
+                              child: LockButton(),
                             ),
                           ],
                         ),
@@ -70,6 +63,34 @@ class _ControlCenterState extends State<ControlCenter> {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+}
+
+class LockButton extends StatelessWidget {
+  void toggleEnableMotor(KellyController controller) {
+    controller.enableMotor(!controller.motorEnabled);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<KellyController>(
+      builder: (context, kellyController, _) {
+        final systemProvider = context.read<SystemProvider>();
+
+        return _ControlCenterButton(
+          onPressed: kellyController.allowDisEnableMotor
+              ? () => toggleEnableMotor(kellyController)
+              : null,
+          onLongPress: systemProvider.allowLock(kellyController)
+              ? () => systemProvider.lock(kellyController)
+              : null,
+          selected: kellyController.motorEnabled,
+          icon: kellyController.motorEnabled
+              ? EvaIcons.lockOutline
+              : EvaIcons.unlockOutline,
         );
       },
     );
@@ -200,7 +221,7 @@ class _ControlCenterButton extends StatelessWidget {
     this.padding: const EdgeInsets.all(8.0),
   });
 
-  bool get disabled => onPressed == null && onLongPress == null;
+  bool get disabled => onPressed == null;
 
   Color backgroundColor(BuildContext context) {
     final color = selected

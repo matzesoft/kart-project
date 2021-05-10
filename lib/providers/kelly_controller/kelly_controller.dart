@@ -12,6 +12,8 @@ const _WHEEL_DIAMETER = 0.33; // m
 const _VOLTAGE_WHEN_CHARGED = 58.8;
 const _VOLTAGE_WHEN_LOW = 39.2;
 
+const _ENABLE_MOTOR_THROTTLE_LIMIT = 0.05;
+
 enum MotorState {
   neutral,
   forward,
@@ -64,8 +66,6 @@ class KellyController extends ChangeNotifier {
   int get motorTemperature => _canData.motorTemperature;
   MotorState get motorStateCommand => _canData.motorStateCommand;
   MotorState get motorStateFeedback => _canData.motorStateFeedback;
-  bool get isOn => _powerGpio.getValue();
-  bool get motorEnabled => _enableMotorGpio.getValue();
 
   ControllerError? get error => _error;
   set error(ControllerError? controllerError) {
@@ -75,6 +75,8 @@ class KellyController extends ChangeNotifier {
       _error = controllerError;
     }
   }
+
+  bool get isOn => _powerGpio.getValue();
 
   void setPower(bool on) {
     if (on) {
@@ -86,9 +88,22 @@ class KellyController extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool get motorEnabled => _enableMotorGpio.getValue();
+
+  bool get allowDisEnableMotor {
+    if (motorEnabled) {
+      if (speed <= 0) return true;
+    } else {
+      if (throttleSignal <= _ENABLE_MOTOR_THROTTLE_LIMIT) return true;
+    }
+    return false;
+  }
+
   void enableMotor(bool locked) {
-    _enableMotorGpio.setValue(locked);
-    notifyListeners();
+    if (allowDisEnableMotor) {
+      _enableMotorGpio.setValue(locked);
+      notifyListeners();
+    }
   }
 
   void _runTimer() {
