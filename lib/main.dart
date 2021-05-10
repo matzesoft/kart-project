@@ -48,19 +48,19 @@ class KartProject extends StatelessWidget {
         },
         child: MultiProvider(
           providers: [
-            Provider(
+            Provider<AudioProvider>(
               create: (context) => AudioProvider(),
               lazy: false,
             ),
-            ChangeNotifierProvider(
+            ChangeNotifierProvider<NotificationsProvider>(
               create: (context) => NotificationsProvider(),
               lazy: false,
             ),
-            ChangeNotifierProvider(
+            ChangeNotifierProvider<CoolingProvider>(
               create: (context) => CoolingProvider(),
               lazy: false,
             ),
-            ChangeNotifierProvider(
+            ChangeNotifierProvider<SystemProvider>(
               create: (context) => SystemProvider(),
               lazy: false,
             ),
