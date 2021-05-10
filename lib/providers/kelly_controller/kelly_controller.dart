@@ -3,13 +3,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
+import 'package:kart_project/providers/profil_provider.dart';
 import 'controller_errors.dart';
 import 'kelly_can_data.dart';
 
-const _wheelDiameter = 0.33; // m
+const _WHEEL_DIAMETER = 0.33; // m
 
-const _voltageWhenCharged = 58.8;
-const _voltageWhenLow = 39.2;
+const _VOLTAGE_WHEN_CHARGED = 58.8;
+const _VOLTAGE_WHEN_LOW = 39.2;
 
 enum MotorState {
   neutral,
@@ -17,29 +18,37 @@ enum MotorState {
   backward,
 }
 
-const _updateFrequenz = const Duration(milliseconds: 50);
+const _UPDATE_FREQUENZ = const Duration(milliseconds: 50);
 
 class KellyController extends ChangeNotifier {
-  KellyController(this._notifications) {
+  KellyController(this._profil, this._notifications) {
     _runTimer();
   }
 
-  late final _canData = KellyCanData(this);
-  NotificationsProvider _notifications;
-  ControllerError? _error;
+  KellyController update(Profil newProfil) {
+    _profil = newProfil;
+    lowSpeedMode._onProfilSwitched();
+    notifyListeners();
+    return this;
+  }
 
+  late final lowSpeedMode = LowSpeedModeController(this);
+  late final _canData = KellyCanData(this);
   final _powerGpio = GpioInterface.kellyOff;
   final _enableMotorGpio = GpioInterface.enableMotor;
-  final _lowSpeedModeGpio = GpioInterface.lowSpeedMode;
+  NotificationsProvider _notifications;
+  Profil _profil;
+  ControllerError? _error;
+  Timer? _timer;
 
   int get speed {
     final rpm = _canData.rpm;
-    return (rpm * (24 / 112) * _wheelDiameter * pi * 60 / 1000).round();
+    return (rpm * (24 / 112) * _WHEEL_DIAMETER * pi * 60 / 1000).round();
   }
 
   double get batteryLevel {
-    final _difference = _voltageWhenCharged - _voltageWhenLow;
-    final level = (batteryVoltage - _voltageWhenLow) / _difference;
+    final _difference = _VOLTAGE_WHEN_CHARGED - _VOLTAGE_WHEN_LOW;
+    final level = (batteryVoltage - _VOLTAGE_WHEN_LOW) / _difference;
     if (level < 0.0) return 0.0;
     if (level > 1.0) return 1.0;
     return level;
@@ -57,21 +66,22 @@ class KellyController extends ChangeNotifier {
   MotorState get motorStateFeedback => _canData.motorStateFeedback;
   bool get isOn => _powerGpio.getValue();
   bool get motorEnabled => _enableMotorGpio.getValue();
-  bool get ecoModusActive => _lowSpeedModeGpio.getValue();
 
   ControllerError? get error => _error;
   set error(ControllerError? controllerError) {
-    if (_error != controllerError) {
-      if (controllerError == null) {
-        if (error != null) _notifications.error.close(_error!.id);
-      } else {
-        _notifications.error.create(controllerError);
-      }
+    if (error != controllerError) {
+      if (error != null) _notifications.error.close(_error!.id);
+      if (controllerError != null) _notifications.error.create(controllerError);
       _error = controllerError;
     }
   }
 
   void setPower(bool on) {
+    if (on) {
+      _runTimer();
+    } else {
+      if (_timer != null) _timer!.cancel();
+    }
     _powerGpio.setValue(on);
     notifyListeners();
   }
@@ -81,16 +91,12 @@ class KellyController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setLowSpeedMode(bool active) {
-    _lowSpeedModeGpio.setValue(active);
-    notifyListeners();
-  }
-
   void _runTimer() {
-    Timer.periodic(_updateFrequenz, (_) {
-      // _canData.update();
-      // _canData.update();
-      // notifyListeners();
+    _timer = Timer.periodic(_UPDATE_FREQUENZ, (_) {
+      _canData.update();
+      _canData.update();
+      lowSpeedMode._onBatteryLevelChange();
+      notifyListeners();
     });
   }
 
@@ -99,5 +105,64 @@ class KellyController extends ChangeNotifier {
     await Future.delayed(Duration(seconds: 3), () {
       setPower(true);
     });
+  }
+
+  void _notify() {
+    notifyListeners();
+  }
+}
+
+const _FORCE_LOW_SPEED_MODE_LIMIT = 0.20;
+const _UNFORCE_LOW_SPEED_MODE_LIMIT = 0.30;
+
+class LowSpeedModeController {
+  LowSpeedModeController(this._controller) {
+    if (alwaysActive && !isActive) _activateLowSpeedMode(true);
+  }
+
+  final KellyController _controller;
+  double get _batteryLevel => _controller.batteryLevel;
+
+  final _lowSpeedModeGpio = GpioInterface.lowSpeedMode;
+  bool _forceLowSpeedMode = false;
+
+  bool get isActive => _lowSpeedModeGpio.getValue();
+
+  /// Returns true if the battery level is under [_FORCE_LOW_SPEED_MODE_LIMIT].
+  /// Turns back to false when over [_UNFORCE_LOW_SPEED_MODE_LIMIT].
+  bool get forceLowSpeed {
+    bool force = false;
+    if (!_forceLowSpeedMode) {
+      if (_batteryLevel <= _FORCE_LOW_SPEED_MODE_LIMIT) force = true;
+    } else {
+      if (_batteryLevel <= _UNFORCE_LOW_SPEED_MODE_LIMIT) force = true;
+    }
+    _forceLowSpeedMode = force;
+    return _forceLowSpeedMode;
+  }
+
+  bool get alwaysActive => _controller._profil.lowSpeedAlwaysActive;
+  set alwaysActive(bool setActive) {
+    _controller._profil.lowSpeedAlwaysActive = setActive;
+    if (!forceLowSpeed) {
+      if (isActive != setActive) _activateLowSpeedMode(setActive);
+    }
+  }
+
+  void _onBatteryLevelChange() {
+    if (!alwaysActive) {
+      if (isActive != forceLowSpeed) _activateLowSpeedMode(forceLowSpeed);
+    }
+  }
+
+  void _onProfilSwitched() {
+    if (!forceLowSpeed) {
+      if (isActive != alwaysActive) _activateLowSpeedMode(alwaysActive);
+    }
+  }
+
+  void _activateLowSpeedMode(bool activate) {
+    _lowSpeedModeGpio.setValue(activate);
+    _controller._notify();
   }
 }

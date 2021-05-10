@@ -2,6 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/audio_provider.dart';
+import 'package:kart_project/providers/kelly_controller/kelly_controller.dart';
 import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
@@ -13,10 +14,6 @@ class ControlCenter extends StatefulWidget {
 }
 
 class _ControlCenterState extends State<ControlCenter> {
-  void toggleCruiseControl() async {
-    // TODO: Implement
-  }
-
   void hoot() async {
     context.read<AudioProvider>().playHootSound();
   }
@@ -50,40 +47,50 @@ class _ControlCenterState extends State<ControlCenter> {
                           icon: EvaIcons.volumeDownOutline,
                         ),
                       ),
-                      // TODO: Improve transition
                       Expanded(
-                        child: _ControlCenterButton(
-                          onPressed: lock,
-                          icon: EvaIcons.lockOutline,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: LowSpeedButton(),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: _ControlCenterButton(
+                                onPressed: lock,
+                                icon: EvaIcons.lockOutline,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      /*
-                      AnimatedCrossFade(
-                        duration: Duration(milliseconds: 400),
-                        crossFadeState: state == LightState.on
-                            ? CrossFadeState.showSecond
-                            : CrossFadeState.showFirst,
-                        firstChild: Expanded(
-                          child: ControlCenterButton(
-                            onPressed: _toggleCruiseControl,
-                            icon: EvaIcons.arrowheadRightOutline,
-                            selected: false, //TODO: Add Provider data
-                          ),
-                        ),
-                        secondChild: Expanded(
-                          child: ControlCenterButton(
-                            onPressed: _lock,
-                            icon: EvaIcons.lockOutline,
-                          ),
-                        ),
-                      ),
-                      */
                     ],
                   ),
                 ),
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+}
+
+class LowSpeedButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<KellyController>(
+      builder: (context, kellyController, _) {
+        final lowSpeedMode = kellyController.lowSpeedMode;
+
+        return _ControlCenterButton(
+          onPressed: lowSpeedMode.forceLowSpeed
+              ? null
+              : () {
+                  lowSpeedMode.alwaysActive = !lowSpeedMode.alwaysActive;
+                },
+          icon: EvaIcons.flashOutline,
+          selected: lowSpeedMode.isActive,
         );
       },
     );
@@ -177,7 +184,8 @@ class _LightSwitchState extends State<_LightSwitch> {
 }
 
 class _ControlCenterButton extends StatelessWidget {
-  final Function() onPressed;
+  final Function()? onPressed;
+  final Function()? onLongPress;
   final IconData icon;
   final bool selected;
   final EdgeInsets margin;
@@ -187,9 +195,28 @@ class _ControlCenterButton extends StatelessWidget {
     required this.onPressed,
     required this.icon,
     this.selected: false,
+    this.onLongPress,
     this.margin: const EdgeInsets.all(6.0),
     this.padding: const EdgeInsets.all(8.0),
   });
+
+  bool get disabled => onPressed == null && onLongPress == null;
+
+  Color backgroundColor(BuildContext context) {
+    final color = selected
+        ? Theme.of(context).accentColor
+        : Theme.of(context).canvasColor;
+    if (disabled) return color.withAlpha(100);
+    return color;
+  }
+
+  Color iconColor(BuildContext context) {
+    final Color color = selected
+        ? Theme.of(context).backgroundColor
+        : Theme.of(context).iconTheme.color!;
+    if (disabled) return color.withAlpha(100);
+    return color;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -198,20 +225,17 @@ class _ControlCenterButton extends StatelessWidget {
         padding: margin,
         child: Material(
           borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-          color: selected
-              ? Theme.of(context).accentColor
-              : Theme.of(context).canvasColor,
+          color: backgroundColor(context),
           child: InkWell(
             onTap: onPressed,
+            onLongPress: onLongPress,
             borderRadius: BorderRadius.circular(AppTheme.borderRadius),
             child: Padding(
               padding: padding,
               child: Icon(
                 icon,
                 size: 36,
-                color: selected
-                    ? Theme.of(context).backgroundColor
-                    : Theme.of(context).iconTheme.color,
+                color: iconColor(context),
               ),
             ),
           ),

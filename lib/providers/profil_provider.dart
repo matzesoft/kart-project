@@ -113,6 +113,7 @@ class Profil {
   int _themeMode = ThemeMode.light.index;
   double _maxLightBrightness = 0.6;
   int _lightStripColor = 0xFFFFFFFFF;
+  int _lowSpeedAlwaysActive = 0;
   Location? _location1;
   Location? _location2;
 
@@ -122,6 +123,7 @@ class Profil {
     ThemeMode? themeMode,
     double? maxLightBrightness,
     Color? lightStripColor,
+    bool? lowSpeedAlwaysActive,
     Location? location1,
     Location? location2,
   }) {
@@ -132,6 +134,8 @@ class Profil {
     if (lightStripColor != null) this._lightStripColor = lightStripColor.value;
     if (location1 != null) this._location1 = location1;
     if (location2 != null) this._location2 = location2;
+    if (lowSpeedAlwaysActive != null)
+      this._lowSpeedAlwaysActive = lowSpeedAlwaysActive ? 1 : 0;
   }
 
   /// ID of the profil in the SQL DB.
@@ -173,6 +177,12 @@ class Profil {
     _update({LIGHT_STRIP_COLOR_COLUMN: _lightStripColor});
   }
 
+  bool get lowSpeedAlwaysActive => _lowSpeedAlwaysActive == 1;
+  set lowSpeedAlwaysActive(bool active) {
+    _lowSpeedAlwaysActive = active ? 1 : 0;
+    _update({LOW_SPEED_ALWAYS_ACTIVE_COLUMN: _lowSpeedAlwaysActive});
+  }
+
   Location? get location1 => _location1;
   set location1(Location? location) {
     if (location != null) {
@@ -202,6 +212,7 @@ class Profil {
       THEME_MODE_COLUMN: _themeMode,
       MAX_LIHGT_BRIGHTNESS_COLUMN: _maxLightBrightness,
       LIGHT_STRIP_COLOR_COLUMN: _lightStripColor,
+      LOW_SPEED_ALWAYS_ACTIVE_COLUMN: _lowSpeedAlwaysActive,
     };
     if (location1 != null) data.addAll(location1!.toProfilMap(1)!);
     if (location2 != null) data.addAll(location2!.toProfilMap(2)!);
@@ -214,6 +225,7 @@ class Profil {
     _themeMode = profil[THEME_MODE_COLUMN];
     _maxLightBrightness = profil[MAX_LIHGT_BRIGHTNESS_COLUMN];
     _lightStripColor = profil[LIGHT_STRIP_COLOR_COLUMN];
+    _lowSpeedAlwaysActive = profil[LOW_SPEED_ALWAYS_ACTIVE_COLUMN];
     _location1 = Location.fromProfilMap(1, profil);
     _location2 = Location.fromProfilMap(2, profil);
   }
@@ -232,6 +244,7 @@ const NAME_COLUMN = "name";
 const THEME_MODE_COLUMN = "theme_mode";
 const MAX_LIHGT_BRIGHTNESS_COLUMN = "max_light_brightness";
 const LIGHT_STRIP_COLOR_COLUMN = "light_strip_color_column";
+const LOW_SPEED_ALWAYS_ACTIVE_COLUMN = "low_speed_always_active_colum";
 // Locations
 const LOCATION1_ZOOM_COLUMN = "location1_zoom";
 const LOCATION1_LAT_COLUMN = "location1_lat";
@@ -286,6 +299,7 @@ class ProfilsSQLHelper {
         $THEME_MODE_COLUMN INTEGER,
         $MAX_LIHGT_BRIGHTNESS_COLUMN REAL,
         $LIGHT_STRIP_COLOR_COLUMN INTEGER,
+        $LOW_SPEED_ALWAYS_ACTIVE_COLUMN INTEGER,
 
         $LOCATION1_ZOOM_COLUMN REAL,
         $LOCATION1_LAT_COLUMN REAL,

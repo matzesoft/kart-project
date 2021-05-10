@@ -92,12 +92,17 @@ class KartProject extends StatelessWidget {
               },
               lazy: false,
             ),
-            ChangeNotifierProxyProvider<NotificationsProvider, KellyController>(
+            ChangeNotifierProxyProvider2<ProfilProvider, NotificationsProvider,
+                KellyController>(
               create: (context) {
-                return KellyController(context.read<NotificationsProvider>());
+                return KellyController(
+                  context.profil(),
+                  context.read<NotificationsProvider>(),
+                );
               },
-              update: (context, notificationProvider, kellyConroller) {
-                return kellyConroller!;
+              update:
+                  (_, profilProvider, notificationProvider, kellyConroller) {
+                return kellyConroller!.update(profilProvider.currentProfil);
               },
               lazy: false,
             ),
