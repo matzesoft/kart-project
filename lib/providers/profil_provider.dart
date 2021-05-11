@@ -112,7 +112,7 @@ class Profil {
   String _name = "Standard Profil";
   int _themeMode = ThemeMode.light.index;
   double _maxLightBrightness = 0.6;
-  int _lightStripColor = 0xFFFFFFFFF;
+  int _lightStripColor = 0xFFD6D6D6;
   int _lowSpeedAlwaysActive = 0;
   Location? _location1;
   Location? _location2;
@@ -226,8 +226,16 @@ class Profil {
     _maxLightBrightness = profil[MAX_LIHGT_BRIGHTNESS_COLUMN];
     _lightStripColor = profil[LIGHT_STRIP_COLOR_COLUMN];
     _lowSpeedAlwaysActive = profil[LOW_SPEED_ALWAYS_ACTIVE_COLUMN];
-    _location1 = Location.fromProfilMap(1, profil);
-    _location2 = Location.fromProfilMap(2, profil);
+    if (profil[LOCATION1_ZOOM_COLUMN] != null &&
+        profil[LOCATION1_LAT_COLUMN] != null &&
+        profil[LOCATION1_LNG_COLUMN] != null) {
+      _location1 = Location.fromProfilMap(1, profil);
+    }
+    if (profil[LOCATION2_ZOOM_COLUMN] != null &&
+        profil[LOCATION2_LAT_COLUMN] != null &&
+        profil[LOCATION2_LNG_COLUMN] != null) {
+      _location2 = Location.fromProfilMap(2, profil);
+    }
   }
 }
 

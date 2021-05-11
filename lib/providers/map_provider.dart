@@ -81,7 +81,7 @@ class MapProvider extends ChangeNotifier {
   /// Moves to [location1] or [location2] based on the [index].
   void toLocation(BuildContext context, int index) {
     Location? location = _locationOfIndex(index);
-    if (location!.isEmpty) {
+    if (location == null) {
       context.showInformNotification(
         icon: EvaIcons.pinOutline,
         message: Strings.saveLocationExplanation,
@@ -189,26 +189,17 @@ class Location {
       throw ArgumentError("Index must be 1 or 2.");
     }
     if (index == 1) {
-      if (profil[LOCATION1_ZOOM_COLUMN] != null) {
-        zoom = profil[LOCATION1_ZOOM_COLUMN];
-      }
-      if ((profil[LOCATION1_LAT_COLUMN] != null) &&
-          (profil[LOCATION1_LNG_COLUMN] != null)) {
-        coordinates = LatLng(
-          profil[LOCATION1_LAT_COLUMN],
-          profil[LOCATION1_LNG_COLUMN],
-        );
-      }
+      zoom = profil[LOCATION1_ZOOM_COLUMN];
+      coordinates = LatLng(
+        profil[LOCATION1_LAT_COLUMN],
+        profil[LOCATION1_LNG_COLUMN],
+      );
     } else {
-      if (profil[LOCATION2_ZOOM_COLUMN] != null)
-        zoom = profil[LOCATION2_ZOOM_COLUMN];
-      if ((profil[LOCATION2_LAT_COLUMN] != null) &&
-          (profil[LOCATION2_LNG_COLUMN] != null)) {
-        coordinates = LatLng(
-          profil[LOCATION2_LAT_COLUMN],
-          profil[LOCATION2_LNG_COLUMN],
-        );
-      }
+      zoom = profil[LOCATION2_ZOOM_COLUMN];
+      coordinates = LatLng(
+        profil[LOCATION2_LAT_COLUMN],
+        profil[LOCATION2_LNG_COLUMN],
+      );
     }
   }
 }
