@@ -1,6 +1,5 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:kart_project/design/theme.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 class NotificationsProvider extends ChangeNotifier {
@@ -105,6 +104,9 @@ abstract class Notification {
   /// Key required by the [Dismissable].
   final String widgetKey;
 
+  /// Moves the widget upper to the top. Needed to ignore SafeArea widget.
+  final bool translate;
+
   /// Entry to dismiss the notification.
   OverlaySupportEntry? _entry;
   bool _shown = false;
@@ -114,6 +116,7 @@ abstract class Notification {
     this.dismissDirection: DismissDirection.down,
     this.duration: const Duration(milliseconds: 5000),
     this.widgetKey: "notify_key",
+    this.translate: false,
   });
 
   /// If the notification is shown on screen.
@@ -122,13 +125,11 @@ abstract class Notification {
   /// Shows the notification as an overlay.
   void show() {
     _shown = true;
-    // TODO: Test with showOverlay
     _entry = showOverlayNotification(
       (context) => this._widget(context),
       duration: duration,
       position: position,
     );
-
     _entry!.dismissed.whenComplete(() => _shown = false);
   }
 
@@ -142,25 +143,28 @@ abstract class Notification {
 
   /// UI of the notification.
   Widget _widget(BuildContext context) {
-    return Dismissible(
-      key: Key(widgetKey),
-      direction: dismissDirection,
-      onDismissed: (_) {
-        tryDimiss(animate: false);
-      },
-      child: FractionallySizedBox(
-        widthFactor: _widthFactor,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            bottom: 8.0,
-            left: 16.0,
-            top: 36.0,
-            right: 16.0,
-          ),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _content(context),
+    return Transform.translate(
+      offset: translate ? Offset(0, -25) : Offset.zero,
+      child: Dismissible(
+        key: Key(widgetKey),
+        direction: dismissDirection,
+        onDismissed: (_) {
+          tryDimiss(animate: false);
+        },
+        child: FractionallySizedBox(
+          widthFactor: _widthFactor,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              bottom: 8.0,
+              left: 16.0,
+              top: 36.0,
+              right: 16.0,
+            ),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: _content(context),
+              ),
             ),
           ),
         ),
@@ -227,35 +231,34 @@ class ErrorNotification extends Notification {
           dismissDirection: DismissDirection.up,
           duration: Duration.zero,
           widgetKey: id,
+          translate: true,
         );
 
-  // TODO: Disable SafeArea for notification
   @override
   Widget _content(BuildContext context) {
     return Column(
       children: [
-        Container(
+        Padding(
           padding: EdgeInsets.all(4.0),
-          decoration: ShapeDecoration(
-            color: Theme.of(context).errorColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-            ),
-          ),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                child: Icon(icon, color: Theme.of(context).backgroundColor),
+                child: Icon(icon, color: Theme.of(context).errorColor),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                child: Text(
-                  title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6!
-                      .copyWith(color: Theme.of(context).backgroundColor),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                  child: Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.headline6!.copyWith(
+                          color: Theme.of(context).errorColor,
+                        ),
+                  ),
                 ),
               ),
             ],
