@@ -38,8 +38,11 @@ class LightProvider extends ChangeNotifier {
   /// This is normally called inside a [ProxyProvider]s update method.
   /// Does update all listeners.
   LightProvider update(Profil newProfil, bool locked) {
-    _ifProfilSwitched(newProfil);
-    _profil = newProfil;
+    if (newProfil != _profil) {
+      _profil = newProfil;
+      if (lightState == LightState.on) lightState = LightState.dimmed;
+      lightStrip._updateByProfil();
+    }
     _updateLightWithLock(locked);
     notifyListeners();
     return this;
@@ -56,16 +59,6 @@ class LightProvider extends ChangeNotifier {
     backLight._setLightByState(state);
     lightStrip._setLightByState(state);
     notifyListeners();
-  }
-
-  /// Should be called if there is an change to the profil. Checks if the profil
-  /// has switched and sets [_lightState] to dimmed if true.
-  bool _ifProfilSwitched(Profil newProfil) {
-    if (newProfil != _profil) {
-      if (lightState == LightState.on) lightState = LightState.dimmed;
-      return true;
-    }
-    return false;
   }
 
   /// Called when there is a change to the lock-state. Sets the [_lightState]
@@ -223,6 +216,8 @@ class BackLightController {
   }
 }
 
+class DriveBackwardsLightController {}
+
 const LIGHT_STRIP_COLORS = [
   Color(0xFFD6D6D6),
   Color(0xFF00FFFF),
@@ -271,5 +266,9 @@ class LightStripController {
   /// Sets the light dependend on the [LightState].
   void _setLightByState(LightState state) {
     state == LightState.off ? active = false : active = true;
+  }
+
+  void _updateByProfil() {
+    _updateLightStrip();
   }
 }

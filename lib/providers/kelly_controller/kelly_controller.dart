@@ -28,9 +28,11 @@ class KellyController extends ChangeNotifier {
   }
 
   KellyController update(Profil newProfil) {
-    _profil = newProfil;
-    lowSpeedMode._onProfilSwitched();
-    notifyListeners();
+    if (_profil != newProfil) {
+      _profil = newProfil;
+      lowSpeedMode._onProfilSwitched();
+      notifyListeners();
+    }
     return this;
   }
 
