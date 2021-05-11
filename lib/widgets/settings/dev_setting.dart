@@ -1,9 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/card_with_title.dart';
-import 'package:flutter_gpiod/flutter_gpiod.dart';
-import 'package:kart_project/interfaces/gpio_interface.dart';
-import 'package:kart_project/extensions.dart';
 import 'package:kart_project/providers/cooling_provider.dart';
 import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
@@ -76,41 +73,6 @@ class KartServiceEnable extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-// TODO: Implement in DevSettings
-class TestGpios extends StatefulWidget {
-  @override
-  _TestGpiosState createState() => _TestGpiosState();
-}
-
-class _TestGpiosState extends State<TestGpios> {
-  GpioLine k1 = GpioInterface.kellyOff;
-  GpioLine blueLight = GpioInterface.ledBlue;
-
-  void toggleK1() {
-    k1.toggle();
-  }
-
-  void toggleBlueLight() {
-    blueLight.toggle();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        FlatButton(
-          child: Text("K1"),
-          onPressed: () => toggleK1(),
-        ),
-        FlatButton(
-          child: Text("Blue Light"),
-          onPressed: () => toggleBlueLight(),
-        ),
-      ],
     );
   }
 }
