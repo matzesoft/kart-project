@@ -141,9 +141,7 @@ class Drawer extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppTheme.borderRadius),
         child: InkWell(
           borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-          onTap: () {
-            onTap(itemIndex);
-          },
+          onTap: currentIndex != itemIndex ? () => onTap(itemIndex) : null,
           child: ListTile(
             leading: Icon(
               settings[itemIndex].icon,
@@ -172,9 +170,7 @@ class Drawer extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppTheme.borderRadius),
             child: InkWell(
               borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-              onTap: () {
-                onTap(itemIndex);
-              },
+              onTap: currentIndex != itemIndex ? () => onTap(itemIndex) : null,
               child: Selector<ProfilProvider, String>(
                 selector: (context, profilProvider) {
                   return profilProvider.currentProfil.name;
