@@ -324,11 +324,13 @@ class ErrorItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton.icon(
+    return TextButton.icon(
       icon: Icon(notification.icon, color: Theme.of(context).errorColor),
       label: Text(notification.categorie),
-      textColor: Theme.of(context).errorColor,
-      padding: EdgeInsets.all(4.0),
+      style: TextButton.styleFrom(
+        primary: Theme.of(context).errorColor,
+        padding: EdgeInsets.all(4.0),
+      ),
       onPressed: notification.moreDetails != null
           ? () => notification.moreDetails!(context)
           : null,

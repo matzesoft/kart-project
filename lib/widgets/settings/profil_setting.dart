@@ -341,13 +341,13 @@ class _CreateProfilDialogState extends State<_CreateProfilDialog> {
         ],
       ),
       actions: [
-        FlatButton(
+        TextButton(
           onPressed: () {
             Navigator.pop(context);
           },
           child: Text(Strings.cancel),
         ),
-        FlatButton(
+        TextButton(
           onPressed: () {
             _createProfil();
           },
@@ -421,13 +421,13 @@ class _EditProfilDialogState extends State<_EditProfilDialog> {
         ),
       ),
       actions: [
-        FlatButton(
+        TextButton(
           onPressed: () {
             Navigator.pop(context);
           },
           child: Text(Strings.cancel),
         ),
-        FlatButton(
+        TextButton(
           onPressed: () {
             _updateProfil();
           },
@@ -491,13 +491,13 @@ class _DeleteProfilDialogState extends State<_DeleteProfilDialog> {
         ],
       ),
       actions: [
-        FlatButton(
+        TextButton(
           onPressed: () {
             Navigator.pop(context);
           },
           child: Text(Strings.cancel),
         ),
-        FlatButton(
+        TextButton(
           onPressed: () {
             _deleteProfil();
           },

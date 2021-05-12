@@ -22,11 +22,15 @@ class AppTheme {
         applyElevationOverlayColor: true,
         backgroundColor: Colors.white,
         brightness: Brightness.light,
-        buttonTheme: ButtonThemeData(
-          buttonColor: Colors.blueAccent[700],
-          padding: EdgeInsets.all(16.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all(Colors.blueAccent[700]),
+            padding: MaterialStateProperty.all(EdgeInsets.all(16.0)),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+            ),
           ),
         ),
         buttonBarTheme: ButtonBarThemeData(

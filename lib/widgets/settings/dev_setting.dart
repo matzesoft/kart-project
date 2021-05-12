@@ -20,10 +20,12 @@ class DevSetting extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: FlatButton(
+              child: TextButton(
                 onPressed: () => systemProvider.disableDevOptions(context),
                 child: Text(Strings.disable),
-                textColor: Theme.of(context).errorColor,
+                style: TextButton.styleFrom(
+                  primary: Theme.of(context).errorColor,
+                ),
               ),
             ),
             KartServiceEnable(devOptions),
@@ -58,17 +60,17 @@ class KartServiceEnable extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FlatButton.icon(
+            TextButton.icon(
               icon: Icon(EvaIcons.checkmarkOutline),
               label: Text(Strings.enable),
               onPressed: enable,
-              padding: EdgeInsets.all(16.0),
+              style: TextButton.styleFrom(padding: EdgeInsets.all(16.0)),
             ),
-            FlatButton.icon(
+            TextButton.icon(
               icon: Icon(EvaIcons.closeOutline),
               label: Text(Strings.disable),
               onPressed: disable,
-              padding: EdgeInsets.all(16.0),
+              style: TextButton.styleFrom(padding: EdgeInsets.all(16.0)),
             ),
           ],
         ),
@@ -88,13 +90,13 @@ class ErrorNotificationsTest extends StatelessWidget {
       title: "Error Notifications",
       child: Column(
         children: [
-          FlatButton(
+          TextButton(
             child: Text("Create Testerror"),
             onPressed: () {
               devOptions.createTestError(context);
             },
           ),
-          FlatButton(
+          TextButton(
             child: Text("Close Testerror"),
             onPressed: () {
               devOptions.closeTestError(context);
