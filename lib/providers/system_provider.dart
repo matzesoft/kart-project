@@ -40,6 +40,7 @@ class SystemProvider extends ChangeNotifier {
   void lock(KellyController kellyController) {
     if (allowLock(kellyController)) {
       _locked = true;
+      kellyController.enableMotor(false);
       notifyListeners();
     }
   }
