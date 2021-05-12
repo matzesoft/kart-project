@@ -79,6 +79,7 @@ class LockButton extends StatelessWidget {
     return Consumer<KellyController>(
       builder: (context, kellyController, _) {
         final systemProvider = context.read<SystemProvider>();
+        final motorLocked = !kellyController.motorEnabled;
 
         return _ControlCenterButton(
           onPressed: kellyController.allowDisEnableMotor
@@ -87,10 +88,8 @@ class LockButton extends StatelessWidget {
           onLongPress: systemProvider.allowLock(kellyController)
               ? () => systemProvider.lock(kellyController)
               : null,
-          selected: kellyController.motorEnabled,
-          icon: kellyController.motorEnabled
-              ? EvaIcons.lockOutline
-              : EvaIcons.unlockOutline,
+          selected: motorLocked,
+          icon: motorLocked ? EvaIcons.lockOutline : EvaIcons.unlockOutline,
         );
       },
     );
