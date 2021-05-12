@@ -88,9 +88,11 @@ class KellyCanData {
   MotorState get motorStateCommand => _motorStateCommand;
   MotorState get motorStateFeedback => _motorStateFeedback;
 
-  KellyCanData(this._controller) {
+  KellyCanData(this._controller);
+
+  Future setup() async {
     try {
-      _can.setup();
+      await _can.setup();
     } on SocketException {
       _communicationFailed();
     }
@@ -105,7 +107,7 @@ class KellyCanData {
       // was sucessful.
       if (failedReading) {
         _failedReads += 1;
-        if (_failedReads == _FAILED_READS_LIMIT) {
+        if (_failedReads >= _FAILED_READS_LIMIT) {
           throw SocketException("Unable to read from can bus.");
         }
       } else {

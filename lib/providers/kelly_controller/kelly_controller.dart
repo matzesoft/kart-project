@@ -24,7 +24,8 @@ const _UPDATE_FREQUENZ = const Duration(milliseconds: 50);
 
 class KellyController extends ChangeNotifier {
   KellyController(this._profil, this._notifications) {
-    _runTimer();
+    _canData = KellyCanData(this);
+    _canData.setup().then((_) => _runTimer());
   }
 
   KellyController update(Profil newProfil) {
@@ -36,8 +37,8 @@ class KellyController extends ChangeNotifier {
     return this;
   }
 
+  late final KellyCanData _canData;
   late final lowSpeedMode = LowSpeedModeController(this);
-  late final _canData = KellyCanData(this);
   final _powerGpio = GpioInterface.kellyOff;
   final _enableMotorGpio = GpioInterface.enableMotor;
   NotificationsProvider _notifications;
