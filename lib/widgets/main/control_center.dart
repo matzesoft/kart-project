@@ -69,6 +69,30 @@ class _ControlCenterState extends State<ControlCenter> {
   }
 }
 
+class LowSpeedButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<KellyController>(
+      builder: (context, kellyController, _) {
+        final lowSpeedMode = kellyController.lowSpeedMode;
+
+        return _ControlCenterButton(
+          onPressed: lowSpeedMode.forceLowSpeed
+              ? null
+              : () {
+                  lowSpeedMode.alwaysActive = !lowSpeedMode.alwaysActive;
+                },
+          icon: EvaIcons.flashOutline,
+          selected: lowSpeedMode.isActive,
+          accentColor: Theme.of(context).brightness == Brightness.light
+              ? Colors.green[700]
+              : Colors.green[300],
+        );
+      },
+    );
+  }
+}
+
 class LockButton extends StatelessWidget {
   void toggleEnableMotor(KellyController controller) {
     controller.enableMotor(!controller.motorEnabled);
@@ -90,27 +114,9 @@ class LockButton extends StatelessWidget {
               : null,
           selected: motorLocked,
           icon: motorLocked ? EvaIcons.lockOutline : EvaIcons.unlockOutline,
-        );
-      },
-    );
-  }
-}
-
-class LowSpeedButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<KellyController>(
-      builder: (context, kellyController, _) {
-        final lowSpeedMode = kellyController.lowSpeedMode;
-
-        return _ControlCenterButton(
-          onPressed: lowSpeedMode.forceLowSpeed
-              ? null
-              : () {
-                  lowSpeedMode.alwaysActive = !lowSpeedMode.alwaysActive;
-                },
-          icon: EvaIcons.flashOutline,
-          selected: lowSpeedMode.isActive,
+          accentColor: Theme.of(context).brightness == Brightness.light
+              ? Colors.red[700]
+              : Colors.red[300],
         );
       },
     );
@@ -210,6 +216,7 @@ class _ControlCenterButton extends StatelessWidget {
   final bool selected;
   final EdgeInsets margin;
   final EdgeInsets padding;
+  final Color? accentColor;
 
   _ControlCenterButton({
     required this.onPressed,
@@ -218,16 +225,17 @@ class _ControlCenterButton extends StatelessWidget {
     this.onLongPress,
     this.margin: const EdgeInsets.all(6.0),
     this.padding: const EdgeInsets.all(8.0),
+    this.accentColor,
   });
 
   bool get disabled => onPressed == null;
 
   Color backgroundColor(BuildContext context) {
     final color = selected
-        ? Theme.of(context).accentColor
+        ? (accentColor == null ? Theme.of(context).accentColor : accentColor)
         : Theme.of(context).canvasColor;
-    if (disabled) return color.withAlpha(100);
-    return color;
+    if (disabled) return color!.withAlpha(100);
+    return color!;
   }
 
   Color iconColor(BuildContext context) {

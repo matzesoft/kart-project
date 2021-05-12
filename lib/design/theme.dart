@@ -163,11 +163,15 @@ class AppTheme {
         applyElevationOverlayColor: true,
         backgroundColor: Colors.grey[900],
         brightness: Brightness.dark,
-        buttonTheme: ButtonThemeData(
-          buttonColor: Colors.blueAccent[100],
-          padding: EdgeInsets.all(16.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all(Colors.blueAccent[100]),
+            padding: MaterialStateProperty.all(EdgeInsets.all(16.0)),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+            ),
           ),
         ),
         buttonBarTheme: ButtonBarThemeData(
