@@ -5,17 +5,18 @@ import 'package:wiring_pi_soft_pwm/wiring_pi_soft_pwm.dart';
 const _gpioChip = 'pinctrl-bcm2711';
 const _gpioConsumer = 'KartProject';
 
-const _FAN_PIN = 21;
-const _FAN_RPM_SPEED_PIN = 20;
-const _KELLY_OFF = 17;
-const _LOW_SPEED_MODE = 27;
-const _SAFETY_LOCK = 22;
 const _BACK_LIGHT_PIN = 0;
+const _BACK_DRIVE_LIGHT_PIN = 1;
 const _BRAKE_INPUT = 4;
-const _LED_BLUE_PIN = 26;
-const _LED_GREEN_PIN = 19;
 const _LED_RED_PIN = 13;
+const _KELLY_OFF = 17;
 const _FRONT_LIGHT_PIN = 18;
+const _LED_GREEN_PIN = 19;
+const _FAN_RPM_SPEED_PIN = 20;
+const _FAN_PIN = 21;
+const _SAFETY_LOCK = 22;
+const _LED_BLUE_PIN = 26;
+const _LOW_SPEED_MODE = 27;
 
 /// Defines which GPIOs are used for what purpose
 class GpioInterface {
@@ -47,16 +48,22 @@ class GpioInterface {
         activeState: ActiveState.low,
       );
 
+  
+  static GpioLine get brakeInput => _requestInput(
+        _BRAKE_INPUT,
+        activeState: ActiveState.low,
+      );
+  static GpioLine get fanRpmSpeed => _requestInput(
+        _FAN_RPM_SPEED_PIN,
+        activeState: ActiveState.low,
+      );
   static SoftPwmGpio get fan => _setupSoftPwm(_FAN_PIN);
-  static GpioLine get fanRpmSpeed =>
-      _requestInput(_FAN_RPM_SPEED_PIN, activeState: ActiveState.low);
   static GpioLine get ledBlue => _requestOutput(_LED_BLUE_PIN);
   static GpioLine get ledGreen => _requestOutput(_LED_GREEN_PIN);
   static GpioLine get ledRed => _requestOutput(_LED_RED_PIN);
   static SoftPwmGpio get backLight => _setupSoftPwm(_BACK_LIGHT_PIN);
-  static GpioLine get brakeInput =>
-      _requestInput(_BRAKE_INPUT, activeState: ActiveState.low);
   static SoftPwmGpio get frontLight => _setupSoftPwm(_FRONT_LIGHT_PIN);
+  static GpioLine get backDriveLight => _requestOutput(_BACK_DRIVE_LIGHT_PIN);
 
   /// Checks if the gpio is already requested and requests a new output if not.
   /// [initalValue] defines the value the GPIO should be set to.

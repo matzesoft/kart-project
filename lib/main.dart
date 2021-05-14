@@ -106,6 +106,19 @@ class KartProject extends StatelessWidget {
               },
               lazy: false,
             ),
+            ProxyProvider<KellyController, BackDriveLightController>(
+              create: (context) {
+                return BackDriveLightController(
+                  context.read<KellyController>().motorStateCommand,
+                );
+              },
+              update: (_, kellyController, backDriveLightController) {
+                return backDriveLightController!.update(
+                  kellyController.motorStateCommand,
+                );
+              },
+              lazy: false,
+            ),
           ],
           child: Core(),
         ),

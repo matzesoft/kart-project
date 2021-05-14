@@ -15,7 +15,6 @@ class DriveSetting extends StatelessWidget {
       children: [
         ControllerErrors(),
         RestartController(),
-        PowerController(),
         ControllerData(),
       ],
     );
@@ -119,42 +118,6 @@ class ControllerData extends StatelessWidget {
           },
         ),
       ),
-    );
-  }
-}
-
-// TODO: Remove after testing
-class PowerController extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _PowerControllerState();
-  }
-}
-
-class _PowerControllerState extends State<PowerController> {
-  late KellyController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<KellyController>(
-      builder: (context, controller, child) {
-        return CardWithTitle(
-          title: "Power",
-          child: Column(
-            children: [
-              Switch(
-                value: controller.isOn,
-                onChanged: controller.setPower,
-              ),
-              Text("Motor enabled:"),
-              Switch(
-                value: controller.motorEnabled,
-                onChanged: controller.enableMotor,
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

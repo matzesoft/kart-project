@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_gpiod/flutter_gpiod.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
+import 'package:kart_project/providers/kelly_controller/kelly_controller.dart';
 import 'package:kart_project/providers/profil_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -216,8 +217,6 @@ class BackLightController {
   }
 }
 
-class DriveBackwardsLightController {}
-
 const LIGHT_STRIP_COLORS = [
   Color(0xFFD6D6D6),
   Color(0xFF00FFFF),
@@ -270,5 +269,27 @@ class LightStripController {
 
   void _updateByProfil() {
     _updateLightStrip();
+  }
+}
+
+class BackDriveLightController {
+  BackDriveLightController(MotorState cmdState) {
+    _updateByMotorState(cmdState);
+  }
+
+  BackDriveLightController update(MotorState cmdState) {
+    _updateByMotorState(cmdState);
+    return this;
+  }
+
+  final _lightGpio = GpioInterface.backDriveLight;
+  bool get backDriveLightActive => _lightGpio.getValue();
+
+  void _updateByMotorState(MotorState cmdState) {
+    if (cmdState == MotorState.backward) {
+      _lightGpio.setValue(true);
+    } else {
+      _lightGpio.setValue(false);
+    }
   }
 }
