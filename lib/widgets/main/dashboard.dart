@@ -2,7 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/custom_list_tile.dart';
 import 'package:kart_project/design/theme.dart';
-import 'package:kart_project/providers/kelly_controller/kelly_controller.dart';
+import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/main/control_center.dart';
@@ -63,7 +63,7 @@ class SpeedAndProfile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              Selector<KellyController, int>(
+              Selector<MotorControllerProvider, int>(
                 selector: (context, kellyController) => kellyController.speed,
                 builder: (context, speed, _) {
                   return Text(
@@ -108,7 +108,7 @@ class MomentaryConsumption extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: widgetPadding,
-      child: Consumer<KellyController>(
+      child: Consumer<MotorControllerProvider>(
         builder: (context, kellyController, _) {
           final current = kellyController.motorCurrent;
           final currentInPercent = kellyController.motorCurrentInPercent;
@@ -226,7 +226,7 @@ class _BatteryState extends State<Battery> {
   Widget build(BuildContext context) {
     return Padding(
       padding: widgetPadding,
-      child: Selector<KellyController, double>(
+      child: Selector<MotorControllerProvider, double>(
         selector: (context, kellyController) => kellyController.batteryLevel,
         builder: (context, batteryLevel, child) {
           _batteryPercentage = batteryLevel;

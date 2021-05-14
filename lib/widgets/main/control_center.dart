@@ -2,7 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/audio_provider.dart';
-import 'package:kart_project/providers/kelly_controller/kelly_controller.dart';
+import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
@@ -72,7 +72,7 @@ class _ControlCenterState extends State<ControlCenter> {
 class LowSpeedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<KellyController>(
+    return Consumer<MotorControllerProvider>(
       builder: (context, kellyController, _) {
         final lowSpeedMode = kellyController.lowSpeedMode;
 
@@ -94,13 +94,13 @@ class LowSpeedButton extends StatelessWidget {
 }
 
 class LockButton extends StatelessWidget {
-  void toggleEnableMotor(KellyController controller) {
+  void toggleEnableMotor(MotorControllerProvider controller) {
     controller.enableMotor(!controller.motorEnabled);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<KellyController>(
+    return Consumer<MotorControllerProvider>(
       builder: (context, kellyController, _) {
         final systemProvider = context.read<SystemProvider>();
         final motorLocked = !kellyController.motorEnabled;

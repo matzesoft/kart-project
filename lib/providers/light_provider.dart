@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_gpiod/flutter_gpiod.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
-import 'package:kart_project/providers/kelly_controller/kelly_controller.dart';
+import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/profil_provider.dart';
 import 'package:provider/provider.dart';
 

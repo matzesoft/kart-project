@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/design/card_with_title.dart';
 import 'package:kart_project/design/custom_list_tile.dart';
 import 'package:kart_project/design/loading_interface.dart';
-import 'package:kart_project/providers/kelly_controller/controller_errors.dart';
-import 'package:kart_project/providers/kelly_controller/kelly_controller.dart';
+import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +23,7 @@ class DriveSetting extends StatelessWidget {
 class ControllerErrors extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Selector<KellyController, ControllerError?>(
+    return Selector<MotorControllerProvider, ControllerError?>(
       selector: (context, kellyController) => kellyController.error,
       builder: (BuildContext context, error, _) {
         return AnimatedSwitcher(
@@ -60,7 +59,7 @@ class RestartController extends StatelessWidget {
       context,
       message: Strings.restartingMotorController,
     );
-    context.read<KellyController>().restart().whenComplete(
+    context.read<MotorControllerProvider>().restart().whenComplete(
           () => Navigator.pop(context),
         );
   }
@@ -99,7 +98,7 @@ class ControllerData extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(8.0),
-        child: Consumer<KellyController>(
+        child: Consumer<MotorControllerProvider>(
           builder: (context, controller, _) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,

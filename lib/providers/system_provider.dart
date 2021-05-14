@@ -4,7 +4,7 @@ import 'package:kart_project/interfaces/cmd_interface.dart';
 import 'package:kart_project/pin.dart';
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/providers/cooling_provider.dart';
-import 'package:kart_project/providers/kelly_controller/kelly_controller.dart';
+import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/strings.dart';
@@ -32,12 +32,12 @@ class SystemProvider extends ChangeNotifier {
   /// If developer options are enabled.
   bool get devOptionsEnabled => _devOptionsEnabled;
 
-  bool allowLock(KellyController kellyController) {
+  bool allowLock(MotorControllerProvider kellyController) {
     return (kellyController.speed <= 0);
   }
 
   /// Sets [locked] to true.
-  void lock(KellyController kellyController) {
+  void lock(MotorControllerProvider kellyController) {
     if (allowLock(kellyController)) {
       _locked = true;
       kellyController.enableMotor(false);

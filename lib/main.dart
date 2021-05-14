@@ -4,7 +4,7 @@ import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/providers/audio_provider.dart';
 import 'package:kart_project/providers/cooling_provider.dart';
-import 'package:kart_project/providers/kelly_controller/kelly_controller.dart';
+import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
@@ -93,9 +93,9 @@ class KartProject extends StatelessWidget {
               lazy: false,
             ),
             ChangeNotifierProxyProvider2<ProfilProvider, NotificationsProvider,
-                KellyController>(
+                MotorControllerProvider>(
               create: (context) {
-                return KellyController(
+                return MotorControllerProvider(
                   context.profil(),
                   context.read<NotificationsProvider>(),
                 );
@@ -106,10 +106,10 @@ class KartProject extends StatelessWidget {
               },
               lazy: false,
             ),
-            ProxyProvider<KellyController, BackDriveLightController>(
+            ProxyProvider<MotorControllerProvider, BackDriveLightController>(
               create: (context) {
                 return BackDriveLightController(
-                  context.read<KellyController>().motorStateCommand,
+                  context.read<MotorControllerProvider>().motorStateCommand,
                 );
               },
               update: (_, kellyController, backDriveLightController) {
