@@ -9,10 +9,12 @@ import 'kelly_can_data.dart';
 
 const _WHEEL_DIAMETER = 0.33; // m
 
-const _VOLTAGE_WHEN_CHARGED = 58.8;
-const _VOLTAGE_WHEN_LOW = 39.2;
+const _VOLTAGE_WHEN_CHARGED = 50.4;
+const _VOLTAGE_WHEN_LOW = 42.0;
 
 const _ENABLE_MOTOR_THROTTLE_LIMIT = 0.05;
+
+const _MOTOR_CURRENT_MAX = 176.0;
 
 enum MotorState {
   neutral,
@@ -64,6 +66,8 @@ class KellyController extends ChangeNotifier {
   }
 
   double get motorCurrent => _canData.motorCurrent;
+  double get motorCurrentInPercent => motorCurrent / _MOTOR_CURRENT_MAX;
+
   double get batteryVoltage => _canData.batteryVoltage;
   int get controllerTemperature => _canData.controllerTemperature;
   int get motorTemperature => _canData.motorTemperature;

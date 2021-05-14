@@ -108,80 +108,95 @@ class MomentaryConsumption extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: widgetPadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            height: 10,
-            width: double.infinity,
-            decoration: ShapeDecoration(
-              color: Theme.of(context).canvasColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: FractionallySizedBox(
-                    widthFactor: 0.0, // TODO: Animate and add API
-                    alignment: Alignment.topRight,
-                    child: Container(
-                      decoration: ShapeDecoration(
-                        color: Colors.green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(AppTheme.borderRadius),
-                            bottomLeft: Radius.circular(AppTheme.borderRadius),
-                          ),
-                        ),
-                      ),
-                      height: double.infinity,
-                    ),
+      child: Consumer<KellyController>(
+        builder: (context, kellyController, _) {
+          final current = kellyController.motorCurrent;
+          final currentInPercent = kellyController.motorCurrentInPercent;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                height: 10,
+                width: double.infinity,
+                decoration: ShapeDecoration(
+                  color: Theme.of(context).canvasColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppTheme.borderRadius),
                   ),
                 ),
-                Selector<KellyController, double>(
-                    selector: (context, kellyController) =>
-                        kellyController.motorCurrent,
-                    builder: (context, current, _) {
-                      final currentPercentage = (current / 400);
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    ConsuptionBarItem(
+                      Alignment.topRight,
+                      currentInPercent < 0.0 ? currentInPercent * (-1) : 0.0,
+                    ),
+                    ConsuptionBarItem(
+                      Alignment.topLeft,
+                      currentInPercent > 0.0 ? currentInPercent : 0.0,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  (current.toString() + "A"),
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
 
-                      return Expanded(
-                        flex: 1,
-                        child: FractionallySizedBox(
-                          alignment: Alignment.topLeft,
-                          widthFactor:
-                              currentPercentage, // TODO: Animate and add API
-                          child: Container(
-                            decoration: ShapeDecoration(
-                              color: Colors.blue[600],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topRight:
-                                      Radius.circular(AppTheme.borderRadius),
-                                  bottomRight:
-                                      Radius.circular(AppTheme.borderRadius),
-                                ),
-                              ),
-                            ),
-                            height: double.infinity,
-                          ),
-                        ),
-                      );
-                    }),
-              ],
+class ConsuptionBarItem extends StatefulWidget {
+  final Alignment align;
+  final double percentage;
+
+  ConsuptionBarItem(this.align, this.percentage);
+
+  @override
+  _ConsuptionBarItemState createState() => _ConsuptionBarItemState();
+}
+
+class _ConsuptionBarItemState extends State<ConsuptionBarItem> {
+  double _percentageBefore = 0.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 1,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween<double>(
+          begin: _percentageBefore,
+          end: widget.percentage,
+        ),
+        duration: Duration(milliseconds: 100),
+        builder: (context, currentInPercent, _) {
+          _percentageBefore = widget.percentage;
+
+          return FractionallySizedBox(
+            alignment: Alignment.topLeft,
+            widthFactor: currentInPercent,
+            child: Container(
+              decoration: ShapeDecoration(
+                color: Colors.blue[600],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(AppTheme.borderRadius),
+                    bottomRight: Radius.circular(AppTheme.borderRadius),
+                  ),
+                ),
+              ),
+              height: double.infinity,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Text(
-              "3 kW", //TODO: Add API
-              style: Theme.of(context).textTheme.subtitle2,
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
