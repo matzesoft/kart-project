@@ -54,10 +54,6 @@ class SystemProvider extends ChangeNotifier {
       );
     } else {
       _locked = false;
-      context.showNotification(
-        icon: EvaIcons.unlockOutline,
-        message: Strings.unlocked,
-      );
       notifyListeners();
     }
   }
