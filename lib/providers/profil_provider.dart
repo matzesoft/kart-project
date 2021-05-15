@@ -2,9 +2,9 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kart_project/providers/map_provider.dart';
+import 'package:kart_project/providers/preferences_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/extensions.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -16,7 +16,8 @@ enum ProfilsState {
 
 /// Lets you create, update and delete profiles.
 class ProfilProvider extends ChangeNotifier {
-  final _sqlHelper = ProfilsSQLHelper();
+  final PreferencesProvider _preferences;
+  late final _sqlHelper = ProfilsDBHelper(_preferences);
   ProfilsState _state = ProfilsState.notInitalized;
   List<Profil> profiles = [];
 
@@ -29,7 +30,7 @@ class ProfilProvider extends ChangeNotifier {
   /// finished.
   ProfilsState get state => _state;
 
-  ProfilProvider() {
+  ProfilProvider(this._preferences) {
     _init();
   }
 
@@ -114,28 +115,16 @@ class Profil {
   double _maxLightBrightness = 0.6;
   int _lightStripColor = 0xFFD6D6D6;
   int _lowSpeedAlwaysActive = 0;
+  double _drivenKilometre = 0.0;
+  double _consumedBatteryPercent = 0.0;
   Location? _location1;
   Location? _location2;
 
   Profil(
     this._id, {
     String? name,
-    ThemeMode? themeMode,
-    double? maxLightBrightness,
-    Color? lightStripColor,
-    bool? lowSpeedAlwaysActive,
-    Location? location1,
-    Location? location2,
   }) {
     if (name != null) this._name = name;
-    if (themeMode != null) this._themeMode = themeMode.index;
-    if (maxLightBrightness != null)
-      this._maxLightBrightness = maxLightBrightness;
-    if (lightStripColor != null) this._lightStripColor = lightStripColor.value;
-    if (location1 != null) this._location1 = location1;
-    if (location2 != null) this._location2 = location2;
-    if (lowSpeedAlwaysActive != null)
-      this._lowSpeedAlwaysActive = lowSpeedAlwaysActive ? 1 : 0;
   }
 
   /// ID of the profil in the SQL DB.
@@ -183,6 +172,18 @@ class Profil {
     _update({LOW_SPEED_ALWAYS_ACTIVE_COLUMN: _lowSpeedAlwaysActive});
   }
 
+  double get drivenKilometre => _drivenKilometre;
+  set drivenKilometre(double kilometre) {
+    _drivenKilometre = kilometre;
+    _update({DRIVEN_KILOMETRE_COLUMN: _drivenKilometre});
+  }
+
+  double get consumedBatteryPercent => _consumedBatteryPercent;
+  set consumedBatteryPercent(double percent) {
+    _consumedBatteryPercent = percent;
+    _update({CONSUMED_BATTERY_PERCENT: _consumedBatteryPercent});
+  }
+
   Location? get location1 => _location1;
   set location1(Location? location) {
     if (location != null) {
@@ -213,6 +214,8 @@ class Profil {
       MAX_LIHGT_BRIGHTNESS_COLUMN: _maxLightBrightness,
       LIGHT_STRIP_COLOR_COLUMN: _lightStripColor,
       LOW_SPEED_ALWAYS_ACTIVE_COLUMN: _lowSpeedAlwaysActive,
+      DRIVEN_KILOMETRE_COLUMN: _drivenKilometre,
+      CONSUMED_BATTERY_PERCENT: _consumedBatteryPercent,
     };
     if (location1 != null) data.addAll(location1!.toProfilMap(1)!);
     if (location2 != null) data.addAll(location2!.toProfilMap(2)!);
@@ -226,6 +229,8 @@ class Profil {
     _maxLightBrightness = profil[MAX_LIHGT_BRIGHTNESS_COLUMN];
     _lightStripColor = profil[LIGHT_STRIP_COLOR_COLUMN];
     _lowSpeedAlwaysActive = profil[LOW_SPEED_ALWAYS_ACTIVE_COLUMN];
+    _drivenKilometre = profil[DRIVEN_KILOMETRE_COLUMN];
+    _consumedBatteryPercent = profil[CONSUMED_BATTERY_PERCENT];
     if (profil[LOCATION1_ZOOM_COLUMN] != null &&
         profil[LOCATION1_LAT_COLUMN] != null &&
         profil[LOCATION1_LNG_COLUMN] != null) {
@@ -239,7 +244,7 @@ class Profil {
   }
 }
 
-const _DB_PATH = "/home/pi/data/kart_project.db";
+const _DB_PATH = "/home/pi/data/kart_project_profiles.db";
 const _DB_VERSION = 1;
 const _TABLE = "Profiles";
 
@@ -253,6 +258,8 @@ const THEME_MODE_COLUMN = "theme_mode";
 const MAX_LIHGT_BRIGHTNESS_COLUMN = "max_light_brightness";
 const LIGHT_STRIP_COLOR_COLUMN = "light_strip_color_column";
 const LOW_SPEED_ALWAYS_ACTIVE_COLUMN = "low_speed_always_active_colum";
+const DRIVEN_KILOMETRE_COLUMN = "driven_kilometre_column";
+const CONSUMED_BATTERY_PERCENT = "consumed_battery_percent";
 // Locations
 const LOCATION1_ZOOM_COLUMN = "location1_zoom";
 const LOCATION1_LAT_COLUMN = "location1_lat";
@@ -263,19 +270,21 @@ const LOCATION2_LNG_COLUMN = "location2_lng";
 
 /// Manages the database of the profiles. Lets you init, create, update and
 /// delete profiles.
-class ProfilsSQLHelper {
-  SharedPreferences? _data;
-  Database? _db;
+class ProfilsDBHelper {
+  ProfilsDBHelper(this._preferences);
+
+  final PreferencesProvider _preferences;
+  late final Database _db;
 
   /// The id of the last used profil. Most important when rebooting the device to
   /// check back to the last user.
-  int get currentProfilIndex => _data!.getInt(_CURRENT_PROFIL_KEY)!;
+  int get currentProfilIndex => _preferences.getInt(_CURRENT_PROFIL_KEY)!;
 
   /// Containes information about the next to use id when creating a new profil.
   /// This is realized, by counting up by one, whenever a new profil is created.
   /// Just using the length of all profiles and adding one to it can result in
   /// various issues when profiles get deleted.
-  int get profilesIndex => _data!.getInt(_PROFILES_INDEX_KEY)!;
+  int get profilesIndex => _preferences.getInt(_PROFILES_INDEX_KEY)!;
 
   /// Opens the database and initalizes SharedPreferences.
   Future initDatabase() async {
@@ -288,12 +297,11 @@ class ProfilsSQLHelper {
       ),
     );
 
-    _data = await SharedPreferences.getInstance();
-    if (!_data!.containsKey(_PROFILES_INDEX_KEY)) {
-      await _data!.setInt(_PROFILES_INDEX_KEY, 1);
+    if (!_preferences.containsKey(_PROFILES_INDEX_KEY)) {
+      await _preferences.setInt(_PROFILES_INDEX_KEY, 1);
     }
-    if (!_data!.containsKey(_CURRENT_PROFIL_KEY)) {
-      await _data!.setInt(_CURRENT_PROFIL_KEY, 0);
+    if (!_preferences.containsKey(_CURRENT_PROFIL_KEY)) {
+      await _preferences.setInt(_CURRENT_PROFIL_KEY, 0);
     }
   }
 
@@ -308,6 +316,8 @@ class ProfilsSQLHelper {
         $MAX_LIHGT_BRIGHTNESS_COLUMN REAL,
         $LIGHT_STRIP_COLOR_COLUMN INTEGER,
         $LOW_SPEED_ALWAYS_ACTIVE_COLUMN INTEGER,
+        $DRIVEN_KILOMETRE_COLUMN REAL,
+        $CONSUMED_BATTERY_PERCENT REAL,
 
         $LOCATION1_ZOOM_COLUMN REAL,
         $LOCATION1_LAT_COLUMN REAL,
@@ -322,13 +332,13 @@ class ProfilsSQLHelper {
 
   /// Creates a profil with the given data.
   Future createProfil(Profil profil) async {
-    await _data!.setInt(_PROFILES_INDEX_KEY, profilesIndex + 1);
-    await _db!.insert(_TABLE, profil.toMap());
+    await _preferences.setInt(_PROFILES_INDEX_KEY, profilesIndex + 1);
+    await _db.insert(_TABLE, profil.toMap());
   }
 
   /// Returns a list of all profiles.
   Future<List<Profil>> getProfilesList() async {
-    final query = await _db!.query(_TABLE);
+    final query = await _db.query(_TABLE);
     return List.generate(
       query.length,
       (index) => Profil.fromMap(query.elementAt(index)),
@@ -337,7 +347,7 @@ class ProfilsSQLHelper {
 
   /// Updates the profil at the [id] with the given [values].
   Future updateProfil(int id, Map<String, Object> values) async {
-    await _db!.update(
+    await _db.update(
       _TABLE,
       values,
       where: '$ID_COLUMN = ?',
@@ -347,11 +357,11 @@ class ProfilsSQLHelper {
 
   /// Sets the current profil to the [id].
   Future setProfil(int id) async {
-    await _data!.setInt(_CURRENT_PROFIL_KEY, id);
+    await _preferences.setInt(_CURRENT_PROFIL_KEY, id);
   }
 
   /// Deletes the profil data at the given [id].
   Future deleteProfil(int id) async {
-    await _db!.delete(_TABLE, where: '$ID_COLUMN = ?', whereArgs: [id]);
+    await _db.delete(_TABLE, where: '$ID_COLUMN = ?', whereArgs: [id]);
   }
 }

@@ -8,6 +8,7 @@ import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
+import 'package:kart_project/providers/preferences_provider.dart';
 import 'package:kart_project/providers/profil_provider.dart';
 import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
@@ -20,109 +21,122 @@ import 'package:kart_project/extensions.dart';
 
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
-  runApp(KartProject());
+  runApp(AppInit());
 }
 
-/// Implements all necessary providers for the project.
-///
-/// Shows a dark loading screen until the database is initalized. Shows a
-/// splashscreen when failed to load the necessary database.
-class KartProject extends StatelessWidget {
+class AppInit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ProfilProvider(),
-      child: Selector<ProfilProvider, ProfilsState>(
-        selector: (context, profilProvider) => profilProvider.state,
-        builder: (context, state, child) {
-          if (state == ProfilsState.notInitalized) {
-            return Container(color: Colors.black);
-          } else if (state == ProfilsState.failedToLoadDB) {
-            return MaterialApp(
-              theme: AppTheme.lightTheme,
-              home: Scaffold(body: Text(Strings.failedLoadingDatabase)),
-            );
-          } else {
-            return child!;
-          }
+    return ChangeNotifierProvider<PreferencesProvider>(
+      create: (context) => PreferencesProvider(),
+      child: Consumer<PreferencesProvider>(
+        builder: (context, preferences, _) {
+          if (!preferences.init) return Container(color: Colors.black);
+
+          return ChangeNotifierProvider<ProfilProvider>(
+            create: (context) => ProfilProvider(
+              context.read<PreferencesProvider>(),
+            ),
+            child: Selector<ProfilProvider, ProfilsState>(
+              selector: (context, profilProvider) => profilProvider.state,
+              builder: (context, state, child) {
+                if (state == ProfilsState.notInitalized) {
+                  return Container(color: Colors.black);
+                } else if (state == ProfilsState.failedToLoadDB) {
+                  return MaterialApp(
+                    theme: AppTheme.lightTheme,
+                    home: Scaffold(body: Text(Strings.failedLoadingDatabase)),
+                  );
+                } else {
+                  return child!;
+                }
+              },
+              child: ProviderInit(),
+            ),
+          );
         },
-        child: MultiProvider(
-          providers: [
-            Provider<AudioProvider>(
-              create: (context) => AudioProvider(),
-              lazy: false,
-            ),
-            ChangeNotifierProvider<NotificationsProvider>(
-              create: (context) => NotificationsProvider(),
-              lazy: false,
-            ),
-            ChangeNotifierProvider<CoolingProvider>(
-              create: (context) => CoolingProvider(),
-              lazy: false,
-            ),
-            ChangeNotifierProvider<SystemProvider>(
-              create: (context) => SystemProvider(),
-              lazy: false,
-            ),
-            ChangeNotifierProxyProvider<ProfilProvider, AppearanceProvider>(
-              create: (context) => AppearanceProvider(context.profil()),
-              update: (_, profilProvider, appearanceProvider) {
-                return appearanceProvider!.update(profilProvider.currentProfil);
-              },
-              lazy: false,
-            ),
-            ChangeNotifierProxyProvider2<ProfilProvider, SystemProvider,
-                LightProvider>(
-              create: (context) => LightProvider(
-                context.profil(),
-                context.locked(),
-              ),
-              update: (_, profilProvider, bootProvider, lightProvider) {
-                return lightProvider!.update(
-                  profilProvider.currentProfil,
-                  bootProvider.locked,
-                );
-              },
-              lazy: false,
-            ),
-            ChangeNotifierProxyProvider<ProfilProvider, MapProvider>(
-              create: (context) => MapProvider(context.profil()),
-              update: (_, profilProvider, mapProvider) {
-                return mapProvider!.update(profilProvider.currentProfil);
-              },
-              lazy: false,
-            ),
-            ChangeNotifierProxyProvider2<ProfilProvider, NotificationsProvider,
-                MotorControllerProvider>(
-              create: (context) {
-                return MotorControllerProvider(
-                  context.profil(),
-                  context.read<NotificationsProvider>(),
-                );
-              },
-              update:
-                  (_, profilProvider, notificationProvider, kellyConroller) {
-                return kellyConroller!.update(profilProvider.currentProfil);
-              },
-              lazy: false,
-            ),
-            ProxyProvider<MotorControllerProvider, BackDriveLightController>(
-              create: (context) {
-                return BackDriveLightController(
-                  context.read<MotorControllerProvider>().motorStateCommand,
-                );
-              },
-              update: (_, kellyController, backDriveLightController) {
-                return backDriveLightController!.update(
-                  kellyController.motorStateCommand,
-                );
-              },
-              lazy: false,
-            ),
-          ],
-          child: Core(),
-        ),
       ),
+    );
+  }
+}
+
+class ProviderInit extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        Provider<AudioProvider>(
+          create: (context) => AudioProvider(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider<NotificationsProvider>(
+          create: (context) => NotificationsProvider(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider<CoolingProvider>(
+          create: (context) => CoolingProvider(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider<SystemProvider>(
+          create: (context) => SystemProvider(),
+          lazy: false,
+        ),
+        ChangeNotifierProxyProvider<ProfilProvider, AppearanceProvider>(
+          create: (context) => AppearanceProvider(context.profil()),
+          update: (_, profilProvider, appearanceProvider) {
+            return appearanceProvider!.update(profilProvider.currentProfil);
+          },
+          lazy: false,
+        ),
+        ChangeNotifierProxyProvider2<ProfilProvider, SystemProvider,
+            LightProvider>(
+          create: (context) => LightProvider(
+            context.profil(),
+            context.locked(),
+          ),
+          update: (_, profilProvider, bootProvider, lightProvider) {
+            return lightProvider!.update(
+              profilProvider.currentProfil,
+              bootProvider.locked,
+            );
+          },
+          lazy: false,
+        ),
+        ChangeNotifierProxyProvider<ProfilProvider, MapProvider>(
+          create: (context) => MapProvider(context.profil()),
+          update: (_, profilProvider, mapProvider) {
+            return mapProvider!.update(profilProvider.currentProfil);
+          },
+          lazy: false,
+        ),
+        ChangeNotifierProxyProvider2<ProfilProvider, NotificationsProvider,
+            MotorControllerProvider>(
+          create: (context) {
+            return MotorControllerProvider(
+              context.profil(),
+              context.read<NotificationsProvider>(),
+            );
+          },
+          update: (_, profilProvider, notificationProvider, kellyConroller) {
+            return kellyConroller!.update(profilProvider.currentProfil);
+          },
+          lazy: false,
+        ),
+        ProxyProvider<MotorControllerProvider, BackDriveLightController>(
+          create: (context) {
+            return BackDriveLightController(
+              context.read<MotorControllerProvider>().motorStateCommand,
+            );
+          },
+          update: (_, kellyController, backDriveLightController) {
+            return backDriveLightController!.update(
+              kellyController.motorStateCommand,
+            );
+          },
+          lazy: false,
+        ),
+      ],
+      child: Core(),
     );
   }
 }

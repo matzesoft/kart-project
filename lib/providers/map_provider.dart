@@ -162,7 +162,7 @@ class Location {
     return true;
   }
 
-  /// Returns the data in form of a map, with the syntax of the [ProfilsSQLHelper].
+  /// Returns the data in form of a map, with the syntax of the [ProfilsDBHelper].
   Map<String, Object>? toProfilMap(int index) {
     if (!(index == 1 || index == 2)) {
       throw ArgumentError("Index must be 1 or 2.");
@@ -183,7 +183,7 @@ class Location {
     }
   }
 
-  /// Converts the data from a map with the [ProfilsSQLHelper] syntax.
+  /// Converts the data from a map with the [ProfilsDBHelper] syntax.
   Location.fromProfilMap(int index, Map<String, dynamic> profil) {
     if (!(index == 1 || index == 2)) {
       throw ArgumentError("Index must be 1 or 2.");
