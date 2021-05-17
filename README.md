@@ -10,13 +10,13 @@ To read the current speed and range are essential for every vehicle.
 We are using the [KellyController KLS7245HC](https://kellycontroller.com/shop/kls-h/) to control the electric motor. This controller enables to read the driving information via CAN Bus.
 
 ### Lights control
-We are building in [2760lm leds](https://www.leds.de/nichia-nfcwl060b-v2-chip-on-board-modul-2760lm-5000k-cri-80-30608.html) for lightning. By implementing PWM with the [wiringPi Library](http://wiringpi.com), you can switch between high beam and low beam.
+To bring the kart to light we make us of two [2760lm leds](https://www.leds.de/nichia-nfcwl060b-v2-chip-on-board-modul-2760lm-5000k-cri-80-30608.html). By implementing PWM with the [wiringPi Library](http://wiringpi.com), you can switch between high beam and low beam.
 Another feature PWM enables is to use the backlights aswell for brakelights by increasing the brightness whenever the driver is breaking.
 
-Because we are using plexiglass for the bottom of the kart, we also added a lightstrip which colors can be controlled in the software aswell and creates a nice looking shadow on the ground.
+Because we are using plexiglass for the bottom of the kart, we also added a lightstrip which colors can be controlled in the software aswell. The strip creates a nice looking shadow on the ground.
 
 ### Music control
-We are using some old speakers to play music on the kart or to hoot. Playing music is enabled with Bluetooth. Any smartphone can connect and start playing. Currently it is not possible to also control the music on the display. You have to use your phone to pause or switch between songs.
+We are using some old speakers to play music on the kart or to hoot. Playing music is enabled via Bluetooth. Any smartphone can connect and start playing. Currently it is not possible to control the music on the display. You have to use your phone to pause or switch between songs.
 
 ### Profil options
 We had the idea of having multiple profiles, so when you are using the kart, all settings are adapted to your profil.
