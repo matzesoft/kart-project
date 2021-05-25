@@ -29,7 +29,7 @@ class Dashboard extends StatelessWidget {
           children: <Widget>[
             Column(
               children: <Widget>[
-                SpeedAndProfile(),
+                SpeedAndUser(),
                 MomentaryConsumption(),
                 Battery(),
                 Consumption(),
@@ -48,8 +48,8 @@ class Dashboard extends StatelessWidget {
   }
 }
 
-class SpeedAndProfile extends StatelessWidget {
-  void _openProfilMenu(BuildContext context) {
+class SpeedAndUser extends StatelessWidget {
+  void _openUserMenu(BuildContext context) {
     Navigator.pushNamed(context, Settings.route);
   }
 
@@ -94,7 +94,7 @@ class SpeedAndProfile extends StatelessWidget {
               icon: Icon(EvaIcons.settings2Outline),
               iconSize: AppTheme.iconButtonSize,
               onPressed: () {
-                _openProfilMenu(context);
+                _openUserMenu(context);
               },
             ),
           ),
