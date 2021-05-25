@@ -63,11 +63,12 @@ class SpeedAndProfile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              Selector<MotorControllerProvider, int>(
+              Selector<MotorControllerProvider, double>(
                 selector: (context, kellyController) => kellyController.speed,
                 builder: (context, speed, _) {
+                  final speedAsInt = speed.round();
                   return Text(
-                    speed.toString(),
+                    speedAsInt.toString(),
                     style: Theme.of(context).textTheme.headline1,
                   );
                 },

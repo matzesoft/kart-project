@@ -27,7 +27,7 @@ enum MotorState {
   backward,
 }
 
-const _UPDATE_FREQUENZ = const Duration(milliseconds: 50);
+const TIMER_UPDATE_FREQUENZ = const Duration(milliseconds: 50);
 
 class MotorControllerProvider extends ChangeNotifier {
   MotorControllerProvider(this._profil, this._notifications) {
@@ -53,9 +53,9 @@ class MotorControllerProvider extends ChangeNotifier {
   ControllerError? _error;
   Timer? _timer;
 
-  int get speed {
+  double get speed {
     final rpm = _canData.rpm;
-    return (rpm * (24 / 112) * _WHEEL_DIAMETER * pi * 60 / 1000).round();
+    return (rpm * (24 / 112) * _WHEEL_DIAMETER * pi * 60 / 1000);
   }
 
   double get batteryLevel {
@@ -120,7 +120,7 @@ class MotorControllerProvider extends ChangeNotifier {
   }
 
   void _runTimer() {
-    _timer = Timer.periodic(_UPDATE_FREQUENZ, (_) {
+    _timer = Timer.periodic(TIMER_UPDATE_FREQUENZ, (_) {
       _canData.update();
       _canData.update();
       lowSpeedMode._onBatteryLevelChange();
@@ -192,6 +192,36 @@ class LowSpeedModeController {
   void _activateLowSpeedMode(bool activate) {
     _lowSpeedModeGpio.setValue(activate);
     _controller._notify();
+  }
+}
+
+abstract class RangeProfil {
+  RangeProfil({double batteryPercent: 0.0, double drivenKilometre: 0.0}) {
+    _consumedBatteryPercent = batteryPercent;
+    _drivenKilometre = drivenKilometre;
+  }
+
+  double _consumedBatteryPercent = 0.0;
+  double _drivenKilometre = 0.0;
+
+  double get consumedBatteryPercent => _consumedBatteryPercent;
+  double get drivenKilometre => _drivenKilometre;
+  double get percentPerKilometre => consumedBatteryPercent / drivenKilometre;
+
+  void _updateByMotorController(double speed, double batteryLevel) {
+    _drivenKilometre += speed * TIMER_UPDATE_FREQUENZ.inHours;
+    _consumedBatteryPercent += batteryLevel - _consumedBatteryPercent;
+
+    _updateInDatabase(_drivenKilometre, _consumedBatteryPercent);
+  }
+
+  void _updateInDatabase(double batteryPercent, double drivenKilometre);
+}
+
+class RangeProfilByKartProfil extends RangeProfil {
+  @override
+  void _updateInDatabase(double batteryPercent, double drivenKilometre) {
+    // TODO: implement _updateInDatabase
   }
 }
 
