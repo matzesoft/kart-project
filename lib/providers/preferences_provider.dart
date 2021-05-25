@@ -24,6 +24,14 @@ class PreferencesProvider extends ChangeNotifier {
     return _preferences.getInt(key);
   }
 
+  Future setDouble(String key, double value) async {
+    await _preferences.setDouble(key, value);
+  }
+
+  double? getDouble(String key) {
+    return _preferences.getDouble(key);
+  }
+
   bool containsKey(String key) {
     return _preferences.containsKey(key);
   }
