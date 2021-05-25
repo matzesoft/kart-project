@@ -1,6 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:kart_project/providers/profil_provider.dart';
+import 'package:kart_project/providers/user_provider.dart';
 import 'package:map/map.dart' hide Map;
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/strings.dart';
@@ -19,26 +19,26 @@ final _swPanBoundary = LatLng(48.2932, 8.0804);
 
 class MapProvider extends ChangeNotifier {
   final controller = MapController(location: _home.coordinates!);
-  Profil _profil;
+  User _user;
 
-  MapProvider(this._profil);
+  MapProvider(this._user);
 
-  /// Updates the [MapProvider] with the data of the [newProfil] and returns the
+  /// Updates the [MapProvider] with the data of the [newUser] and returns the
   /// object back. This is normally called inside a [ProxyProvider]s update method.
-  MapProvider update(Profil newProfil) {
-    _profil = newProfil;
+  MapProvider update(User newUser) {
+    _user = newUser;
     notifyListeners();
     return this;
   }
 
-  Location? get location1 => _profil.location1;
+  Location? get location1 => _user.location1;
   set location1(Location? location) {
-    if (location != null) _profil.location1 = location;
+    if (location != null) _user.location1 = location;
   }
 
-  Location? get location2 => _profil.location2;
+  Location? get location2 => _user.location2;
   set location2(Location? location) {
-    if (location != null) _profil.location2 = location;
+    if (location != null) _user.location2 = location;
   }
 
   /// Sets and updates the location values based on the [index].
@@ -162,8 +162,8 @@ class Location {
     return true;
   }
 
-  /// Returns the data in form of a map, with the syntax of the [ProfilsDBHelper].
-  Map<String, Object>? toProfilMap(int index) {
+  /// Returns the data in form of a map, with the syntax of the [UsersDBHelper].
+  Map<String, Object>? toUserMap(int index) {
     if (!(index == 1 || index == 2)) {
       throw ArgumentError("Index must be 1 or 2.");
     }
@@ -183,22 +183,22 @@ class Location {
     }
   }
 
-  /// Converts the data from a map with the [ProfilsDBHelper] syntax.
-  Location.fromProfilMap(int index, Map<String, dynamic> profil) {
+  /// Converts the data from a map with the [UsersDBHelper] syntax.
+  Location.fromUserMap(int index, Map<String, dynamic> user) {
     if (!(index == 1 || index == 2)) {
       throw ArgumentError("Index must be 1 or 2.");
     }
     if (index == 1) {
-      zoom = profil[LOCATION1_ZOOM_COLUMN];
+      zoom = user[LOCATION1_ZOOM_COLUMN];
       coordinates = LatLng(
-        profil[LOCATION1_LAT_COLUMN],
-        profil[LOCATION1_LNG_COLUMN],
+        user[LOCATION1_LAT_COLUMN],
+        user[LOCATION1_LNG_COLUMN],
       );
     } else {
-      zoom = profil[LOCATION2_ZOOM_COLUMN];
+      zoom = user[LOCATION2_ZOOM_COLUMN];
       coordinates = LatLng(
-        profil[LOCATION2_LAT_COLUMN],
-        profil[LOCATION2_LNG_COLUMN],
+        user[LOCATION2_LAT_COLUMN],
+        user[LOCATION2_LNG_COLUMN],
       );
     }
   }

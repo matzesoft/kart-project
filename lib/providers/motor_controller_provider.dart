@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
-import 'package:kart_project/providers/profil_provider.dart';
+import 'package:kart_project/providers/user_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
 import 'package:linux_can/linux_can.dart';
@@ -30,15 +30,15 @@ enum MotorState {
 const _UPDATE_FREQUENZ = const Duration(milliseconds: 50);
 
 class MotorControllerProvider extends ChangeNotifier {
-  MotorControllerProvider(this._profil, this._notifications) {
+  MotorControllerProvider(this._user, this._notifications) {
     _canData = KellyCanData._(this);
     _canData.setup().then((_) => _runTimer());
   }
 
-  MotorControllerProvider update(Profil newProfil) {
-    if (_profil != newProfil) {
-      _profil = newProfil;
-      lowSpeedMode._onProfilSwitched();
+  MotorControllerProvider update(User newUser) {
+    if (_user != newUser) {
+      _user = newUser;
+      lowSpeedMode._onUserSwitched();
       notifyListeners();
     }
     return this;
@@ -49,7 +49,7 @@ class MotorControllerProvider extends ChangeNotifier {
   final _powerGpio = GpioInterface.kellyOff;
   final _enableMotorGpio = GpioInterface.enableMotor;
   NotificationsProvider _notifications;
-  Profil _profil;
+  User _user;
   ControllerError? _error;
   Timer? _timer;
 
@@ -169,9 +169,9 @@ class LowSpeedModeController {
     return _forceLowSpeedMode;
   }
 
-  bool get alwaysActive => _controller._profil.lowSpeedAlwaysActive;
+  bool get alwaysActive => _controller._user.lowSpeedAlwaysActive;
   set alwaysActive(bool setActive) {
-    _controller._profil.lowSpeedAlwaysActive = setActive;
+    _controller._user.lowSpeedAlwaysActive = setActive;
     if (!forceLowSpeed) {
       if (isActive != setActive) _activateLowSpeedMode(setActive);
     }
@@ -183,7 +183,7 @@ class LowSpeedModeController {
     }
   }
 
-  void _onProfilSwitched() {
+  void _onUserSwitched() {
     if (!forceLowSpeed) {
       if (isActive != alwaysActive) _activateLowSpeedMode(alwaysActive);
     }

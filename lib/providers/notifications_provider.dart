@@ -18,7 +18,7 @@ class SimpleNotificationsController {
   Notification? _notification;
 
   /// Should confirm the user quickly if the requested process was sucessfull.
-  /// For example when deleting a profil or changing a setting.
+  /// For example when deleting a user or changing a setting.
   void show({required IconData icon, required String message}) {
     _showNotification(icon: icon, message: message);
   }

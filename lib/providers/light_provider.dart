@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gpiod/flutter_gpiod.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/providers/motor_controller_provider.dart';
-import 'package:kart_project/providers/profil_provider.dart';
+import 'package:kart_project/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 /// Brightness when the [LightState] is set to [LightState.dimmed].
@@ -17,7 +17,7 @@ enum LightState {
   /// Brightness will always be set to [FRONT_DIMMED_BRIGHTNESS].
   dimmed,
 
-  /// Brightness will be set to the [_frontMaxBrightness] saved in the profil.
+  /// Brightness will be set to the [_frontMaxBrightness] saved in the user.
   on,
 }
 
@@ -26,23 +26,23 @@ class LightProvider extends ChangeNotifier {
   late final frontLight = FrontLightController(this);
   late final backLight = BackLightController();
   late final lightStrip = LightStripController(this);
-  Profil _profil;
+  User _user;
   LightState _lightState = LightState.off;
 
-  LightProvider(this._profil, bool locked) {
+  LightProvider(this._user, bool locked) {
     lightState = LightState.off;
     _updateLightWithLock(locked);
   }
 
-  /// Updates the [LightProvider] with the data of the [newprofil] and the
+  /// Updates the [LightProvider] with the data of the [newUser] and the
   /// [locked] value of the [BootProvider]. Returns the back the object itself.
   /// This is normally called inside a [ProxyProvider]s update method.
   /// Does update all listeners.
-  LightProvider update(Profil newProfil, bool locked) {
-    if (newProfil != _profil) {
-      _profil = newProfil;
+  LightProvider update(User newUser, bool locked) {
+    if (newUser != _user) {
+      _user = newUser;
       if (lightState == LightState.on) lightState = LightState.dimmed;
-      lightStrip._updateByProfil();
+      lightStrip._updateByUser();
     }
     _updateLightWithLock(locked);
     notifyListeners();
@@ -100,9 +100,9 @@ class FrontLightController {
   }
 
   /// The maximum brightness the light can be set to.
-  double get maxBrightness => _controller._profil.maxLightBrightness;
+  double get maxBrightness => _controller._user.maxLightBrightness;
   set maxBrightness(double maxBrightness) {
-    _controller._profil.maxLightBrightness = maxBrightness;
+    _controller._user.maxLightBrightness = maxBrightness;
   }
 
   void animateLight(double factor) {
@@ -237,9 +237,9 @@ class LightStripController {
 
   LightStripController(this._controller);
 
-  Color get color => _controller._profil.lightStripColor;
+  Color get color => _controller._user.lightStripColor;
   set color(Color color) {
-    _controller._profil.lightStripColor = color;
+    _controller._user.lightStripColor = color;
     _updateLightStrip();
   }
 
@@ -267,7 +267,7 @@ class LightStripController {
     state == LightState.off ? active = false : active = true;
   }
 
-  void _updateByProfil() {
+  void _updateByUser() {
     _updateLightStrip();
   }
 }

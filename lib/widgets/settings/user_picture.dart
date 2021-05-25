@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 /// Shows a round background with the first letter of the name in it. If
-/// [active] is set to true, the profil pircture will be highlighted.
+/// [active] is set to true, the user pircture will be highlighted.
 /// 
 /// Use [size] to change the height and width and text size of the widget.
-class ProfilPicture extends StatelessWidget {
+class UserPicture extends StatelessWidget {
   final bool active;
   final String name;
   final double size;
   final EdgeInsets padding;
   final EdgeInsets margin;
 
-  ProfilPicture({
+  UserPicture({
     this.active: false,
     this.name: "",
     this.size: 48,
@@ -24,7 +24,7 @@ class ProfilPicture extends StatelessWidget {
       ? Theme.of(context).accentColor
       : Theme.of(context).textTheme.subtitle1!.color;
 
-  /// Color used by the background of the profile picture.
+  /// Color used by the background of the user picture.
   Color _backgroundColor(BuildContext context) => active
       ? Theme.of(context).accentColor.withOpacity(0.4)
       : Theme.of(context).canvasColor;

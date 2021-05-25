@@ -2,8 +2,8 @@ const SOFTWARE_VERSION = "0.2.0+1";
 const GITHUB_REPO_LINK = "github.com/matzesoft/kart-project";
 
 class Strings {
-  static String get profiles => _STRINGS['profiles']!;
-  static String get profil => _STRINGS['profil']!;
+  static String get users => _STRINGS['users']!;
+  static String get user => _STRINGS['user']!;
   static String get drive => _STRINGS['drive']!;
   static String get lightAndDisplay => _STRINGS['light_and_display']!;
   static String get audio => _STRINGS['audio']!;
@@ -13,10 +13,10 @@ class Strings {
   static String get dimmed => _STRINGS['dimmed']!;
   static String get kmh => _STRINGS['kmh']!;
   static String get range => _STRINGS['range']!;
-  static String get currentProfil => _STRINGS['current_profil']!;
-  static String get createProfil => _STRINGS['create_profil']!;
+  static String get currentUser => _STRINGS['current_user']!;
+  static String get createUser => _STRINGS['create_user']!;
   static String get loading => _STRINGS['loading']!;
-  static String get profilIsSwitched => _STRINGS['profil_is_switched']!;
+  static String get userIsSwitched => _STRINGS['user_is_switched']!;
   static String get create => _STRINGS['create']!;
   static String get typeInTheName => _STRINGS['type_in_the_name']!;
   static String get maxLengthOfName => _STRINGS['max_length_of_name']!;
@@ -24,26 +24,24 @@ class Strings {
       _STRINGS['leave_empty_to_use_deafult_name']!;
   static String get cancel => _STRINGS['cancel']!;
   static String get delete => _STRINGS['delete']!;
-  static String get deleteProfilQuestion => _STRINGS['delete_profil_question']!;
-  static String get deleteProfilMessage1 =>
-      _STRINGS['delete_profil_message_0']!;
-  static String get deleteProfilMessage2 =>
-      _STRINGS['delete_profil_message_1']!;
-  static String get profilIsCreated => _STRINGS['profil_is_created']!;
-  static String get profilIsDeleted => _STRINGS['profil_is_deleted']!;
-  static String get profilIsUpdated => _STRINGS['profil_is_updated']!;
-  static String get profilWasCreated => _STRINGS['profil_was_created']!;
-  static String get profilWasDeleted => _STRINGS['profil_was_deleted']!;
-  static String get profilWasUpdated => _STRINGS['profil_was_updated']!;
-  static String get failedCreatingProfil => _STRINGS['failed_creating_profil']!;
-  static String get failedDeletingProfil => _STRINGS['failed_deleting_profil']!;
-  static String get failedUpdatingProfil => _STRINGS['failed_updating_profil']!;
-  static String get failedSettingProfil => _STRINGS['failed_setting_profil']!;
+  static String get deleteuserQuestion => _STRINGS['delete_user_question']!;
+  static String get deleteUserMessage1 => _STRINGS['delete_user_message_0']!;
+  static String get deleteUserMessage2 => _STRINGS['delete_user_message_1']!;
+  static String get userIsCreated => _STRINGS['user_is_created']!;
+  static String get userIsDeleted => _STRINGS['user_is_deleted']!;
+  static String get userIsUpdated => _STRINGS['user_is_updated']!;
+  static String get userWasCreated => _STRINGS['user_was_created']!;
+  static String get userWasDeleted => _STRINGS['user_was_deleted']!;
+  static String get userWasUpdated => _STRINGS['user_was_updated']!;
+  static String get failedCreatingUser => _STRINGS['failed_creating_user']!;
+  static String get failedDeletingUser => _STRINGS['failed_deleting_user']!;
+  static String get failedUpdatingUser => _STRINGS['failed_updating_user']!;
+  static String get failedSettingUser => _STRINGS['failed_setting_user']!;
   static String get failedLoadingDatabase =>
       _STRINGS['failed_loading_database']!;
   static String get failedSettingLocation =>
       _STRINGS['failed_setting_locations']!;
-  static String get editProfil => _STRINGS['edit_profil']!;
+  static String get editUser => _STRINGS['edit_user']!;
   static String get giveName => _STRINGS['give_name']!;
   static String get safe => _STRINGS['safe']!;
   static String get locationWasSaved => _STRINGS['location_was_saved']!;
@@ -124,8 +122,8 @@ class Strings {
       _STRINGS['motor_over_temperature_message']!;
 
   static const Map<String, String> _STRINGS = {
-    "profiles": "Profile",
-    "profil": "Profil",
+    "users": "Benutzer",
+    "user": "Benutzer",
     "drive": "Fahren",
     "light_and_display": "Licht & Anzeige",
     "audio": "Audio",
@@ -135,10 +133,10 @@ class Strings {
     "dimmed": "Gedimmt",
     "kmh": "km/h",
     "range": "Reichweite",
-    "current_profil": "Aktuelles Profil",
-    "create_profil": "Neues Profil",
+    "current_user": "Aktueller Benutzer",
+    "create_user": "Neuer Benutzer",
     "loading": "Laden...",
-    "profil_is_switched": "Profil wird gewechselt...",
+    "user_is_switched": "Benutzer wird gewechselt...",
     "create": "Erstellen",
     "type_in_the_name": "Gebe den Namen ein:",
     "max_length_of_name": "Der Name darf nicht länger als 30 Buchstaben sein.",
@@ -146,23 +144,23 @@ class Strings {
         "Lasse das Textfeld leer, um einen Standard-Namen zu verwenden.",
     "cancel": "Abbrechen",
     "delete": "Löschen",
-    "delete_profil_question": "Profil löschen?",
-    "delete_profil_message_0": 'Hiermit wird das Profil "',
-    "delete_profil_message_1": '" entgültig gelöscht.',
-    "profil_is_created": "Profil wird erstellt...",
-    "profil_is_deleted": "Profil wird gelöscht...",
-    "profil_is_updated": "Profil wird aktualisiert...",
-    "profil_was_created": "Profil wurde erstellt",
-    "profil_was_deleted": "Profil wurde gelöscht",
-    "profil_was_updated": "Profil wurde aktualisiert",
-    "failed_creating_profil": "Erstellen des Profils fehlgeschlagen",
-    "failed_deleting_profil": "Löschen des Profils fehlgeschlagen",
-    "failed_updating_profil": "Aktualisieren des Profils fehlgeschlagen",
-    "failed_setting_profil": "Festlegen des Profils fehlgeschlagen",
+    "delete_user_question": "Benutzer löschen?",
+    "delete_user_message_0": 'Hiermit wird der Benutzer "',
+    "delete_user_message_1": '" entgültig gelöscht.',
+    "user_is_created": "Benutzer wird erstellt...",
+    "user_is_deleted": "Benutzer wird gelöscht...",
+    "user_is_updated": "Benutzer wird aktualisiert...",
+    "user_was_created": "Benutzer wurde erstellt",
+    "user_was_deleted": "Benutzer wurde gelöscht",
+    "user_was_updated": "Benutzer wurde aktualisiert",
+    "failed_creating_user": "Erstellen des Benutzers fehlgeschlagen",
+    "failed_deleting_user": "Löschen des Benutzers fehlgeschlagen",
+    "failed_updating_user": "Aktualisieren des Benutzers fehlgeschlagen",
+    "failed_setting_user": "Festlegen des Benutzers fehlgeschlagen",
     "failed_setting_locations": "Speichern des Orts fehlgeschlagen",
     "failed_loading_database": "Laden der Datenbank fehlgeschlagen. Die App "
         "kann nur mit einer Datenbank funktionieren.",
-    "edit_profil": "Profil bearbeiten",
+    "edit_user": "Benutzer bearbeiten",
     "give_name": "Gebe einen Namen ein.",
     "safe": "Speichern",
     "location_was_saved": "Ort wurde gespeichert",

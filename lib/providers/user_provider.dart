@@ -8,109 +8,109 @@ import 'package:kart_project/extensions.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-enum ProfilsState {
+enum UsersState {
   notInitalized,
   initalized,
   failedToLoadDB,
 }
 
-/// Lets you create, update and delete profiles.
-class ProfilProvider extends ChangeNotifier {
+/// Lets you create, update and delete users.
+class UserProvider extends ChangeNotifier {
   final PreferencesProvider _preferences;
-  late final _sqlHelper = ProfilsDBHelper(_preferences);
-  ProfilsState _state = ProfilsState.notInitalized;
-  List<Profil> profiles = [];
+  late final _sqlHelper = UsersDBHelper(_preferences);
+  UsersState _state = UsersState.notInitalized;
+  List<User> users = [];
 
-  /// Returns the current profil.
-  Profil get currentProfil => profiles.firstWhere(
-        (profil) => profil.id == _sqlHelper.currentProfilIndex,
+  /// Returns the current user.
+  User get currentUser => users.firstWhere(
+        (user) => user.id == _sqlHelper.currentUserIndex,
       );
 
   /// Indicates if the database is up and running and initalizing has been
   /// finished.
-  ProfilsState get state => _state;
+  UsersState get state => _state;
 
-  ProfilProvider(this._preferences) {
+  UserProvider(this._preferences) {
     _init();
   }
 
-  /// Initalizes the database. Loads the profiles proberty of the SQL database.
-  /// Sets [state] to [ProfilsState.failedToLoadDB] if database crashed.
+  /// Initalizes the database. Loads the users proberty of the SQL database.
+  /// Sets [state] to [UsersState.failedToLoadDB] if database crashed.
   Future _init() async {
     try {
-      Profil._controller = this;
+      User._controller = this;
       await _sqlHelper.initDatabase();
-      profiles = await _sqlHelper.getProfilesList();
-      _state = ProfilsState.initalized;
+      users = await _sqlHelper.getUsersList();
+      _state = UsersState.initalized;
     } catch (error) {
-      _state = ProfilsState.failedToLoadDB;
+      _state = UsersState.failedToLoadDB;
     } finally {
       notifyListeners();
     }
   }
 
   /// Updates the SQL database and notify listeners.
-  void _updateProfil(int id, Map<String, Object> sqlData) {
-    _sqlHelper.updateProfil(id, sqlData);
+  void _updateUser(int id, Map<String, Object> sqlData) {
+    _sqlHelper.updateUser(id, sqlData);
     notifyListeners();
   }
 
-  /// Sets the new profil.
-  Future switchProfil(BuildContext context, int id) async {
-    await _sqlHelper.setProfil(id).catchError((error) {
-      context.showExceptionNotification(Strings.failedSettingProfil);
+  /// Sets the new user.
+  Future switchUser(BuildContext context, int id) async {
+    await _sqlHelper.setUser(id).catchError((error) {
+      context.showExceptionNotification(Strings.failedSettingUser);
     });
     notifyListeners();
   }
 
-  /// Creates a profil with the default settings and switches to it.
-  /// If [name] is null, a default name with the profilId will be created.
-  Future createProfil(BuildContext context, {String? name}) async {
+  /// Creates a user with the default settings and switches to it.
+  /// If [name] is null, a default name with the userId will be created.
+  Future createUser(BuildContext context, {String? name}) async {
     try {
-      int profilId = _sqlHelper.profilesIndex;
+      int userId = _sqlHelper.usersIndex;
       if (name == null || name.isEmpty) {
-        name = "${Strings.profil} $profilId";
+        name = "${Strings.user} $userId";
       }
-      Profil profil = Profil(profilId, name: name);
-      profiles.add(profil);
-      await _sqlHelper.createProfil(profil);
-      await switchProfil(context, profilId);
+      User user = User(userId, name: name);
+      users.add(user);
+      await _sqlHelper.createUser(user);
+      await switchUser(context, userId);
       context.showNotification(
         icon: EvaIcons.plusOutline,
-        message: Strings.profilWasCreated,
+        message: Strings.userWasCreated,
       );
     } catch (error) {
-      context.showExceptionNotification(Strings.failedCreatingProfil);
+      context.showExceptionNotification(Strings.failedCreatingUser);
     }
   }
 
-  /// Deletes the profil. Throws an [StateError] if there are no other profiles.
-  /// Switches to the first profil in the list.
-  Future deleteProfil(BuildContext context, int id) async {
-    if (profiles.length <= 1) {
-      throw StateError("Deleting all profiles is not supported.");
+  /// Deletes the user. Throws an [StateError] if there are no other users.
+  /// Switches to the first user in the list.
+  Future deleteUser(BuildContext context, int id) async {
+    if (users.length <= 1) {
+      throw StateError("Deleting all users is not supported.");
     }
     try {
-      profiles.removeWhere((profil) => profil.id == id);
-      await _sqlHelper.deleteProfil(id);
-      await switchProfil(context, profiles[0].id);
+      users.removeWhere((user) => user.id == id);
+      await _sqlHelper.deleteUser(id);
+      await switchUser(context, users[0].id);
 
       context.showNotification(
         icon: EvaIcons.trash2Outline,
-        message: Strings.profilWasDeleted,
+        message: Strings.userWasDeleted,
       );
     } catch (error) {
-      context.showExceptionNotification(Strings.failedDeletingProfil);
+      context.showExceptionNotification(Strings.failedDeletingUser);
     }
   }
 }
 
-/// Indicates one Profil. For more information on the specific values check out
+/// Indicates one user. For more information on the specific values check out
 /// the assosiated provider.
-class Profil {
-  static ProfilProvider? _controller;
+class User {
+  static UserProvider? _controller;
   late int _id;
-  String _name = "Standard Profil";
+  String _name = "Standard Benutzer";
   int _themeMode = ThemeMode.light.index;
   double _maxLightBrightness = 0.6;
   int _lightStripColor = 0xFFD6D6D6;
@@ -120,18 +120,18 @@ class Profil {
   Location? _location1;
   Location? _location2;
 
-  Profil(
+  User(
     this._id, {
     String? name,
   }) {
     if (name != null) this._name = name;
   }
 
-  /// ID of the profil in the SQL DB.
+  /// ID of the user in the SQL DB.
   int get id => _id;
   String get name => _name;
 
-  /// Sets the name of the Profil. Shows a [ErrorNotification] if failed.
+  /// Sets the name of the user. Shows a [ErrorNotification] if failed.
   void setName(BuildContext context, String name) {
     if (name.isEmpty) {
       throw ArgumentError("Name must not be null or empty.");
@@ -141,10 +141,10 @@ class Profil {
       _update({NAME_COLUMN: name});
       context.showNotification(
         icon: EvaIcons.editOutline,
-        message: Strings.editProfil,
+        message: Strings.editUser,
       );
     } catch (error) {
-      context.showExceptionNotification(Strings.failedUpdatingProfil);
+      context.showExceptionNotification(Strings.failedUpdatingUser);
     }
   }
 
@@ -188,7 +188,7 @@ class Profil {
   set location1(Location? location) {
     if (location != null) {
       _location1 = location;
-      _update(location.toProfilMap(1)!);
+      _update(location.toUserMap(1)!);
     }
   }
 
@@ -196,14 +196,14 @@ class Profil {
   set location2(Location? location) {
     if (location != null) {
       _location2 = location;
-      _update(location.toProfilMap(2)!);
+      _update(location.toUserMap(2)!);
     }
   }
 
-  /// Updates the profil in the [ProfilProvider].
+  /// Updates the user in the [UserProvider].
   void _update(Map<String, Object> sqlData) {
     print("Update Data: $sqlData");
-    _controller!._updateProfil(id, sqlData);
+    _controller!._updateUser(id, sqlData);
   }
 
   Map<String, Object> toMap() {
@@ -217,39 +217,39 @@ class Profil {
       DRIVEN_KILOMETRE_COLUMN: _drivenKilometre,
       CONSUMED_BATTERY_PERCENT: _consumedBatteryPercent,
     };
-    if (location1 != null) data.addAll(location1!.toProfilMap(1)!);
-    if (location2 != null) data.addAll(location2!.toProfilMap(2)!);
+    if (location1 != null) data.addAll(location1!.toUserMap(1)!);
+    if (location2 != null) data.addAll(location2!.toUserMap(2)!);
     return data;
   }
 
-  Profil.fromMap(Map<String, dynamic> profil) {
-    _id = profil[ID_COLUMN];
-    _name = profil[NAME_COLUMN];
-    _themeMode = profil[THEME_MODE_COLUMN];
-    _maxLightBrightness = profil[MAX_LIHGT_BRIGHTNESS_COLUMN];
-    _lightStripColor = profil[LIGHT_STRIP_COLOR_COLUMN];
-    _lowSpeedAlwaysActive = profil[LOW_SPEED_ALWAYS_ACTIVE_COLUMN];
-    _drivenKilometre = profil[DRIVEN_KILOMETRE_COLUMN];
-    _consumedBatteryPercent = profil[CONSUMED_BATTERY_PERCENT];
-    if (profil[LOCATION1_ZOOM_COLUMN] != null &&
-        profil[LOCATION1_LAT_COLUMN] != null &&
-        profil[LOCATION1_LNG_COLUMN] != null) {
-      _location1 = Location.fromProfilMap(1, profil);
+  User.fromMap(Map<String, dynamic> user) {
+    _id = user[ID_COLUMN];
+    _name = user[NAME_COLUMN];
+    _themeMode = user[THEME_MODE_COLUMN];
+    _maxLightBrightness = user[MAX_LIHGT_BRIGHTNESS_COLUMN];
+    _lightStripColor = user[LIGHT_STRIP_COLOR_COLUMN];
+    _lowSpeedAlwaysActive = user[LOW_SPEED_ALWAYS_ACTIVE_COLUMN];
+    _drivenKilometre = user[DRIVEN_KILOMETRE_COLUMN];
+    _consumedBatteryPercent = user[CONSUMED_BATTERY_PERCENT];
+    if (user[LOCATION1_ZOOM_COLUMN] != null &&
+        user[LOCATION1_LAT_COLUMN] != null &&
+        user[LOCATION1_LNG_COLUMN] != null) {
+      _location1 = Location.fromUserMap(1, user);
     }
-    if (profil[LOCATION2_ZOOM_COLUMN] != null &&
-        profil[LOCATION2_LAT_COLUMN] != null &&
-        profil[LOCATION2_LNG_COLUMN] != null) {
-      _location2 = Location.fromProfilMap(2, profil);
+    if (user[LOCATION2_ZOOM_COLUMN] != null &&
+        user[LOCATION2_LAT_COLUMN] != null &&
+        user[LOCATION2_LNG_COLUMN] != null) {
+      _location2 = Location.fromUserMap(2, user);
     }
   }
 }
 
-const _DB_PATH = "/home/pi/data/kart_project_profiles.db";
+const _DB_PATH = "/home/pi/data/kart_project_users.db";
 const _DB_VERSION = 1;
-const _TABLE = "Profiles";
+const _TABLE = "Users";
 
-const _CURRENT_PROFIL_KEY = "current_profil";
-const _PROFILES_INDEX_KEY = "profiles_index";
+const _CURRENT_USER_KEY = "current_user";
+const _USERS_INDEX_KEY = "users_index";
 
 /// Strings for the columns of the SQL database.
 const ID_COLUMN = "id";
@@ -268,23 +268,23 @@ const LOCATION2_ZOOM_COLUMN = "location2_zoom";
 const LOCATION2_LAT_COLUMN = "location2_lat";
 const LOCATION2_LNG_COLUMN = "location2_lng";
 
-/// Manages the database of the profiles. Lets you init, create, update and
-/// delete profiles.
-class ProfilsDBHelper {
-  ProfilsDBHelper(this._preferences);
+/// Manages the database of the users. Lets you init, create, update and
+/// delete users.
+class UsersDBHelper {
+  UsersDBHelper(this._preferences);
 
   final PreferencesProvider _preferences;
   late final Database _db;
 
-  /// The id of the last used profil. Most important when rebooting the device to
+  /// The id of the last used user. Most important when rebooting the device to
   /// check back to the last user.
-  int get currentProfilIndex => _preferences.getInt(_CURRENT_PROFIL_KEY)!;
+  int get currentUserIndex => _preferences.getInt(_CURRENT_USER_KEY)!;
 
-  /// Containes information about the next to use id when creating a new profil.
-  /// This is realized, by counting up by one, whenever a new profil is created.
-  /// Just using the length of all profiles and adding one to it can result in
-  /// various issues when profiles get deleted.
-  int get profilesIndex => _preferences.getInt(_PROFILES_INDEX_KEY)!;
+  /// Containes information about the next to use id when creating a new user.
+  /// This is realized, by counting up by one, whenever a new user is created.
+  /// Just using the length of all users and adding one to it can result in
+  /// various issues when users get deleted.
+  int get usersIndex => _preferences.getInt(_USERS_INDEX_KEY)!;
 
   /// Opens the database and initalizes SharedPreferences.
   Future initDatabase() async {
@@ -297,15 +297,15 @@ class ProfilsDBHelper {
       ),
     );
 
-    if (!_preferences.containsKey(_PROFILES_INDEX_KEY)) {
-      await _preferences.setInt(_PROFILES_INDEX_KEY, 1);
+    if (!_preferences.containsKey(_USERS_INDEX_KEY)) {
+      await _preferences.setInt(_USERS_INDEX_KEY, 1);
     }
-    if (!_preferences.containsKey(_CURRENT_PROFIL_KEY)) {
-      await _preferences.setInt(_CURRENT_PROFIL_KEY, 0);
+    if (!_preferences.containsKey(_CURRENT_USER_KEY)) {
+      await _preferences.setInt(_CURRENT_USER_KEY, 0);
     }
   }
 
-  /// Creates the Profiles table and adds the default profil to it. Gets
+  /// Creates the users table and adds the default user to it. Gets
   /// usually called when the database is opened the first time.
   Future _createTable(Database db, int version) async {
     await db.execute('''
@@ -327,26 +327,26 @@ class ProfilsDBHelper {
         $LOCATION2_LNG_COLUMN REAL
       )
     ''');
-    await db.insert(_TABLE, Profil(0).toMap());
+    await db.insert(_TABLE, User(0).toMap());
   }
 
-  /// Creates a profil with the given data.
-  Future createProfil(Profil profil) async {
-    await _preferences.setInt(_PROFILES_INDEX_KEY, profilesIndex + 1);
-    await _db.insert(_TABLE, profil.toMap());
+  /// Creates a user with the given data.
+  Future createUser(User user) async {
+    await _preferences.setInt(_USERS_INDEX_KEY, usersIndex + 1);
+    await _db.insert(_TABLE, user.toMap());
   }
 
-  /// Returns a list of all profiles.
-  Future<List<Profil>> getProfilesList() async {
+  /// Returns a list of all users.
+  Future<List<User>> getUsersList() async {
     final query = await _db.query(_TABLE);
     return List.generate(
       query.length,
-      (index) => Profil.fromMap(query.elementAt(index)),
+      (index) => User.fromMap(query.elementAt(index)),
     );
   }
 
-  /// Updates the profil at the [id] with the given [values].
-  Future updateProfil(int id, Map<String, Object> values) async {
+  /// Updates the user at the [id] with the given [values].
+  Future updateUser(int id, Map<String, Object> values) async {
     await _db.update(
       _TABLE,
       values,
@@ -355,13 +355,13 @@ class ProfilsDBHelper {
     );
   }
 
-  /// Sets the current profil to the [id].
-  Future setProfil(int id) async {
-    await _preferences.setInt(_CURRENT_PROFIL_KEY, id);
+  /// Sets the current user to the [id].
+  Future setUser(int id) async {
+    await _preferences.setInt(_CURRENT_USER_KEY, id);
   }
 
-  /// Deletes the profil data at the given [id].
-  Future deleteProfil(int id) async {
+  /// Deletes the user data at the given [id].
+  Future deleteUser(int id) async {
     await _db.delete(_TABLE, where: '$ID_COLUMN = ?', whereArgs: [id]);
   }
 }

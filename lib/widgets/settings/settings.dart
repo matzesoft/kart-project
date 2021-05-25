@@ -1,7 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
-import 'package:kart_project/providers/profil_provider.dart';
+import 'package:kart_project/providers/user_provider.dart';
 import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/about_setting.dart';
@@ -9,8 +9,8 @@ import 'package:kart_project/widgets/settings/appearance_setting.dart';
 import 'package:kart_project/widgets/settings/audio_setting.dart';
 import 'package:kart_project/widgets/settings/dev_setting.dart';
 import 'package:kart_project/widgets/settings/drive_setting.dart';
-import 'package:kart_project/widgets/settings/profil_picture.dart';
-import 'package:kart_project/widgets/settings/profil_setting.dart';
+import 'package:kart_project/widgets/settings/user_picture.dart';
+import 'package:kart_project/widgets/settings/user_setting.dart';
 import 'package:provider/provider.dart';
 
 class Setting {
@@ -23,8 +23,8 @@ class Setting {
 
 List<Setting> settings = [
   Setting(
-    title: Strings.profiles,
-    content: ProfilSetting(),
+    title: Strings.users,
+    content: UserSetting(),
   ),
   Setting(
     title: Strings.drive,
@@ -158,7 +158,7 @@ class Drawer extends StatelessWidget {
   }
 
   /// Shown on top of the list. Shows the current profil and contains of a
-  /// [ProfilPicture] instead of a icon.
+  /// [UserPicture] instead of a icon.
   Widget _profilItem(BuildContext context, int itemIndex) {
     bool active = (itemIndex == currentIndex);
     return Column(
@@ -171,13 +171,13 @@ class Drawer extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(AppTheme.borderRadius),
               onTap: currentIndex != itemIndex ? () => onTap(itemIndex) : null,
-              child: Selector<ProfilProvider, String>(
+              child: Selector<UserProvider, String>(
                 selector: (context, profilProvider) {
-                  return profilProvider.currentProfil.name;
+                  return profilProvider.currentUser.name;
                 },
                 builder: (context, profilName, child) {
                   return ListTile(
-                    leading: ProfilPicture(
+                    leading: UserPicture(
                       active: active,
                       name: profilName,
                       size: 38,
@@ -189,7 +189,7 @@ class Drawer extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: _textColor(context, active)),
                     ),
-                    subtitle: Text(Strings.profil),
+                    subtitle: Text(Strings.user),
                   );
                 },
               ),

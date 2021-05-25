@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Manages the data not stored in specific profiles.
+/// Manages the data not stored in specific users.
 class PreferencesProvider extends ChangeNotifier {
   PreferencesProvider() {
     SharedPreferences.getInstance().then((data) {

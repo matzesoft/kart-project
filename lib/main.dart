@@ -9,7 +9,7 @@ import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/preferences_provider.dart';
-import 'package:kart_project/providers/profil_provider.dart';
+import 'package:kart_project/providers/user_provider.dart';
 import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/lockscreen.dart';
@@ -33,16 +33,16 @@ class AppInit extends StatelessWidget {
         builder: (context, preferences, _) {
           if (!preferences.init) return Container(color: Colors.black);
 
-          return ChangeNotifierProvider<ProfilProvider>(
-            create: (context) => ProfilProvider(
+          return ChangeNotifierProvider<UserProvider>(
+            create: (context) => UserProvider(
               context.read<PreferencesProvider>(),
             ),
-            child: Selector<ProfilProvider, ProfilsState>(
-              selector: (context, profilProvider) => profilProvider.state,
+            child: Selector<UserProvider, UsersState>(
+              selector: (context, userProvider) => userProvider.state,
               builder: (context, state, child) {
-                if (state == ProfilsState.notInitalized) {
+                if (state == UsersState.notInitalized) {
                   return Container(color: Colors.black);
-                } else if (state == ProfilsState.failedToLoadDB) {
+                } else if (state == UsersState.failedToLoadDB) {
                   return MaterialApp(
                     theme: AppTheme.lightTheme,
                     home: Scaffold(body: Text(Strings.failedLoadingDatabase)),
@@ -81,44 +81,44 @@ class ProviderInit extends StatelessWidget {
           create: (context) => SystemProvider(),
           lazy: false,
         ),
-        ChangeNotifierProxyProvider<ProfilProvider, AppearanceProvider>(
-          create: (context) => AppearanceProvider(context.profil()),
-          update: (_, profilProvider, appearanceProvider) {
-            return appearanceProvider!.update(profilProvider.currentProfil);
+        ChangeNotifierProxyProvider<UserProvider, AppearanceProvider>(
+          create: (context) => AppearanceProvider(context.user()),
+          update: (_, userProvider, appearanceProvider) {
+            return appearanceProvider!.update(userProvider.currentUser);
           },
           lazy: false,
         ),
-        ChangeNotifierProxyProvider2<ProfilProvider, SystemProvider,
+        ChangeNotifierProxyProvider2<UserProvider, SystemProvider,
             LightProvider>(
           create: (context) => LightProvider(
-            context.profil(),
+            context.user(),
             context.locked(),
           ),
-          update: (_, profilProvider, bootProvider, lightProvider) {
+          update: (_, userProvider, bootProvider, lightProvider) {
             return lightProvider!.update(
-              profilProvider.currentProfil,
+              userProvider.currentUser,
               bootProvider.locked,
             );
           },
           lazy: false,
         ),
-        ChangeNotifierProxyProvider<ProfilProvider, MapProvider>(
-          create: (context) => MapProvider(context.profil()),
-          update: (_, profilProvider, mapProvider) {
-            return mapProvider!.update(profilProvider.currentProfil);
+        ChangeNotifierProxyProvider<UserProvider, MapProvider>(
+          create: (context) => MapProvider(context.user()),
+          update: (_, userProvider, mapProvider) {
+            return mapProvider!.update(userProvider.currentUser);
           },
           lazy: false,
         ),
-        ChangeNotifierProxyProvider2<ProfilProvider, NotificationsProvider,
+        ChangeNotifierProxyProvider2<UserProvider, NotificationsProvider,
             MotorControllerProvider>(
           create: (context) {
             return MotorControllerProvider(
-              context.profil(),
+              context.user(),
               context.read<NotificationsProvider>(),
             );
           },
-          update: (_, profilProvider, notificationProvider, kellyConroller) {
-            return kellyConroller!.update(profilProvider.currentProfil);
+          update: (_, userProvider, notificationProvider, kellyConroller) {
+            return kellyConroller!.update(userProvider.currentUser);
           },
           lazy: false,
         ),

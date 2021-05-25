@@ -1,24 +1,24 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:kart_project/providers/profil_provider.dart';
+import 'package:kart_project/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 /// Provides methods to change the appearance of the kart.
 class AppearanceProvider extends ChangeNotifier {
-  Profil _profil;
+  User _user;
 
-  AppearanceProvider(this._profil);
+  AppearanceProvider(this._user);
 
-  /// Updates the [AppearanceProvider] with the data of the [newProfil]. Returns
+  /// Updates the [AppearanceProvider] with the data of the [newUser]. Returns
   /// the back the object itself. This is normally called inside a [ProxyProvider]s
   /// update method. Does update all listeners.
-  AppearanceProvider update(Profil newProfil) {
-    _profil = newProfil;
+  AppearanceProvider update(User newUser) {
+    _user = newUser;
     notifyListeners();
     return this;
   }
 
   /// Theme the app should use. Normally implemented in MaterialApp.
-  ThemeMode get themeMode => _profil.themeMode;
-  set themeMode(ThemeMode mode) => _profil.themeMode = mode;
+  ThemeMode get themeMode => _user.themeMode;
+  set themeMode(ThemeMode mode) => _user.themeMode = mode;
 }

@@ -3,69 +3,69 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/design/loading_interface.dart';
 import 'package:kart_project/design/sized_alert_dialog.dart';
 import 'package:kart_project/design/theme.dart';
-import 'package:kart_project/providers/profil_provider.dart';
+import 'package:kart_project/providers/user_provider.dart';
 import 'package:kart_project/strings.dart';
-import 'package:kart_project/widgets/settings/profil_picture.dart';
+import 'package:kart_project/widgets/settings/user_picture.dart';
 import 'package:provider/provider.dart';
 
-/// Lets you create, switch, edit and delete profiles. Consists of a header
-/// which shows the [_CurrentProfil] and a [GridView] with a list of all profiles.
-class ProfilSetting extends StatefulWidget {
+/// Lets you create, switch, edit and delete users. Consists of a header
+/// which shows the [_CurrentUser] and a [GridView] with a list of all users.
+class UserSetting extends StatefulWidget {
   @override
-  _ProfilSettingState createState() => _ProfilSettingState();
+  _UserSettingState createState() => _UserSettingState();
 }
 
-class _ProfilSettingState extends State<ProfilSetting> {
-  ProfilProvider? profilProvider;
-  List<Profil> profiles = [];
-  Profil? currentProfil;
+class _UserSettingState extends State<UserSetting> {
+  UserProvider? userProvider;
+  List<User> users = [];
+  User? currentUser;
 
-  /// Opens up the [CreateProfilDialog].
-  Future _createProfil() async {
+  /// Opens up the [CreateUserDialog].
+  Future _createUser() async {
     showDialog(
       context: context,
-      builder: (context) => _CreateProfilDialog(profilProvider!),
+      builder: (context) => _CreateUserDialog(userProvider!),
     );
   }
 
-  /// Switches the profil. Shows an [LoadingInterface] as long as processing.
-  Future _setProfil(Profil profil) async {
-    LoadingInterface.dialog(context, message: Strings.profilIsSwitched);
-    await profilProvider!.switchProfil(context, profil.id);
+  /// Switches the user. Shows an [LoadingInterface] as long as processing.
+  Future _setUser(User user) async {
+    LoadingInterface.dialog(context, message: Strings.userIsSwitched);
+    await userProvider!.switchUser(context, user.id);
     Navigator.pop(context);
   }
 
-  /// Opens the [EditProfilDialog].
-  Future _editProfil(Profil profil) async {
+  /// Opens the [EditUserDialog].
+  Future _editUser(User user) async {
     showDialog(
       context: context,
-      builder: (context) => _EditProfilDialog(currentProfil!),
+      builder: (context) => _EditUserDialog(currentUser!),
     );
   }
 
-  /// Opens the [DeleteProfilDialog].
-  Future _deleteProfil(Profil profil) async {
+  /// Opens the [DeleteUserDialog].
+  Future _deleteUser(User user) async {
     showDialog(
       context: context,
-      builder: (context) => _DeleteProfilDialog(profilProvider!),
+      builder: (context) => _DeleteUserDialog(userProvider!),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    profilProvider = context.watch<ProfilProvider>();
-    profiles = profilProvider!.profiles;
-    currentProfil = profilProvider!.currentProfil;
+    userProvider = context.watch<UserProvider>();
+    users = userProvider!.users;
+    currentUser = userProvider!.currentUser;
 
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: _CurrentProfil(
-            currentProfil!,
-            enableDeletion: profiles.length > 1,
-            editProfil: _editProfil,
-            deleteProfil: _deleteProfil,
+          child: _CurrentUser(
+            currentUser!,
+            enableDeletion: users.length > 1,
+            editUser: _editUser,
+            deleteUser: _deleteUser,
           ),
         ),
         Padding(
@@ -79,15 +79,15 @@ class _ProfilSettingState extends State<ProfilSetting> {
                 childAspectRatio: 3 / 2,
               ),
               itemBuilder: (context, index) {
-                if (index == profiles.length)
-                  return _CreateProfilItem(_createProfil);
-                return _ProfilItem(
-                  profiles[index],
-                  active: profiles[index].id == currentProfil!.id,
-                  setProfil: _setProfil,
+                if (index == users.length)
+                  return _CreateUserItem(_createUser);
+                return _UserItem(
+                  users[index],
+                  active: users[index].id == currentUser!.id,
+                  setUser: _setUser,
                 );
               },
-              itemCount: profiles.length + 1,
+              itemCount: users.length + 1,
             ),
           ),
         ),
@@ -96,19 +96,19 @@ class _ProfilSettingState extends State<ProfilSetting> {
   }
 }
 
-/// Shows which profil is currently choosen and lets you delete and edit it.
+/// Shows which user is currently choosen and lets you delete and edit it.
 /// Set [enableDeletion] to false to disable the delete button.
-class _CurrentProfil extends StatelessWidget {
-  final Profil profil;
+class _CurrentUser extends StatelessWidget {
+  final User user;
   final bool enableDeletion;
-  final Function(Profil profil) editProfil;
-  final Function(Profil profil) deleteProfil;
+  final Function(User user) editUser;
+  final Function(User user) deleteUser;
 
-  _CurrentProfil(
-    this.profil, {
+  _CurrentUser(
+    this.user, {
     this.enableDeletion: true,
-    required this.editProfil,
-    required this.deleteProfil,
+    required this.editUser,
+    required this.deleteUser,
   });
 
   @override
@@ -122,18 +122,18 @@ class _CurrentProfil extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                ProfilPicture(name: profil.name),
+                UserPicture(name: user.name),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        profil.name,
+                        user.name,
                         style: Theme.of(context).textTheme.headline5,
                       ),
                       Text(
-                        Strings.currentProfil,
+                        Strings.currentUser,
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
                     ],
@@ -149,7 +149,7 @@ class _CurrentProfil extends StatelessWidget {
                     iconSize: AppTheme.iconButtonSize,
                     icon: Icon(EvaIcons.editOutline),
                     onPressed: () {
-                      editProfil(profil);
+                      editUser(user);
                     },
                   ),
                 ),
@@ -160,7 +160,7 @@ class _CurrentProfil extends StatelessWidget {
                     icon: Icon(EvaIcons.trash2Outline),
                     onPressed: enableDeletion
                         ? () {
-                            deleteProfil(profil);
+                            deleteUser(user);
                           }
                         : null,
                   ),
@@ -174,15 +174,15 @@ class _CurrentProfil extends StatelessWidget {
   }
 }
 
-/// Represents one profil in the grid.  If [active] is true the profil will be
-/// highlighted and the [setProfil] function disabled to prevent user from
-/// resetting the current profil.
-class _ProfilItem extends StatelessWidget {
-  final Profil profil;
+/// Represents one user in the grid.  If [active] is true the user will be
+/// highlighted and the [setUser] function disabled to prevent user from
+/// resetting the current user.
+class _UserItem extends StatelessWidget {
+  final User user;
   final bool active;
-  final Function(Profil profil) setProfil;
+  final Function(User user) setUser;
 
-  _ProfilItem(this.profil, {this.active: false, required this.setProfil});
+  _UserItem(this.user, {this.active: false, required this.setUser});
 
   /// Color used by the title and the icon of the setting.
   Color? _textColor(BuildContext context) => active
@@ -198,7 +198,7 @@ class _ProfilItem extends StatelessWidget {
         onTap: active
             ? null
             : () {
-                setProfil(profil);
+                setUser(user);
               },
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -206,13 +206,13 @@ class _ProfilItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ProfilPicture(
+              UserPicture(
                 active: active,
-                name: profil.name,
+                name: user.name,
                 size: 42,
               ),
               Text(
-                profil.name,
+                user.name,
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
@@ -228,11 +228,11 @@ class _ProfilItem extends StatelessWidget {
   }
 }
 
-/// Always the last item in the [GridView]. Calls [createProfil] when tapped on.
-class _CreateProfilItem extends StatelessWidget {
-  final Function() createProfil;
+/// Always the last item in the [GridView]. Calls [createUser] when tapped on.
+class _CreateUserItem extends StatelessWidget {
+  final Function() createUser;
 
-  _CreateProfilItem(this.createProfil);
+  _CreateUserItem(this.createUser);
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +240,7 @@ class _CreateProfilItem extends StatelessWidget {
       padding: EdgeInsets.all(8.0),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-        onTap: createProfil,
+        onTap: createUser,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
@@ -249,7 +249,7 @@ class _CreateProfilItem extends StatelessWidget {
             children: [
               Icon(EvaIcons.plus),
               Text(
-                Strings.createProfil,
+                Strings.createUser,
                 style: Theme.of(context).textTheme.bodyText1,
               ),
             ],
@@ -260,18 +260,18 @@ class _CreateProfilItem extends StatelessWidget {
   }
 }
 
-/// Interface for creating a new profil. If no name for the new profil is given
+/// Interface for creating a new user. If no name for the new user is given
 /// an automatic generated name will be used.
-class _CreateProfilDialog extends StatefulWidget {
-  final ProfilProvider profilProvider;
+class _CreateUserDialog extends StatefulWidget {
+  final UserProvider userProvider;
 
-  _CreateProfilDialog(this.profilProvider);
+  _CreateUserDialog(this.userProvider);
 
   @override
-  State<StatefulWidget> createState() => _CreateProfilDialogState();
+  State<StatefulWidget> createState() => _CreateUserDialogState();
 }
 
-class _CreateProfilDialogState extends State<_CreateProfilDialog> {
+class _CreateUserDialogState extends State<_CreateUserDialog> {
   final _formKey = GlobalKey<FormState>();
   final _controller = TextEditingController();
 
@@ -290,13 +290,13 @@ class _CreateProfilDialogState extends State<_CreateProfilDialog> {
     super.dispose();
   }
 
-  /// Creates a new profil. Sets [_processing] to true while processing.
-  Future _createProfil() async {
+  /// Creates a new user. Sets [_processing] to true while processing.
+  Future _createUser() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _processing = true;
       });
-      await widget.profilProvider.createProfil(
+      await widget.userProvider.createUser(
         context,
         name: _controller.text,
       );
@@ -308,11 +308,11 @@ class _CreateProfilDialogState extends State<_CreateProfilDialog> {
   Widget build(BuildContext context) {
     if (_processing) {
       return LoadingInterface(
-        message: Strings.profilIsCreated,
+        message: Strings.userIsCreated,
       ).dialogInterface();
     }
     return SizedAlertDialog(
-      title: Text(Strings.createProfil),
+      title: Text(Strings.createUser),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,7 +349,7 @@ class _CreateProfilDialogState extends State<_CreateProfilDialog> {
         ),
         TextButton(
           onPressed: () {
-            _createProfil();
+            _createUser();
           },
           child: Text(Strings.create),
         ),
@@ -358,25 +358,25 @@ class _CreateProfilDialogState extends State<_CreateProfilDialog> {
   }
 }
 
-/// Interface to edit the profil.
-class _EditProfilDialog extends StatefulWidget {
-  final Profil profil;
+/// Interface to edit the user.
+class _EditUserDialog extends StatefulWidget {
+  final User user;
 
-  _EditProfilDialog(this.profil);
+  _EditUserDialog(this.user);
 
   @override
-  State<StatefulWidget> createState() => _EditProfilDialogState();
+  State<StatefulWidget> createState() => _EditUserDialogState();
 }
 
-class _EditProfilDialogState extends State<_EditProfilDialog> {
+class _EditUserDialogState extends State<_EditUserDialog> {
   final _formKey = GlobalKey<FormState>();
-  Profil? _profil;
+  User? _user;
   TextEditingController? _controller;
 
   @override
   void initState() {
-    _profil = widget.profil;
-    _controller = TextEditingController(text: _profil!.name);
+    _user = widget.user;
+    _controller = TextEditingController(text: _user!.name);
     super.initState();
   }
 
@@ -386,10 +386,10 @@ class _EditProfilDialogState extends State<_EditProfilDialog> {
     super.dispose();
   }
 
-  /// Updates the [_profil].
-  void _updateProfil() {
+  /// Updates the [_user].
+  void _updateUser() {
     if (_formKey.currentState!.validate()) {
-      _profil!.setName(
+      _user!.setName(
         context,
         _controller!.text,
       );
@@ -400,7 +400,7 @@ class _EditProfilDialogState extends State<_EditProfilDialog> {
   @override
   Widget build(BuildContext context) {
     return SizedAlertDialog(
-      title: Text(Strings.editProfil),
+      title: Text(Strings.editUser),
       content: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
         child: Form(
@@ -429,7 +429,7 @@ class _EditProfilDialogState extends State<_EditProfilDialog> {
         ),
         TextButton(
           onPressed: () {
-            _updateProfil();
+            _updateUser();
           },
           child: Text(Strings.safe),
         ),
@@ -438,18 +438,18 @@ class _EditProfilDialogState extends State<_EditProfilDialog> {
   }
 }
 
-/// Interface for deleting a profil.
-class _DeleteProfilDialog extends StatefulWidget {
-  final ProfilProvider profilProvider;
+/// Interface for deleting a user.
+class _DeleteUserDialog extends StatefulWidget {
+  final UserProvider userProvider;
 
-  _DeleteProfilDialog(this.profilProvider);
+  _DeleteUserDialog(this.userProvider);
 
   @override
-  _DeleteProfilDialogState createState() => _DeleteProfilDialogState();
+  _DeleteUserDialogState createState() => _DeleteUserDialogState();
 }
 
-class _DeleteProfilDialogState extends State<_DeleteProfilDialog> {
-  Profil? _profil;
+class _DeleteUserDialogState extends State<_DeleteUserDialog> {
+  User? _user;
 
   /// Set to true when work is in progress. Normaly used to check wether to show
   /// a [LoadingInterface] or not.
@@ -457,16 +457,16 @@ class _DeleteProfilDialogState extends State<_DeleteProfilDialog> {
 
   @override
   void initState() {
-    _profil = widget.profilProvider.currentProfil;
+    _user = widget.userProvider.currentUser;
     super.initState();
   }
 
-  /// Deletes the [_profil]. Sets [_processing] to true while processing.
-  Future _deleteProfil() async {
+  /// Deletes the [_user]. Sets [_processing] to true while processing.
+  Future _deleteUser() async {
     setState(() {
       _processing = true;
     });
-    await widget.profilProvider.deleteProfil(context, _profil!.id);
+    await widget.userProvider.deleteUser(context, _user!.id);
     Navigator.pop(context);
   }
 
@@ -474,19 +474,19 @@ class _DeleteProfilDialogState extends State<_DeleteProfilDialog> {
   Widget build(BuildContext context) {
     if (_processing) {
       return LoadingInterface(
-        message: Strings.profilIsDeleted,
+        message: Strings.userIsDeleted,
       ).dialogInterface();
     }
     return SizedAlertDialog(
-      title: Text(Strings.deleteProfilQuestion),
+      title: Text(Strings.deleteuserQuestion),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            Strings.deleteProfilMessage1 +
-                _profil!.name +
-                Strings.deleteProfilMessage2,
+            Strings.deleteUserMessage1 +
+                _user!.name +
+                Strings.deleteUserMessage2,
           ),
         ],
       ),
@@ -499,7 +499,7 @@ class _DeleteProfilDialogState extends State<_DeleteProfilDialog> {
         ),
         TextButton(
           onPressed: () {
-            _deleteProfil();
+            _deleteUser();
           },
           child: Text(Strings.delete),
         ),
