@@ -211,7 +211,7 @@ class Battery extends StatefulWidget {
 class _BatteryState extends State<Battery> {
   final _animationDuration = Duration(milliseconds: 300);
   double _batteryPercentageBefore = 1.0;
-  double _batteryPercentage = 0.4;
+  double _batteryPercentage = 0.0;
 
   Color _batteryColor() {
     if (_batteryPercentage <= 0.2) {

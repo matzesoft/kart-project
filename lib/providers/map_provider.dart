@@ -184,21 +184,21 @@ class Location {
   }
 
   /// Converts the data from a map with the [UsersDBHelper] syntax.
-  Location.fromUserMap(int index, Map<String, dynamic> user) {
+  Location.fromUserMap(int index, Map<String, dynamic> mapData) {
     if (!(index == 1 || index == 2)) {
       throw ArgumentError("Index must be 1 or 2.");
     }
     if (index == 1) {
-      zoom = user[LOCATION1_ZOOM_COLUMN];
+      zoom = mapData[LOCATION1_ZOOM_COLUMN];
       coordinates = LatLng(
-        user[LOCATION1_LAT_COLUMN],
-        user[LOCATION1_LNG_COLUMN],
+        mapData[LOCATION1_LAT_COLUMN],
+        mapData[LOCATION1_LNG_COLUMN],
       );
     } else {
-      zoom = user[LOCATION2_ZOOM_COLUMN];
+      zoom = mapData[LOCATION2_ZOOM_COLUMN];
       coordinates = LatLng(
-        user[LOCATION2_LAT_COLUMN],
-        user[LOCATION2_LNG_COLUMN],
+        mapData[LOCATION2_LAT_COLUMN],
+        mapData[LOCATION2_LNG_COLUMN],
       );
     }
   }

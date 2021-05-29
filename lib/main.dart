@@ -115,6 +115,7 @@ class ProviderInit extends StatelessWidget {
             return MotorControllerProvider(
               context.user(),
               context.read<NotificationsProvider>(),
+              context.read<PreferencesProvider>(),
             );
           },
           update: (_, userProvider, notificationProvider, kellyConroller) {

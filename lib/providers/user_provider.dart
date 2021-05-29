@@ -2,6 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kart_project/providers/map_provider.dart';
+import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/preferences_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/extensions.dart';
@@ -110,13 +111,12 @@ class UserProvider extends ChangeNotifier {
 class User {
   static UserProvider? _controller;
   late int _id;
+  late UserRangeProfil _rangeProfil = UserRangeProfil(this);
   String _name = "Standard Benutzer";
   int _themeMode = ThemeMode.light.index;
   double _maxLightBrightness = 0.6;
   int _lightStripColor = 0xFFD6D6D6;
   int _lowSpeedAlwaysActive = 0;
-  double _drivenKilometre = 0.0;
-  double _consumedBatteryPercent = 0.0;
   Location? _location1;
   Location? _location2;
 
@@ -172,16 +172,10 @@ class User {
     _update({LOW_SPEED_ALWAYS_ACTIVE_COLUMN: _lowSpeedAlwaysActive});
   }
 
-  double get drivenKilometre => _drivenKilometre;
-  set drivenKilometre(double kilometre) {
-    _drivenKilometre = kilometre;
-    _update({DRIVEN_KILOMETRE_COLUMN: _drivenKilometre});
-  }
-
-  double get consumedBatteryPercent => _consumedBatteryPercent;
-  set consumedBatteryPercent(double percent) {
-    _consumedBatteryPercent = percent;
-    _update({CONSUMED_BATTERY_PERCENT: _consumedBatteryPercent});
+  UserRangeProfil get rangeProfil => _rangeProfil;
+  set rangeProfil(UserRangeProfil rangeProfil) {
+    _rangeProfil = rangeProfil;
+    _update(_rangeProfil.toUserMap());
   }
 
   Location? get location1 => _location1;
@@ -214,32 +208,30 @@ class User {
       MAX_LIHGT_BRIGHTNESS_COLUMN: _maxLightBrightness,
       LIGHT_STRIP_COLOR_COLUMN: _lightStripColor,
       LOW_SPEED_ALWAYS_ACTIVE_COLUMN: _lowSpeedAlwaysActive,
-      DRIVEN_KILOMETRE_COLUMN: _drivenKilometre,
-      CONSUMED_BATTERY_PERCENT: _consumedBatteryPercent,
     };
+    data.addAll(_rangeProfil.toUserMap());
     if (location1 != null) data.addAll(location1!.toUserMap(1)!);
     if (location2 != null) data.addAll(location2!.toUserMap(2)!);
     return data;
   }
 
-  User.fromMap(Map<String, dynamic> user) {
-    _id = user[ID_COLUMN];
-    _name = user[NAME_COLUMN];
-    _themeMode = user[THEME_MODE_COLUMN];
-    _maxLightBrightness = user[MAX_LIHGT_BRIGHTNESS_COLUMN];
-    _lightStripColor = user[LIGHT_STRIP_COLOR_COLUMN];
-    _lowSpeedAlwaysActive = user[LOW_SPEED_ALWAYS_ACTIVE_COLUMN];
-    _drivenKilometre = user[DRIVEN_KILOMETRE_COLUMN];
-    _consumedBatteryPercent = user[CONSUMED_BATTERY_PERCENT];
-    if (user[LOCATION1_ZOOM_COLUMN] != null &&
-        user[LOCATION1_LAT_COLUMN] != null &&
-        user[LOCATION1_LNG_COLUMN] != null) {
-      _location1 = Location.fromUserMap(1, user);
+  User.fromMap(Map<String, dynamic> mapData) {
+    _id = mapData[ID_COLUMN];
+    _name = mapData[NAME_COLUMN];
+    _themeMode = mapData[THEME_MODE_COLUMN];
+    _maxLightBrightness = mapData[MAX_LIHGT_BRIGHTNESS_COLUMN];
+    _lightStripColor = mapData[LIGHT_STRIP_COLOR_COLUMN];
+    _lowSpeedAlwaysActive = mapData[LOW_SPEED_ALWAYS_ACTIVE_COLUMN];
+    _rangeProfil = UserRangeProfil.fromUserMap(this, mapData);
+    if (mapData[LOCATION1_ZOOM_COLUMN] != null &&
+        mapData[LOCATION1_LAT_COLUMN] != null &&
+        mapData[LOCATION1_LNG_COLUMN] != null) {
+      _location1 = Location.fromUserMap(1, mapData);
     }
-    if (user[LOCATION2_ZOOM_COLUMN] != null &&
-        user[LOCATION2_LAT_COLUMN] != null &&
-        user[LOCATION2_LNG_COLUMN] != null) {
-      _location2 = Location.fromUserMap(2, user);
+    if (mapData[LOCATION2_ZOOM_COLUMN] != null &&
+        mapData[LOCATION2_LAT_COLUMN] != null &&
+        mapData[LOCATION2_LNG_COLUMN] != null) {
+      _location2 = Location.fromUserMap(2, mapData);
     }
   }
 }
@@ -256,10 +248,10 @@ const ID_COLUMN = "id";
 const NAME_COLUMN = "name";
 const THEME_MODE_COLUMN = "theme_mode";
 const MAX_LIHGT_BRIGHTNESS_COLUMN = "max_light_brightness";
-const LIGHT_STRIP_COLOR_COLUMN = "light_strip_color_column";
-const LOW_SPEED_ALWAYS_ACTIVE_COLUMN = "low_speed_always_active_colum";
-const DRIVEN_KILOMETRE_COLUMN = "driven_kilometre_column";
-const CONSUMED_BATTERY_PERCENT = "consumed_battery_percent";
+const LIGHT_STRIP_COLOR_COLUMN = "light_strip_color";
+const LOW_SPEED_ALWAYS_ACTIVE_COLUMN = "low_speed_always_active";
+const RANGE_PROFIL_KILOMETRE_COLUMN = "range_profil_kilometre";
+const RANGE_PROFIL_BATTERY_PERCENT_COLUMN = "range_profil_battery_percent";
 // Locations
 const LOCATION1_ZOOM_COLUMN = "location1_zoom";
 const LOCATION1_LAT_COLUMN = "location1_lat";
@@ -316,8 +308,8 @@ class UsersDBHelper {
         $MAX_LIHGT_BRIGHTNESS_COLUMN REAL,
         $LIGHT_STRIP_COLOR_COLUMN INTEGER,
         $LOW_SPEED_ALWAYS_ACTIVE_COLUMN INTEGER,
-        $DRIVEN_KILOMETRE_COLUMN REAL,
-        $CONSUMED_BATTERY_PERCENT REAL,
+        $RANGE_PROFIL_KILOMETRE_COLUMN REAL,
+        $RANGE_PROFIL_BATTERY_PERCENT_COLUMN REAL,
 
         $LOCATION1_ZOOM_COLUMN REAL,
         $LOCATION1_LAT_COLUMN REAL,
