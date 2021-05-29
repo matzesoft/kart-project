@@ -292,6 +292,7 @@ class _BatteryState extends State<Battery> {
 }
 
 class Consumption extends StatelessWidget {
+  // ignore: unused_element
   void _openConsumptionHistory() {
     // TODO: Implement
   }
@@ -300,17 +301,21 @@ class Consumption extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: widgetPadding,
-      child: Column(
-        children: <Widget>[
-          CustomListTile(
-            icon: Icon(EvaIcons.trendingUpOutline),
-            title: "43 km", //TODO: Add API
-            subtitle: Strings.range,
-            onPressed: _openConsumptionHistory,
-            trailing: Icon(EvaIcons.arrowIosForwardOutline),
-          ),
-        ],
-      ),
+      child: Selector<MotorControllerProvider, RangeProfil>(
+          selector: (context, controller) => controller.userRangeProfil,
+          builder: (context, rangeProfil, _) {
+            final remainingKilometre = rangeProfil.remainingKilometre(context);
+            final text =
+                remainingKilometre == null ? "-" : "$remainingKilometre km";
+
+            return CustomListTile(
+              icon: Icon(EvaIcons.trendingUpOutline),
+              title: text,
+              subtitle: Strings.range,
+              // onPressed: _openConsumptionHistory,
+              // trailing: Icon(EvaIcons.arrowIosForwardOutline),
+            );
+          }),
     );
   }
 }

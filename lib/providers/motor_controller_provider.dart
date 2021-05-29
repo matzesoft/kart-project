@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/providers/preferences_provider.dart';
@@ -32,8 +33,8 @@ enum MotorState {
   backward,
 }
 
-const _TIMER_DURATION = const Duration(milliseconds: 50);
-const _TIMER_DURATION_IN_HOURES = 50 / 1000 / 60 / 60;
+const _CAN_UPDATE_DURATION = const Duration(milliseconds: 50);
+const _CAN_UPDATE_DURATION_IN_HOURES = 50 / 1000 / 60 / 60;
 
 class MotorControllerProvider extends ChangeNotifier {
   MotorControllerProvider(this._user, this._notifications, this._preferences) {
@@ -222,11 +223,19 @@ abstract class RangeProfil {
     return factor;
   }
 
+  int? remainingKilometre(BuildContext context) {
+    if (percentPerKilometre == null) return null;
+
+    final battery = context.read<MotorControllerProvider>().batteryLevel;
+    final kilometre = (battery / percentPerKilometre!).floor();
+    return kilometre;
+  }
+
   void updateByMotorController(double? speed, double? batteryLevel) {
     if ((speed != null && batteryLevel != null) && speed > 3.0) {
       final checkDBUpdate = (_drivenKilometre * 10).floor();
 
-      _drivenKilometre += (speed * _TIMER_DURATION_IN_HOURES);
+      _drivenKilometre += (speed * _CAN_UPDATE_DURATION_IN_HOURES);
 
       if (_batteryPercentBefore == null) {
         _batteryPercentBefore = batteryLevel;
@@ -499,7 +508,7 @@ void readCanFrames(SendPort sendPort) async {
   final can = CanDevice(bitrate: _CAN_MODUL_BITRATE);
   await can.setup();
 
-  Timer.periodic(_TIMER_DURATION, (_) {
+  Timer.periodic(_CAN_UPDATE_DURATION, (_) {
     List<CanFrame> frames = [];
 
     try {
