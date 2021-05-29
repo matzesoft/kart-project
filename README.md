@@ -12,6 +12,7 @@ To read the current speed and range are essential for every vehicle.
 We are using the [KellyController KLS7245HC](https://kellycontroller.com/shop/kls-h/) to control the electric motor. This controller enables to read the driving information via CAN Bus.
 
 ### Lights control
+
 To bring the kart to light we make us of two [2760lm leds](https://www.leds.de/nichia-nfcwl060b-v2-chip-on-board-modul-2760lm-5000k-cri-80-30608.html). By implementing PWM with the [wiringPi Library](http://wiringpi.com), you can switch between high beam and low beam.
 Another feature PWM enables is to use the backlights aswell for brakelights by increasing the brightness whenever the driver is breaking.
 
