@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:math';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
+import 'package:kart_project/providers/preferences_provider.dart';
 import 'package:kart_project/providers/user_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
@@ -21,18 +23,27 @@ const _ENABLE_MOTOR_THROTTLE_LIMIT = 0.05;
 
 const _MOTOR_CURRENT_MAX = 176.0;
 
+const _GLOBAL_RANGE_KEY = 'global_range';
+const _TRIP_RANGE_KEY = 'trip_range';
+
 enum MotorState {
   neutral,
   forward,
   backward,
 }
 
-const TIMER_UPDATE_FREQUENZ = const Duration(milliseconds: 50);
+const _TIMER_DURATION = const Duration(milliseconds: 50);
+const _TIMER_DURATION_IN_HOURES = 50 / 1000 / 60 / 60;
 
 class MotorControllerProvider extends ChangeNotifier {
-  MotorControllerProvider(this._user, this._notifications) {
+  MotorControllerProvider(this._user, this._notifications, this._preferences) {
     _canData = KellyCanData._(this);
-    _canData.setup().then((_) => _runTimer());
+    globalRangeProfil = GlobalRangeProfil(_preferences, _GLOBAL_RANGE_KEY);
+    tripRangeProfil = GlobalRangeProfil(_preferences, _TRIP_RANGE_KEY);
+
+    _canData.setup().then((_) {
+      _canData.addListener(() => _onCanDataChanged());
+    });
   }
 
   MotorControllerProvider update(User newUser) {
@@ -44,14 +55,16 @@ class MotorControllerProvider extends ChangeNotifier {
     return this;
   }
 
+  final NotificationsProvider _notifications;
+  final PreferencesProvider _preferences;
   late final KellyCanData _canData;
   late final lowSpeedMode = LowSpeedModeController(this);
+  late final GlobalRangeProfil globalRangeProfil;
+  late final GlobalRangeProfil tripRangeProfil;
   final _powerGpio = GpioInterface.kellyOff;
   final _enableMotorGpio = GpioInterface.enableMotor;
-  NotificationsProvider _notifications;
   User _user;
   ControllerError? _error;
-  Timer? _timer;
 
   double get speed {
     final rpm = _canData.rpm;
@@ -80,6 +93,8 @@ class MotorControllerProvider extends ChangeNotifier {
   MotorState get motorStateCommand => _canData.motorStateCommand;
   MotorState get motorStateFeedback => _canData.motorStateFeedback;
 
+  UserRangeProfil get userRangeProfil => _user.rangeProfil;
+
   ControllerError? get error => _error;
   set error(ControllerError? controllerError) {
     if (error != controllerError) {
@@ -92,13 +107,10 @@ class MotorControllerProvider extends ChangeNotifier {
   bool get isOn => _powerGpio.getValue();
 
   void setPower(bool on) {
-    if (on) {
-      _runTimer();
-    } else {
-      if (_timer != null) _timer!.cancel();
+    if (on != isOn) {
+      _powerGpio.setValue(on);
+      notifyListeners();
     }
-    _powerGpio.setValue(on);
-    notifyListeners();
   }
 
   bool get motorEnabled => _enableMotorGpio.getValue();
@@ -119,13 +131,12 @@ class MotorControllerProvider extends ChangeNotifier {
     }
   }
 
-  void _runTimer() {
-    _timer = Timer.periodic(TIMER_UPDATE_FREQUENZ, (_) {
-      _canData.update();
-      _canData.update();
-      lowSpeedMode._onBatteryLevelChange();
-      notifyListeners();
-    });
+  void _onCanDataChanged() async {
+    lowSpeedMode._onBatteryLevelChange();
+    globalRangeProfil.updateByMotorController(speed, batteryLevel);
+    tripRangeProfil.updateByMotorController(speed, batteryLevel);
+    userRangeProfil.updateByMotorController(speed, batteryLevel);
+    notifyListeners();
   }
 
   Future restart() async {
@@ -196,32 +207,88 @@ class LowSpeedModeController {
 }
 
 abstract class RangeProfil {
-  RangeProfil({double batteryPercent: 0.0, double drivenKilometre: 0.0}) {
-    _consumedBatteryPercent = batteryPercent;
-    _drivenKilometre = drivenKilometre;
-  }
-
   double _consumedBatteryPercent = 0.0;
   double _drivenKilometre = 0.0;
+  double? _batteryPercentBefore;
 
   double get consumedBatteryPercent => _consumedBatteryPercent;
   double get drivenKilometre => _drivenKilometre;
-  double get percentPerKilometre => consumedBatteryPercent / drivenKilometre;
 
-  void _updateByMotorController(double speed, double batteryLevel) {
-    _drivenKilometre += speed * TIMER_UPDATE_FREQUENZ.inHours;
-    _consumedBatteryPercent += batteryLevel - _consumedBatteryPercent;
+  double? get percentPerKilometre {
+    if (drivenKilometre < 0.5 || consumedBatteryPercent < 2.0) return null;
 
-    _updateInDatabase(_drivenKilometre, _consumedBatteryPercent);
+    final factor = consumedBatteryPercent / drivenKilometre;
+    if (factor.isInfinite || factor.isNegative || factor.isNaN) return null;
+    return factor;
   }
 
-  void _updateInDatabase(double batteryPercent, double drivenKilometre);
+  void updateByMotorController(double? speed, double? batteryLevel) {
+    if ((speed != null && batteryLevel != null) && speed > 3.0) {
+      final checkDBUpdate = (_drivenKilometre * 10).floor();
+
+      _drivenKilometre += (speed * _TIMER_DURATION_IN_HOURES);
+
+      if (_batteryPercentBefore == null) {
+        _batteryPercentBefore = batteryLevel;
+      } else {
+        _consumedBatteryPercent += (batteryLevel - _batteryPercentBefore!);
+        _batteryPercentBefore = batteryLevel;
+      }
+      // Updates the database for every 100 driven meter.
+      if (checkDBUpdate != (drivenKilometre * 10).floor()) _updateInDatabase();
+    }
+  }
+
+  void _updateInDatabase();
 }
 
-class RangeProfilByKartProfil extends RangeProfil {
+class UserRangeProfil extends RangeProfil {
+  UserRangeProfil(this._user);
+  final User _user;
+
   @override
-  void _updateInDatabase(double batteryPercent, double drivenKilometre) {
-    // TODO: implement _updateInDatabase
+  void _updateInDatabase() {
+    _user.rangeProfil = this;
+  }
+
+  Map<String, Object> toUserMap() {
+    return <String, Object>{
+      RANGE_PROFIL_KILOMETRE_COLUMN: drivenKilometre,
+      RANGE_PROFIL_BATTERY_PERCENT_COLUMN: consumedBatteryPercent,
+    };
+  }
+
+  UserRangeProfil.fromUserMap(this._user, Map<String, dynamic> mapData) {
+    _drivenKilometre = mapData[RANGE_PROFIL_KILOMETRE_COLUMN];
+    _consumedBatteryPercent = mapData[RANGE_PROFIL_BATTERY_PERCENT_COLUMN];
+  }
+}
+
+/// RangeProfil stored in preferences and indepedend by user data.
+class GlobalRangeProfil extends RangeProfil {
+  GlobalRangeProfil(this._preferences, String dataKey) {
+    _batteryPercentKey = dataKey + "_battery_percent";
+    _drivenKilometreKey = dataKey + "_driven_kilometre";
+
+    if (!_preferences.containsKey(_batteryPercentKey)) {
+      _preferences.setDouble(_batteryPercentKey, 0.0);
+    }
+    if (!_preferences.containsKey(_drivenKilometreKey)) {
+      _preferences.setDouble(_drivenKilometreKey, 0.0);
+    }
+
+    _consumedBatteryPercent = _preferences.getDouble(_batteryPercentKey)!;
+    _drivenKilometre = _preferences.getDouble(_drivenKilometreKey)!;
+  }
+
+  final PreferencesProvider _preferences;
+  late final String _batteryPercentKey;
+  late final String _drivenKilometreKey;
+
+  @override
+  void _updateInDatabase() {
+    _preferences.setDouble(_batteryPercentKey, consumedBatteryPercent);
+    _preferences.setDouble(_drivenKilometreKey, drivenKilometre);
   }
 }
 
@@ -282,19 +349,19 @@ const _STATUS_OF_CONTROLLER_STATES = [
 ];
 // const _statusOfSwitchSignalsIndex = 5;
 
-const _CAN_MODUL_BITRATE = 250000;
-
 // Update frequency: Per 50ms x2 -> Wait 2 seconds
 const _FAILED_READS_LIMIT = (20 * 2) * 2;
 
-class KellyCanData {
+class KellyCanData extends ChangeNotifier {
+  KellyCanData._(this._controller);
+
   final MotorControllerProvider _controller;
-  final _can = CanDevice(bitrate: _CAN_MODUL_BITRATE);
+  final _receivePort = ReceivePort();
   int _failedReads = 0;
 
   int _rpm = 0;
-  double _motorCurrent = 0;
-  double _batterVoltage = 0;
+  double _motorCurrent = 0.0;
+  double _batterVoltage = 0.0;
   int _throttleSignal = 0;
   int _controllerTemperature = 25;
   int _motorTemperature = 25;
@@ -310,20 +377,23 @@ class KellyCanData {
   MotorState get motorStateCommand => _motorStateCommand;
   MotorState get motorStateFeedback => _motorStateFeedback;
 
-  KellyCanData._(this._controller);
-
   Future setup() async {
     try {
-      await _can.setup();
+      await Isolate.spawn(
+        readCanFrames,
+        _receivePort.sendPort,
+      );
+      _receivePort.listen(update);
     } on SocketException {
       _communicationFailed();
     }
   }
 
-  void update() {
+  void update(dynamic canData) {
+    List<CanFrame> frames = canData;
+
     try {
-      final frame = _can.read();
-      final failedReading = frame.data.isEmpty;
+      final failedReading = frames.isEmpty;
 
       // Increases [_failedReads] for every empty frame. Resets when one read
       // was sucessful.
@@ -336,8 +406,12 @@ class KellyCanData {
         if (_failedReads > 0) _failedReads = 0;
         if (_controller.error == _communicationError) _controller.error = null;
 
-        if (frame.id == _CAN_MESSAGE1) _updateFromMsg1(frame);
-        if (frame.id == _CAN_MESSAGE2) _updateFromMsg2(frame);
+        final msg1Frames = frames.where((f) => f.id == _CAN_MESSAGE1).toList();
+        if (msg1Frames.isNotEmpty) _updateFromMsg1(msg1Frames.last);
+
+        final msg2Frames = frames.where((f) => f.id == _CAN_MESSAGE2).toList();
+        if (msg2Frames.isNotEmpty) _updateFromMsg2(msg2Frames.last);
+        notifyListeners();
       }
     } on SocketException {
       _communicationFailed();
@@ -417,6 +491,23 @@ class KellyCanData {
   void _communicationFailed() {
     _controller.error = _communicationError;
   }
+}
+
+const _CAN_MODUL_BITRATE = 250000;
+
+void readCanFrames(SendPort sendPort) async {
+  final can = CanDevice(bitrate: _CAN_MODUL_BITRATE);
+  await can.setup();
+
+  Timer.periodic(_TIMER_DURATION, (_) {
+    List<CanFrame> frames = [];
+
+    try {
+      frames.add(can.read());
+      frames.add(can.read());
+    } catch (e) {}
+    sendPort.send(frames);
+  });
 }
 
 class ControllerError extends ErrorNotification {
