@@ -7,7 +7,7 @@ import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:provider/provider.dart';
 
-class AboutSetting extends StatelessWidget {
+class InfoSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(

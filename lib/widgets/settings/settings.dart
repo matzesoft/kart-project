@@ -4,7 +4,7 @@ import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/user_provider.dart';
 import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
-import 'package:kart_project/widgets/settings/about_setting.dart';
+import 'package:kart_project/widgets/settings/info_setting.dart';
 import 'package:kart_project/widgets/settings/appearance_setting.dart';
 import 'package:kart_project/widgets/settings/audio_setting.dart';
 import 'package:kart_project/widgets/settings/dev_setting.dart';
@@ -44,7 +44,7 @@ List<Setting> settings = [
   Setting(
     title: Strings.about,
     icon: EvaIcons.infoOutline,
-    content: AboutSetting(),
+    content: InfoSetting(),
   ),
   // The last setting is hidden when dev options are disabled.
   Setting(
