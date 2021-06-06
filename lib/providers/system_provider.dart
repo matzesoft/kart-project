@@ -95,11 +95,6 @@ class SystemProvider extends ChangeNotifier {
     _cmdInterface.runCmd('sudo reboot'); // Test
   }
 
-  /// Allows to power off without disabeling the providers.
-  void emergencyPowerOff() {
-    _cmdInterface.runCmd('sudo poweroff');
-  }
-
   /// Calls all providers to update their values for power off.
   Future _powerOffProviders(BuildContext context) async {
     context.read<LightProvider>().powerOff();
