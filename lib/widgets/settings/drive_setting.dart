@@ -108,34 +108,9 @@ class ControllerData extends StatelessWidget {
                 element('Motor Current', controller.motorCurrent),
                 element('Voltage', controller.batteryVoltage),
                 element('Throttle Signal', controller.throttleSignal),
-                element('Controller Temp', controller.controllerTemperature),
                 element('Motor Temp', controller.motorTemperature),
                 element('Motor State Cmd', controller.motorStateCommand),
                 element('Motor State Feedback', controller.motorStateFeedback),
-                element(
-                  'Global Range Kilometre',
-                  controller.globalRangeProfil.drivenKilometre,
-                ),
-                element(
-                  'Global Range Percent',
-                  controller.globalRangeProfil.consumedBatteryPercent,
-                ),
-                element(
-                  'Percent per kilometre',
-                  controller.globalRangeProfil.percentPerKilometre,
-                ),
-                element(
-                  'User Range Kilometre',
-                  controller.userRangeProfil.drivenKilometre,
-                ),
-                element(
-                  'User Range Percent',
-                  controller.userRangeProfil.consumedBatteryPercent,
-                ),
-                element(
-                  'Percent per kilometre',
-                  controller.userRangeProfil.percentPerKilometre,
-                ),
               ],
             );
           },
