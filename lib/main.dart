@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/appearance_provider.dart';
 import 'package:kart_project/providers/audio_provider.dart';
-import 'package:kart_project/providers/cooling_provider.dart';
+import 'package:kart_project/providers/temperature_provider.dart';
 import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/map_provider.dart';
@@ -73,8 +73,12 @@ class ProviderInit extends StatelessWidget {
           create: (context) => NotificationsProvider(),
           lazy: false,
         ),
-        ChangeNotifierProvider<CoolingProvider>(
-          create: (context) => CoolingProvider(),
+         ChangeNotifierProvider<TemperatureProvider>(
+          create: (context) => TemperatureProvider(
+            context.read<NotificationsProvider>(),
+            context.read<MotorControllerProvider>(),
+            context.read<SystemProvider>(),
+          ),
           lazy: false,
         ),
         ChangeNotifierProvider<SystemProvider>(

@@ -9,6 +9,7 @@ import 'package:kart_project/widgets/settings/appearance_setting.dart';
 import 'package:kart_project/widgets/settings/audio_setting.dart';
 import 'package:kart_project/widgets/settings/dev_setting.dart';
 import 'package:kart_project/widgets/settings/drive_setting.dart';
+import 'package:kart_project/widgets/settings/safety_setting.dart';
 import 'package:kart_project/widgets/settings/user_picture.dart';
 import 'package:kart_project/widgets/settings/user_setting.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,11 @@ List<Setting> settings = [
     title: Strings.audio,
     icon: EvaIcons.musicOutline,
     content: AudioSetting(),
+  ),
+  Setting(
+    title: Strings.safety,
+    icon: EvaIcons.shieldOutline,
+    content: SafetySetting(),
   ),
   Setting(
     title: Strings.about,

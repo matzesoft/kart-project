@@ -88,7 +88,7 @@ class Strings {
       _STRINGS['restart_motor_controller']!;
   static String get restartingMotorController =>
       _STRINGS['restarting_motor_controller']!;
-  // Controller Errors
+  // Controller errors
   static String get motorErrorCategorie => _STRINGS['motor_error_categorie']!;
   static String get supplyErrorCategorie => _STRINGS['supply_error_categorie']!;
   static String get heatErrorCategorie => _STRINGS['heat_error_categorie']!;
@@ -120,6 +120,32 @@ class Strings {
       _STRINGS['motor_over_temperature_title']!;
   static String get motorOverTemperatureMessage =>
       _STRINGS['motor_over_temperature_message']!;
+  // Temperature errors
+  static String get temperature => _STRINGS['temperature']!;
+  static String get heat => _STRINGS['heat']!;
+  static String get batteryOverheat => _STRINGS['battery_overheat']!;
+  static String get batteryOverheatMsg => _STRINGS['battery_overheat_msg']!;
+  static String get highBatteryOverheat => _STRINGS['high_battery_overheat']!;
+  static String get highBatteryOverheatMsg =>
+      _STRINGS['high_battery_overheat_msg']!;
+  static String get batteryOverheatDisableKart =>
+      _STRINGS['battery_overheat_disable_kart']!;
+  static String get batteryOverheatDisableKartMsg =>
+      _STRINGS['battery_overheat_disable_kart_msg']!;
+  static String get highSwitchCabinetTemperature =>
+      _STRINGS['high_switch_cabinet_temperature']!;
+  static String get highSwitchCabinetTemperatureMsg =>
+      _STRINGS['high_switch_cabinet_temperature_msg']!;
+  static String get motorControllerTemp => _STRINGS['motor_controller_temp']!;
+  static String get switchCabinetTemp => _STRINGS['switch_cabinet_temp']!;
+  static String get everythingSafe => _STRINGS['everything_safe']!;
+  static String get swtichCabinetTempOk => _STRINGS['swtich_cabinet_temp_ok']!;
+  static String get switchCabinet => _STRINGS['switch_cabinet']!;
+  static String get batteryTempOk => _STRINGS['battery_temp_ok']!;
+  static String get battery => _STRINGS['battery']!;
+  static String get batteryTempAverage => _STRINGS['battery_temp_average']!;
+  static String get batteryTempMax => _STRINGS['battery_temp_max']!;
+  static String get safety => _STRINGS['safety']!;
 
   static const Map<String, String> _STRINGS = {
     "users": "Benutzer",
@@ -210,7 +236,7 @@ class Strings {
     "power": "Power",
     "restart_motor_controller": "Starte den Motor-Controller neu.",
     "restarting_motor_controller": "Motor-Controller wird neu gestartet...",
-    // Controller Errors
+    // Controller errors
     "motor_error_categorie": "Motor",
     "supply_error_categorie": "Versorgung",
     "heat_error_categorie": "Hitze",
@@ -242,5 +268,31 @@ class Strings {
     "throttle_error_title": "Problem mit dem Gaspedal",
     "throttle_error_message":
         "Achte beim Einschalten darauf, kein Gas zu geben oder starte das Kart neu.",
+    // Temperature errors
+    "temperature": "Temperatur",
+    "heat": "Hitze",
+    "battery_overheat": "Erhöhte Akkutemperatur",
+    "battery_overheat_msg": "Der langsame Modus wurde aktiviert. Achte darauf, "
+        "dass der Akku wieder abgekühlt.",
+    "high_battery_overheat": "Achtung! Akku überhitzt",
+    "high_battery_overheat_msg": "Halte an und überprüfe den Schaltschrank und "
+        "Unterboden auf Beschädigungen. Schalte im Zweifelsfall den "
+        "Hauptschalter aus.",
+    "battery_overheat_disable_kart": "Lebensgefahr! Akku sehr stark überhitzt!",
+    "battery_overheat_disable_kart_msg":
+        "Verlasse das Kart sofort! Schalte den Hauptschalter aus.",
+    "high_switch_cabinet_temperature": "Hohe Schaltschrank-Temperatur",
+    "high_switch_cabinet_temperature_msg": "Der Eco-Modus wurde aktiviert. "
+        "Übprüfe den Schrank auf mögliche Schäden.",
+        "motor_controller_temp": "Motor-Controller Temperatur",
+        "switch_cabinet_temp": "Schaltschrank Temperatur",
+        "everything_safe": "Alles sicher",
+        "swtich_cabinet_temp_ok": "Schaltschrank-Temperatur in Ordnung.",
+        "switch_cabinet": "Schaltschrank",
+        "battery_temp_ok": "Akkutemperatur in Ordnung.",
+        "battery": "Akku",
+        "battery_temp_average": "Akkutemperatur Durchschnitt",
+        "battery_temp_max": "Akkutemperatur Maximal",
+        "safety": "Sicherheit"
   };
 }

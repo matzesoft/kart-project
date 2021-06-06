@@ -80,10 +80,12 @@ class ErrorNotificationController {
   }
 
   /// Dismisses the notification if still shown and removes the error from [errors].
-  void close(String id) {
-    final notification = errors.firstWhere((n) => n.id == id);
-    notification.tryDimiss();
-    errors.remove(notification);
+  void tryClose(String id) {
+    final notification = errors.where((n) => n.id == id).toList();
+    notification.forEach((notification) {
+      notification.tryDimiss();
+      errors.remove(notification);
+    });
     _provider.notify();
   }
 }

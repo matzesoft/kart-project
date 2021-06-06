@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:kart_project/interfaces/cmd_interface.dart';
 import 'package:kart_project/pin.dart';
 import 'package:kart_project/extensions.dart';
-import 'package:kart_project/providers/cooling_provider.dart';
 import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/light_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
@@ -86,16 +85,19 @@ class SystemProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Shuts down the RaspberryPi.
   Future powerOff(BuildContext context) async {
     _powerOffProviders(context);
     _cmdInterface.runCmd('sudo poweroff');
   }
 
-  /// Reboots the RaspberryPi
   Future reboot(BuildContext context) async {
     _powerOffProviders(context);
     _cmdInterface.runCmd('sudo reboot'); // Test
+  }
+
+  /// Allows to power off without disabeling the providers.
+  void emergencyPowerOff() {
+    _cmdInterface.runCmd('sudo poweroff');
   }
 
   /// Calls all providers to update their values for power off.
@@ -148,11 +150,6 @@ class DeveloperOptions {
   }
 
   void closeTestError(BuildContext context) {
-    context.read<NotificationsProvider>().error.close(_NOTIFY_ID);
-  }
-
-  void setFanOutput(BuildContext context, double value) {
-    final fan = context.read<CoolingProvider>().fan;
-    fan.output = value;
+    context.read<NotificationsProvider>().error.tryClose(_NOTIFY_ID);
   }
 }

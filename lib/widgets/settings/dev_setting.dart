@@ -1,7 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/card_with_title.dart';
-import 'package:kart_project/providers/cooling_provider.dart';
 import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +29,6 @@ class DevSetting extends StatelessWidget {
             ),
             KartServiceEnable(devOptions),
             ErrorNotificationsTest(devOptions),
-            FanTest(devOptions),
           ],
         );
       },
@@ -103,34 +101,6 @@ class ErrorNotificationsTest extends StatelessWidget {
             },
           ),
         ],
-      ),
-    );
-  }
-}
-
-class FanTest extends StatefulWidget {
-  final DeveloperOptions devOptions;
-
-  FanTest(this.devOptions);
-
-  @override
-  _FanTestState createState() => _FanTestState();
-}
-
-class _FanTestState extends State<FanTest> {
-  void onChange(double value) {
-    setState(() {
-      widget.devOptions.setFanOutput(context, value);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CardWithTitle(
-      title: "Fan",
-      child: Slider(
-        value: context.watch<CoolingProvider>().fan.output,
-        onChanged: onChange,
       ),
     );
   }

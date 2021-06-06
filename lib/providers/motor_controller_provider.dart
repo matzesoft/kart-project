@@ -88,8 +88,8 @@ class MotorControllerProvider extends ChangeNotifier {
   double get motorCurrentInPercent => motorCurrent / _MOTOR_CURRENT_MAX;
   double get batteryVoltage => _canData.batteryVoltage;
 
-  int get controllerTemperature => _canData.controllerTemperature;
-  int get motorTemperature => _canData.motorTemperature;
+  int? get controllerTemperature => _canData.controllerTemperature;
+  int? get motorTemperature => _canData.motorTemperature;
 
   MotorState get motorStateCommand => _canData.motorStateCommand;
   MotorState get motorStateFeedback => _canData.motorStateFeedback;
@@ -99,7 +99,7 @@ class MotorControllerProvider extends ChangeNotifier {
   ControllerError? get error => _error;
   set error(ControllerError? controllerError) {
     if (error != controllerError) {
-      if (error != null) _notifications.error.close(_error!.id);
+      if (error != null) _notifications.error.tryClose(_error!.id);
       if (controllerError != null) _notifications.error.create(controllerError);
       _error = controllerError;
     }
@@ -372,8 +372,8 @@ class KellyCanData extends ChangeNotifier {
   double _motorCurrent = 0.0;
   double _batterVoltage = 0.0;
   int _throttleSignal = 0;
-  int _controllerTemperature = 25;
-  int _motorTemperature = 25;
+  int? _controllerTemperature;
+  int? _motorTemperature;
   MotorState _motorStateCommand = MotorState.neutral;
   MotorState _motorStateFeedback = MotorState.neutral;
 
@@ -381,8 +381,8 @@ class KellyCanData extends ChangeNotifier {
   double get motorCurrent => _motorCurrent;
   double get batteryVoltage => _batterVoltage;
   int get throttleSignal => _throttleSignal;
-  int get controllerTemperature => _controllerTemperature;
-  int get motorTemperature => _motorTemperature;
+  int? get controllerTemperature => _controllerTemperature;
+  int? get motorTemperature => _motorTemperature;
   MotorState get motorStateCommand => _motorStateCommand;
   MotorState get motorStateFeedback => _motorStateFeedback;
 
@@ -543,6 +543,7 @@ class ControllerError extends ErrorNotification {
     );
   }
 }
+
 
 final _generalControllerError = ControllerError(
   'InternalControllerError',

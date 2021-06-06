@@ -350,6 +350,7 @@ class ErrorItem extends StatelessWidget {
       label: Text(notification.categorie),
       style: TextButton.styleFrom(
         primary: Theme.of(context).errorColor,
+        onSurface: Theme.of(context).errorColor,
         padding: EdgeInsets.all(4.0),
       ),
       onPressed: notification.moreDetails != null
