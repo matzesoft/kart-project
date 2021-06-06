@@ -1,0 +1,2 @@
+## Configuration of /boot/cmdline.txt
+console=tty1 root=PARTUUID=d1bf8f9f-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait video=HDMI-A-1:1024x600M@60,margin_left=0,margin_right=0,margin_top=0,margin_bottom=0,rotate=180 quiet logo.nologo vt.global_cursor_default=0

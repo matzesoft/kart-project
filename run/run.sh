@@ -5,7 +5,7 @@
 
 counter=0 # Counter how often flutter-pi failed to run.
 while [ $counter -lt 10 ]; do
-    sudo /home/pi/flutter-pi/build/flutter-pi /home/pi/projects/kart_project | tee /home/pi/logs/log.txt-$(date +"%Y-%m-%d-%T")
+    sudo /home/pi/flutter-pi/build/flutter-pi -r 180 /home/pi/projects/kart_project | tee /home/pi/logs/log.txt-$(date +"%Y-%m-%d-%T")
     echo "KartProject will be restarted in 3 seconds..."
     sleep 3s
     counter=$(expr $counter + 1)
