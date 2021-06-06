@@ -321,18 +321,18 @@ const _BATTERY_VOLTAGE_DIVIDER = 10;
 const _ERROR_LSB_INDEX = 6;
 const _ERROR_MSB_INDEX = 7;
 final _errors = {
-  0x0001: _identificationError, //ERR0
-  0x0002: _overVoltage, //ERR1
-  0x0004: _lowVoltage, //ERR2
-  0x0010: _stallError, //ERR4
-  0x0020: _generalControllerError, //ERR5
-  0x0040: _controllerOverTemperature, //ERR6
-  0x0080: _throttleError, //ERR7
-  0x0200: _generalControllerError, //ERR9
-  0x0400: _throttleError, //ERR10
-  0x0800: _generalControllerError, //ERR11
-  0x4000: _motorOverTemperature, //ERR14
-  0x8000: _generalControllerError, //ERR15
+  0x0001: ControllerErrors.identificationError, //ERR0
+  0x0002: ControllerErrors.overVoltage, //ERR1
+  0x0004: ControllerErrors.lowVoltage, //ERR2
+  0x0010: ControllerErrors.stallError, //ERR4
+  0x0020: ControllerErrors.generalControllerError, //ERR5
+  0x0040: ControllerErrors.controllerOverTemperature, //ERR6
+  0x0080: ControllerErrors.throttleError, //ERR7
+  0x0200: ControllerErrors.generalControllerError, //ERR9
+  0x0400: ControllerErrors.throttleError, //ERR10
+  0x0800: ControllerErrors.generalControllerError, //ERR11
+  0x4000: ControllerErrors.motorOverTemperature, //ERR14
+  0x8000: ControllerErrors.generalControllerError, //ERR15
 };
 
 // Second Message of Kelly CAN protocol
@@ -413,7 +413,8 @@ class KellyCanData extends ChangeNotifier {
         }
       } else {
         if (_failedReads > 0) _failedReads = 0;
-        if (_controller.error == _communicationError) _controller.error = null;
+        if (_controller.error == ControllerErrors.communicationError)
+          _controller.error = null;
 
         final msg1Frames = frames.where((f) => f.id == _CAN_MESSAGE1).toList();
         if (msg1Frames.isNotEmpty) _updateFromMsg1(msg1Frames.last);
@@ -498,7 +499,7 @@ class KellyCanData extends ChangeNotifier {
   }
 
   void _communicationFailed() {
-    _controller.error = _communicationError;
+    _controller.error = ControllerErrors.communicationError;
   }
 }
 
@@ -544,75 +545,76 @@ class ControllerError extends ErrorNotification {
   }
 }
 
+class ControllerErrors {
+  static final generalControllerError = ControllerError(
+    'InternalControllerError',
+    categorie: Strings.motorErrorCategorie,
+    icon: EvaIcons.alertTriangleOutline,
+    title: Strings.generalControllerErrorTitle,
+    message: Strings.generalControllerErrorMessage,
+  );
 
-final _generalControllerError = ControllerError(
-  'InternalControllerError',
-  categorie: Strings.motorErrorCategorie,
-  icon: EvaIcons.alertTriangleOutline,
-  title: Strings.generalControllerErrorTitle,
-  message: Strings.generalControllerErrorMessage,
-);
+  static final communicationError = ControllerError(
+    'CommunicationError',
+    icon: EvaIcons.shakeOutline,
+    categorie: Strings.motorErrorCategorie,
+    title: Strings.communicationErrorTitle,
+    message: Strings.communicationErrorMessage,
+  );
 
-final _communicationError = ControllerError(
-  'CommunicationError',
-  icon: EvaIcons.shakeOutline,
-  categorie: Strings.motorErrorCategorie,
-  title: Strings.communicationErrorTitle,
-  message: Strings.communicationErrorMessage,
-);
+  static final identificationError = ControllerError(
+    'IdentificationError',
+    icon: EvaIcons.activity,
+    categorie: Strings.motorErrorCategorie,
+    title: Strings.identificationErrorTitle,
+    message: Strings.identificationErrorMessage,
+  );
 
-final _identificationError = ControllerError(
-  'IdentificationError',
-  icon: EvaIcons.activity,
-  categorie: Strings.motorErrorCategorie,
-  title: Strings.identificationErrorTitle,
-  message: Strings.identificationErrorMessage,
-);
+  static final overVoltage = ControllerError(
+    'OverVoltage',
+    icon: EvaIcons.flashOutline,
+    categorie: Strings.supplyErrorCategorie,
+    title: Strings.overVoltageTitle,
+    message: Strings.overVoltageMessage,
+  );
 
-final _overVoltage = ControllerError(
-  'OverVoltage',
-  icon: EvaIcons.flashOutline,
-  categorie: Strings.supplyErrorCategorie,
-  title: Strings.overVoltageTitle,
-  message: Strings.overVoltageMessage,
-);
+  static final lowVoltage = ControllerError(
+    'LowVoltage',
+    icon: EvaIcons.flashOffOutline,
+    categorie: Strings.supplyErrorCategorie,
+    title: Strings.lowVoltageTitle,
+    message: Strings.lowVoltageTitle,
+  );
 
-final _lowVoltage = ControllerError(
-  'LowVoltage',
-  icon: EvaIcons.flashOffOutline,
-  categorie: Strings.supplyErrorCategorie,
-  title: Strings.lowVoltageTitle,
-  message: Strings.lowVoltageTitle,
-);
+  static final stallError = ControllerError(
+    'StallError',
+    icon: EvaIcons.navigationOutline,
+    categorie: Strings.motorErrorCategorie,
+    title: Strings.stallErrorTitle,
+    message: Strings.stallErrorMessage,
+  );
 
-final _stallError = ControllerError(
-  'StallError',
-  icon: EvaIcons.navigationOutline,
-  categorie: Strings.motorErrorCategorie,
-  title: Strings.stallErrorTitle,
-  message: Strings.stallErrorMessage,
-);
+  static final controllerOverTemperature = ControllerError(
+    'ControllerOverTemperature',
+    icon: EvaIcons.thermometerPlusOutline,
+    categorie: Strings.motorErrorCategorie,
+    title: Strings.controllerOverTemperatureTitle,
+    message: Strings.controllerOverTemperatureMessage,
+  );
 
-final _controllerOverTemperature = ControllerError(
-  'ControllerOverTemperature',
-  icon: EvaIcons.thermometerPlusOutline,
-  categorie: Strings.motorErrorCategorie,
-  title: Strings.controllerOverTemperatureTitle,
-  message: Strings.controllerOverTemperatureMessage,
-);
+  static final motorOverTemperature = ControllerError(
+    'MotorOverTemperature',
+    icon: EvaIcons.thermometerPlusOutline,
+    categorie: Strings.heatErrorCategorie,
+    title: Strings.motorOverTemperatureTitle,
+    message: Strings.motorOverTemperatureMessage,
+  );
 
-final _motorOverTemperature = ControllerError(
-  'MotorOverTemperature',
-  icon: EvaIcons.thermometerPlusOutline,
-  categorie: Strings.heatErrorCategorie,
-  title: Strings.motorOverTemperatureTitle,
-  message: Strings.motorOverTemperatureMessage,
-);
-
-final _throttleError = ControllerError(
-  'ThrottleError',
-  icon: EvaIcons.logInOutline,
-  categorie: Strings.motorErrorCategorie,
-  title: Strings.throttleErrorTitle,
-  message: Strings.throttleErrorMessage,
-);
+  static final throttleError = ControllerError(
+    'ThrottleError',
+    icon: EvaIcons.logInOutline,
+    categorie: Strings.motorErrorCategorie,
+    title: Strings.throttleErrorTitle,
+    message: Strings.throttleErrorMessage,
+  );
+}
