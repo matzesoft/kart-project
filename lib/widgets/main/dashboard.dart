@@ -293,9 +293,7 @@ class _BatteryState extends State<Battery> {
 
 class Consumption extends StatelessWidget {
   // ignore: unused_element
-  void _openConsumptionHistory() {
-    // TODO: Implement
-  }
+  void _openConsumptionHistory() {}
 
   @override
   Widget build(BuildContext context) {
