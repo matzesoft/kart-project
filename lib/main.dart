@@ -73,14 +73,6 @@ class ProviderInit extends StatelessWidget {
           create: (context) => NotificationsProvider(),
           lazy: false,
         ),
-         ChangeNotifierProvider<TemperatureProvider>(
-          create: (context) => TemperatureProvider(
-            context.read<NotificationsProvider>(),
-            context.read<MotorControllerProvider>(),
-            context.read<SystemProvider>(),
-          ),
-          lazy: false,
-        ),
         ChangeNotifierProvider<SystemProvider>(
           create: (context) => SystemProvider(),
           lazy: false,
@@ -125,6 +117,14 @@ class ProviderInit extends StatelessWidget {
           update: (_, userProvider, notificationProvider, kellyConroller) {
             return kellyConroller!.update(userProvider.currentUser);
           },
+          lazy: false,
+        ),
+        ChangeNotifierProvider<TemperatureProvider>(
+          create: (context) => TemperatureProvider(
+            context.read<NotificationsProvider>(),
+            context.read<MotorControllerProvider>(),
+            context.read<SystemProvider>(),
+          ),
           lazy: false,
         ),
         ProxyProvider<MotorControllerProvider, BackDriveLightController>(
