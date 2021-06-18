@@ -36,6 +36,7 @@
 /assets/map/TileMill Export/
 /assets/map/TileMill Projects/
 /assets/map/.map_bw.osm.pbf.icloud
+/run/build_release.bat
 
 # Web related
 lib/generated_plugin_registrant.dart
