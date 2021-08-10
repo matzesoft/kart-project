@@ -278,7 +278,6 @@ class UsersDBHelper {
   /// various issues when users get deleted.
   int get usersIndex => _preferences.getInt(_USERS_INDEX_KEY)!;
 
-  /// Opens the database and initalizes SharedPreferences.
   Future initDatabase() async {
     var dbFactory = databaseFactoryFfi;
     _db = await dbFactory.openDatabase(

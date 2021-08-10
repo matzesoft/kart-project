@@ -10,18 +10,14 @@ import 'package:provider/provider.dart';
 /// Brightness when the [LightState] is set to [LightState.dimmed].
 const FRONT_DIMMED_BRIGHTNESS = 0.3;
 
-/// Possible states of the light.
+/// Possible States of the light system. [dimmed] stands for the so called
+/// "Abblendlicht" (dimmed headlights).
 enum LightState {
   off,
-
-  /// Brightness will always be set to [FRONT_DIMMED_BRIGHTNESS].
   dimmed,
-
-  /// Brightness will be set to the [_frontMaxBrightness] saved in the user.
   on,
 }
 
-/// Lets you control the lights of the kart.
 class LightProvider extends ChangeNotifier {
   late final frontLight = FrontLightController(this);
   late final backLight = BackLightController();
@@ -49,11 +45,10 @@ class LightProvider extends ChangeNotifier {
     return this;
   }
 
-  /// State of the light. Could be `off`, `dimmed` or `on`.
   LightState get lightState => _lightState;
 
   /// Updates [lightState] and sets the light brightness based on the setting.
-  /// Calls the listeners if notify is true.
+  /// Notifys the listeners.
   set lightState(LightState state) {
     _lightState = state;
     frontLight._setLightByState(state);
@@ -63,7 +58,7 @@ class LightProvider extends ChangeNotifier {
   }
 
   /// Called when there is a change to the lock-state. Sets the [_lightState]
-  /// to [LightState.dimmed] if locked. Does not update any listeners.
+  /// to [LightState.dimmed] if locked.
   void _updateLightWithLock(bool locked) {
     if (locked == true && _lightState == LightState.on)
       lightState = LightState.dimmed;

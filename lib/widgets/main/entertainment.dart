@@ -80,7 +80,7 @@ class LocationControls extends StatelessWidget {
             LocationButton(
               icon: Icon(EvaIcons.pinOutline),
               onPressed: () {
-                mapProvider.toLocation(context, 1);
+                mapProvider.moveToUserStoredLocation(context, 1);
               },
               onLongPress: () {
                 mapProvider.setCurrentLocation(context, 1);
@@ -89,7 +89,7 @@ class LocationControls extends StatelessWidget {
             LocationButton(
               icon: Icon(EvaIcons.pinOutline),
               onPressed: () {
-                mapProvider.toLocation(context, 2);
+                mapProvider.moveToUserStoredLocation(context, 2);
               },
               onLongPress: () {
                 mapProvider.setCurrentLocation(context, 2);
@@ -98,7 +98,7 @@ class LocationControls extends StatelessWidget {
             LocationButton(
               icon: Icon(EvaIcons.homeOutline),
               onPressed: () {
-                mapProvider.toHome();
+                mapProvider.moveToHome();
               },
             ),
           ],

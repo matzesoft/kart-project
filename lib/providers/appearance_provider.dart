@@ -11,14 +11,14 @@ class AppearanceProvider extends ChangeNotifier {
 
   /// Updates the [AppearanceProvider] with the data of the [newUser]. Returns
   /// the back the object itself. This is normally called inside a [ProxyProvider]s
-  /// update method. Does update all listeners.
+  /// update method. Does update all its listeners.
   AppearanceProvider update(User newUser) {
     _user = newUser;
     notifyListeners();
     return this;
   }
 
-  /// Theme the app should use. Normally implemented in MaterialApp.
+  /// Theme of the app. Must be implemented in MaterialApp.
   ThemeMode get themeMode => _user.themeMode;
   set themeMode(ThemeMode mode) => _user.themeMode = mode;
 }

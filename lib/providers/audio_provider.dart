@@ -2,14 +2,13 @@ import 'dart:async';
 import 'package:kart_project/interfaces/cmd_interface.dart';
 
 /// Path to the local audio files.
-const String _AUDIO_PATH = "/home/pi/data/audio";
+const _AUDIO_PATH = "/home/pi/data/audio";
 
 /// Lets you play audio which is locally saved on the Raspberry Pi.
 class AudioProvider {
   final _cmdInterface = CmdInterface();
   bool _audioIsPlaying = false;
 
-  /// Play a hoot sound.
   void playHootSound() {
     _playAudio('hoot.wav', Duration(milliseconds: 3000));
   }

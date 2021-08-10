@@ -169,6 +169,7 @@ class Core extends StatelessWidget {
 
 /// Shows a loading screen until all necessary components are loaded.
 /// Afterwards requestes a pin of the user to unlock the kart.
+// TODO: Reorganice this widget
 class Root extends StatelessWidget {
   static String route = "/";
 

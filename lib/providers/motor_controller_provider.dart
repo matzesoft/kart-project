@@ -207,6 +207,8 @@ class LowSpeedModeController {
   }
 }
 
+/// Contains information about the amount of driven kilometre and the therefor
+/// used battery percent. With that data, the remaining kilometre can be calculated.
 abstract class RangeProfil {
   double _consumedBatteryPercent = 0.0;
   double _drivenKilometre = 0.0;
@@ -231,6 +233,7 @@ abstract class RangeProfil {
     return kilometre;
   }
 
+  /// Must be called when new motor data is available.
   void updateByMotorController(double? speed, double? batteryLevel) {
     if ((speed != null && batteryLevel != null) && speed > 3.0) {
       final checkDBUpdate = (_drivenKilometre * 10).floor();
@@ -251,6 +254,7 @@ abstract class RangeProfil {
   void _updateInDatabase();
 }
 
+/// Implements [RangeProfil] for a single user.
 class UserRangeProfil extends RangeProfil {
   UserRangeProfil(this._user);
   final User _user;
@@ -273,7 +277,7 @@ class UserRangeProfil extends RangeProfil {
   }
 }
 
-/// RangeProfil stored in preferences and indepedend by user data.
+/// A [RangeProfil] stored in preferences and indepedend by user data.
 class GlobalRangeProfil extends RangeProfil {
   GlobalRangeProfil(this._preferences, String dataKey) {
     _batteryPercentKey = dataKey + "_battery_percent";
@@ -388,10 +392,7 @@ class KellyCanData extends ChangeNotifier {
 
   Future setup() async {
     try {
-      await Isolate.spawn(
-        readCanFrames,
-        _receivePort.sendPort,
-      );
+      await Isolate.spawn(readCanFrames, _receivePort.sendPort);
       _receivePort.listen(update);
     } on SocketException {
       _communicationFailed();
@@ -511,7 +512,6 @@ void readCanFrames(SendPort sendPort) async {
 
   Timer.periodic(_CAN_UPDATE_DURATION, (_) {
     List<CanFrame> frames = [];
-
     try {
       frames.add(can.read());
       frames.add(can.read());

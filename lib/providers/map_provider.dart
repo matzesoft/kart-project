@@ -8,7 +8,7 @@ import 'package:latlng/latlng.dart';
 import 'package:flutter/widgets.dart';
 
 const _LIGHT_MAP_PATH = "/home/pi/data/map/map_light";
-const String _DARK_MAP_PATH = "/home/pi/data/map/map_dark";
+const _DARK_MAP_PATH = "/home/pi/data/map/map_dark";
 
 final _home = Location(zoom: 14.0, coordinates: LatLng(48.5268, 8.5642));
 
@@ -42,7 +42,7 @@ class MapProvider extends ChangeNotifier {
   }
 
   /// Sets and updates the location values based on the [index].
-  void _setLocation(int index, Location location) {
+  void _setLocationByIndex(int index, Location location) {
     if (index == 1) location1 = location;
     if (index == 2) location2 = location;
   }
@@ -55,7 +55,7 @@ class MapProvider extends ChangeNotifier {
         zoom: controller.zoom,
         coordinates: controller.center,
       );
-      _setLocation(index, location);
+      _setLocationByIndex(index, location);
       context.showNotification(
         icon: EvaIcons.pinOutline,
         message: Strings.locationWasSaved,
@@ -74,12 +74,12 @@ class MapProvider extends ChangeNotifier {
   }
 
   /// Moves the map to the [_home] location.
-  void toHome() {
+  void moveToHome() {
     _moveToLocation(_home);
   }
 
   /// Moves to [location1] or [location2] based on the [index].
-  void toLocation(BuildContext context, int index) {
+  void moveToUserStoredLocation(BuildContext context, int index) {
     Location? location = _locationOfIndex(index);
     if (location == null) {
       context.showInformNotification(
