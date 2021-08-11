@@ -2,7 +2,7 @@
 
 ## Gpio Init 
 gpio=17,22,27=op,dh
-gpio=21=op,dl
+gpio=18,21=op,dl
 gpio=4=ip,pd
 
 ## SBC-CAN01 CAN Modul
