@@ -38,6 +38,7 @@ class SystemProvider extends ChangeNotifier {
   /// Sets [locked] to true.
   void lock(MotorControllerProvider kellyController) {
     if (allowLock(kellyController)) {
+      logToConsole("SystemProvider", "locked", "Lock Kaerelle.");
       _locked = true;
       kellyController.enableMotor(false);
       notifyListeners();
@@ -52,6 +53,7 @@ class SystemProvider extends ChangeNotifier {
         message: Strings.wrongPincode,
       );
     } else {
+      logToConsole("SystemProvider", "unlock", "Unlocked Kaerelle.");
       _locked = false;
       notifyListeners();
     }

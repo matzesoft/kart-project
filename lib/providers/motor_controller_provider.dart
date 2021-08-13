@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kart_project/extensions.dart';
 import 'package:provider/provider.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
@@ -391,10 +392,13 @@ class KellyCanData extends ChangeNotifier {
   MotorState get motorStateFeedback => _motorStateFeedback;
 
   Future setup() async {
+    logToConsole("KellyCanData", "setup", "Setting up CAN communication...");
     try {
       await Isolate.spawn(readCanFrames, _receivePort.sendPort);
       _receivePort.listen(update);
+      logToConsole("KellyCanData", "setup", "Successfully setup CAN.");
     } on SocketException {
+      logToConsole("KellyCanData", "setup", "Failed setting up CAN.");
       _communicationFailed();
     }
   }
@@ -410,12 +414,17 @@ class KellyCanData extends ChangeNotifier {
       if (failedReading) {
         _failedReads += 1;
         if (_failedReads >= _FAILED_READS_LIMIT) {
+          logToConsole("KellyCanData", "update",
+              "Over _FAILED_READS_LIMIT $_FAILED_READS_LIMIT");
           throw SocketException("Unable to read from can bus.");
         }
       } else {
         if (_failedReads > 0) _failedReads = 0;
-        if (_controller.error == ControllerErrors.communicationError)
+        if (_controller.error == ControllerErrors.communicationError) {
+          logToConsole("KellyCanData", "update",
+              "CAN communication went back successfully.");
           _controller.error = null;
+        }
 
         final msg1Frames = frames.where((f) => f.id == _CAN_MESSAGE1).toList();
         if (msg1Frames.isNotEmpty) _updateFromMsg1(msg1Frames.last);
@@ -462,6 +471,8 @@ class KellyCanData extends ChangeNotifier {
         _controller.error = null;
       }
     } else if (_errors.containsKey(error)) {
+      logToConsole("KellyCanData", "_updateFromMsg1",
+          "KellyController error code $error.");
       _controller.error = _errors[error]!;
     }
   }
@@ -515,7 +526,10 @@ void readCanFrames(SendPort sendPort) async {
     try {
       frames.add(can.read());
       frames.add(can.read());
-    } catch (e) {}
+    } catch (e) {
+      logToConsole(
+          "CAN Isolate", "readCanFrames", "Failed reading CAN frames.");
+    }
     sendPort.send(frames);
   });
 }

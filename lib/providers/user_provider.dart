@@ -196,7 +196,7 @@ class User {
 
   /// Updates the user in the [UserProvider].
   void _update(Map<String, Object> sqlData) {
-    print("Update Data: $sqlData");
+    logToConsole("User", "_update", "sqlData: $sqlData");
     _controller!._updateUser(id, sqlData);
   }
 
@@ -324,6 +324,8 @@ class UsersDBHelper {
   /// Creates a user with the given data.
   Future createUser(User user) async {
     await _preferences.setInt(_USERS_INDEX_KEY, usersIndex + 1);
+    final userAsMap = user.toMap();
+    logToConsole("UsersDBHelper", "createUser", "user: $userAsMap");
     await _db.insert(_TABLE, user.toMap());
   }
 

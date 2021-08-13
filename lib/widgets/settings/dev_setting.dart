@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/card_with_title.dart';
@@ -29,6 +32,7 @@ class DevSetting extends StatelessWidget {
             ),
             KartServiceEnable(devOptions),
             ErrorNotificationsTest(devOptions),
+            Logs(),
           ],
         );
       },
@@ -101,6 +105,67 @@ class ErrorNotificationsTest extends StatelessWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+class Logs extends StatelessWidget {
+  final logDir = Directory("/home/pi/logs/");
+
+  Future<List<FileSystemEntity>> getAllLogs() {
+    final files = <FileSystemEntity>[];
+    final completer = Completer<List<FileSystemEntity>>();
+    logDir.list().listen(
+          (file) => files.add(file),
+          onDone: () => completer.complete(files),
+        );
+    return completer.future;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CardWithTitle(
+      title: "Logs",
+      child: FutureBuilder<List<FileSystemEntity>>(
+        future: getAllLogs(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Text("Loading logs...");
+          final logs = snapshot.data;
+
+          return Column(
+            children: List.generate(
+              logs!.length,
+              (index) {
+                return ListTile(
+                  title: Text(logs[index].path),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return Scaffold(
+                            appBar: AppBar(),
+                            body: FutureBuilder<String>(
+                              future: (logs[index] as File).readAsString(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData)
+                                  return Text("Loading log...");
+                                return SingleChildScrollView(
+                                    child: Text(snapshot.data!));
+                              },
+                            ),
+                          );
+                        },
+                        fullscreenDialog: true,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }

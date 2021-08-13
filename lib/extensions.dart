@@ -6,6 +6,10 @@ import 'package:kart_project/providers/user_provider.dart';
 import 'package:kart_project/providers/system_provider.dart';
 import 'package:provider/provider.dart';
 
+void logToConsole(String className, String function, String message) {
+  print("[$className], [$function]: $message");
+}
+
 extension ProviderExtensions<T> on BuildContext {
   /// Returns the current user.
   User user() => this.read<UserProvider>().currentUser;

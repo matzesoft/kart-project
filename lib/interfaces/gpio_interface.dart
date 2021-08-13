@@ -1,4 +1,5 @@
 import 'package:flutter_gpiod/flutter_gpiod.dart';
+import 'package:kart_project/extensions.dart';
 import 'package:wiring_pi_soft_pwm/wiring_pi_soft_pwm.dart';
 
 /// Label of the default RaspberryPi GPIO chip.
@@ -48,7 +49,6 @@ class GpioInterface {
         activeState: ActiveState.low,
       );
 
-  
   static GpioLine get brakeInput => _requestInput(
         _BRAKE_INPUT,
         activeState: ActiveState.low,
@@ -76,6 +76,11 @@ class GpioInterface {
 
     final gpio = _gpios![pin];
     if (!gpio.requested) {
+      logToConsole(
+        "GpioInterface",
+        "_requestOutput",
+        "GPIO: $pin, initalValue: $initalValue, activeState: $activeState",
+      );
       gpio.requestOutput(
         initialValue: initalValue,
         consumer: _gpioConsumer,
@@ -94,6 +99,11 @@ class GpioInterface {
 
     final gpio = _gpios![pin];
     if (!gpio.requested) {
+      logToConsole(
+        "GpioInterface",
+        "_requestInput",
+        "GPIO: $pin, activeState: $activeState",
+      );
       gpio.requestInput(
         consumer: _gpioConsumer,
         activeState: activeState,
@@ -105,6 +115,7 @@ class GpioInterface {
 
   /// Creates a [SoftPwmGpio]. Set [init] to define the initalValue.
   static SoftPwmGpio _setupSoftPwm(int pin, {int init: 0}) {
+    logToConsole("GpioInterface", "_setupSoftPwm", "pin: $pin, init: $init");
     final gpio = SoftPwmGpio(pin);
     gpio.setup(initalValue: init);
     return gpio;

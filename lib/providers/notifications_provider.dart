@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:kart_project/extensions.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 class NotificationsProvider extends ChangeNotifier {
@@ -55,6 +56,9 @@ class SimpleNotificationsController {
     if (_notification != null && _notification!.shown) {
       _notification!.tryDimiss();
     }
+
+    logToConsole("SimpleNotificationsController", "_showNotification",
+        "message: $message");
     _notification = SimpleNotification(
         icon: icon, message: message, duration: duration, maxLines: maxLines);
     _notification!.show();
@@ -72,6 +76,8 @@ class ErrorNotificationController {
   /// Adds the error to the list of [errors]. If there already is a error
   /// registerd with the same id, the request will be ignored.
   void create(ErrorNotification notification) {
+    logToConsole("ErrorNotificationController", "create",
+        "Try create new error: ${notification.id}");
     if (!errors.any((n) => n.id == notification.id)) {
       errors.add(notification);
       notification.show();
@@ -81,6 +87,8 @@ class ErrorNotificationController {
 
   /// Dismisses the notification if still shown and removes the error from [errors].
   void tryClose(String id) {
+    logToConsole(
+        "ErrorNotificationController", "close", "Try close error: $id");
     final notification = errors.where((n) => n.id == id).toList();
     notification.forEach((notification) {
       notification.tryDimiss();

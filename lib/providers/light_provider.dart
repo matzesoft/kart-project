@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_gpiod/flutter_gpiod.dart';
+import 'package:kart_project/extensions.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/user_provider.dart';
@@ -50,6 +51,7 @@ class LightProvider extends ChangeNotifier {
   /// Updates [lightState] and sets the light brightness based on the setting.
   /// Notifys the listeners.
   set lightState(LightState state) {
+    logToConsole("LightProvider", "set lightState", "state: $state");
     _lightState = state;
     frontLight._setLightByState(state);
     backLight._setLightByState(state);
@@ -185,6 +187,8 @@ class BackLightController {
 
     // Check if value has changed.
     if (value != _braking) {
+      logToConsole(
+          "BackLightController", "_onBrake", "Brake input switched to: $value");
       _braking = value;
       if (_braking) {
         _setLightBrightness(BRAKING_BRIGHTNESS);
@@ -214,12 +218,12 @@ class BackLightController {
 
 const LIGHT_STRIP_COLORS = [
   Color(0xFFD6D6D6),
-  Color(0xFF00FFFF),
-  Color(0xFFFF00FF),
   Color(0xFFFFFF00),
   Color(0xFFFF0000),
-  Color(0xFF00FF00),
+  Color(0xFFFF00FF),
   Color(0xFF0000FF),
+  Color(0xFF00FFFF),
+  Color(0xFF00FF00),
   Color(0xFF424242),
 ];
 
@@ -242,6 +246,7 @@ class LightStripController {
   set active(bool on) {
     _active = on;
     _updateLightStrip();
+    logToConsole("LightStripController", "set active", "on: $on");
   }
 
   /// Checks [active] and sets the GPIOs to the current [color] of true.
