@@ -20,51 +20,8 @@ class _EntertainmentState extends State<Entertainment> {
       body: Stack(
         children: [
           MapWidget(),
-          Clock(),
         ],
       ),
-    );
-  }
-}
-
-class Clock extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _ClockState();
-  }
-}
-
-class _ClockState extends State<Clock> {
-  Timer? _timer;
-  String time = "";
-
-  void setClock() {
-    time = DateFormat('kk:mm').format(DateTime.now());
-  }
-
-  @override
-  void initState() {
-    setClock();
-    _timer = Timer.periodic(Duration(milliseconds: 2000), (_) {
-      setState(() {
-        setClock();
-      });
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _timer!.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.topCenter,
-      padding: EdgeInsets.all(8.0),
-      child: Text(time),
     );
   }
 }
