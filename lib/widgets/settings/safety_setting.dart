@@ -102,6 +102,7 @@ class BatterySafety extends StatelessWidget {
             icon: icon,
             title: title,
             message: message,
+            level: state.level,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
