@@ -194,7 +194,7 @@ class Strings {
         "Noch kein Ort gespeichert. Tippe dafür lange auf eines der Standort-Symbole.",
     "wrong_pincode": "Falscher Pincode",
     "unlocked": "Entsperrt",
-    "project_name": "Kärrele",
+    "project_name": "Kärelle",
     "project_slogan": "Ein E-Kart, geplant und gebaut von zwei Brüdern.",
     "appearance": "Erscheinungsbild",
     "light_mode": "Hell",
@@ -211,12 +211,12 @@ class Strings {
     "connect_with_bluetooth_explanation":
         "Stelle als Erstes sicher, dass aktuell "
             "keine Geräte verbunden sind. Öffne dann die Bluetooth Einstellungen "
-            "deines Geräts und verbinde dich mit 'Raspberry Pi'.",
-    "multiple_devices": "Mehrere Geräte",
+            "deines Geräts und verbinde dich mit 'Kärelle'.",
+    "multiple_devices": "Nur ein Gerät",
     "multiple_devices_explanation":
         "Es kann immer nur ein Gerät Musik abspielen lassen, es können jedoch "
             "mehrere gleichzeitig verbunden sein. Um das Gerät zu wechseln pausiere "
-            "die Musik und starte sie auf dem gewünschten Gerät.",
+            "die Musik und starte sie auf dem Gewünschten.",
     "music_control": "Musiksteuerung",
     "music_control_explanation":
         "Um die Lautstärke zu ändern oder das Lied zu wechseln musst du dein "
@@ -284,15 +284,15 @@ class Strings {
     "high_switch_cabinet_temperature": "Hohe Schaltschrank-Temperatur",
     "high_switch_cabinet_temperature_msg": "Der Eco-Modus wurde aktiviert. "
         "Übprüfe den Schrank auf mögliche Schäden.",
-        "motor_controller_temp": "Motor-Controller Temperatur",
-        "switch_cabinet_temp": "Schaltschrank Temperatur",
-        "everything_safe": "Alles sicher",
-        "swtich_cabinet_temp_ok": "Schaltschrank-Temperatur in Ordnung.",
-        "switch_cabinet": "Schaltschrank",
-        "battery_temp_ok": "Akkutemperatur in Ordnung.",
-        "battery": "Akku",
-        "battery_temp_average": "Akkutemperatur Durchschnitt",
-        "battery_temp_max": "Akkutemperatur Maximal",
-        "safety": "Sicherheit"
+    "motor_controller_temp": "Motor-Controller Temperatur",
+    "switch_cabinet_temp": "Schaltschrank Temperatur",
+    "everything_safe": "Alles sicher",
+    "swtich_cabinet_temp_ok": "Schaltschrank-Temperatur in Ordnung.",
+    "switch_cabinet": "Schaltschrank",
+    "battery_temp_ok": "Akkutemperatur in Ordnung.",
+    "battery": "Akku",
+    "battery_temp_average": "Akkutemperatur Durchschnitt",
+    "battery_temp_max": "Akkutemperatur Maximal",
+    "safety": "Sicherheit"
   };
 }
