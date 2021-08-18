@@ -24,7 +24,7 @@ We are using some old speakers to play music on the kart or to hoot. Playing mus
 
 ### User options
 
-We had the idea of having multiple users, so when you are using the kart, all settings are adapted to your user.
+We had the idea of having multiple users, so when you are using the kart, all settings are adapted to you.
 
 ### Dark & Light theme
 
@@ -41,16 +41,10 @@ We added a map using this [map](https://pub.dev/packages/map)-package. The data 
 ![main_light](./screenshots/main_light.png)
 ![main_dark](./screenshots/main_dark.png)
 
-### Settings
+## Conclusion
 
-![profil_setting](./screenshots/profil_setting.png)
-![light_setting](./screenshots/light_setting.png)
+After 1,5 years of work we finally made the Kart drive. At the moment we are working on a video to present the features best possible. We are going to open a small website with some more details and pictures. This repo will stay Software focused.
 
-## Still in process
+I want to thank @ardera as the creator of [flutter-pi](https://github.com/ardera/flutter-pi) who helped me in various situations.
 
-Day for day we are moving on by developing - and we already made a big process. But there is still a lot of to do...
-
-I already want to thank @ardera as the creator of [flutter-pi](https://github.com/ardera/flutter-pi) who already helped me in various situations.
-
-If you already found some bad code,
-something to improve or just have a question about the project at all feel free to open an issue or write an [e-mail](mailto:matzesoft@gmail.com).
+If you found some bad code, something to improve or just have a question about the project at all feel free to open an issue or write an [e-mail](mailto:matzesoft@gmail.com).
