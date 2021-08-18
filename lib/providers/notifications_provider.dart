@@ -51,7 +51,7 @@ class SimpleNotificationsController {
     required IconData icon,
     required String message,
     Duration duration: const Duration(milliseconds: 2500),
-    int maxLines: 1,
+    int maxLines: 2,
   }) async {
     if (_notification != null && _notification!.shown) {
       _notification!.tryDimiss();

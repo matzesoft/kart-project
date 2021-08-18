@@ -59,7 +59,7 @@ class RestartController extends StatelessWidget {
       context,
       message: Strings.restartingMotorController,
     );
-    context.read<MotorControllerProvider>().restart().whenComplete(
+    context.read<MotorControllerProvider>().restart(context).whenComplete(
           () => Navigator.pop(context),
         );
   }

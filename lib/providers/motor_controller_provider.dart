@@ -21,6 +21,9 @@ const _WHEEL_DIAMETER = 0.33; // m
 const _VOLTAGE_WHEN_CHARGED = 50.4;
 const _VOLTAGE_WHEN_LOW = 42.0;
 
+const _ALLOW_MOTOR_POWER_OFF = 3;
+
+const _ALLOW_DISABLE_MOTOR_SPEED = 3;
 const _ENABLE_MOTOR_THROTTLE_LIMIT = 0.18;
 
 const _MOTOR_CURRENT_MAX = 176.0;
@@ -109,7 +112,7 @@ class MotorControllerProvider extends ChangeNotifier {
   bool get isOn => _powerGpio.getValue();
 
   void setPower(bool on) {
-    if (on != isOn) {
+    if ((!on && speed <= _ALLOW_MOTOR_POWER_OFF) || on) {
       _powerGpio.setValue(on);
       notifyListeners();
     }
@@ -119,7 +122,7 @@ class MotorControllerProvider extends ChangeNotifier {
 
   bool get allowDisEnableMotor {
     if (motorEnabled) {
-      if (speed <= 0) return true;
+      if (speed <= _ALLOW_DISABLE_MOTOR_SPEED) return true;
     } else {
       if (throttleSignal <= _ENABLE_MOTOR_THROTTLE_LIMIT) return true;
     }
@@ -141,11 +144,16 @@ class MotorControllerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future restart() async {
-    setPower(false);
-    await Future.delayed(Duration(seconds: 3), () {
-      setPower(true);
-    });
+  Future restart(BuildContext context) async {
+    if (speed > _ALLOW_MOTOR_POWER_OFF) {
+      context
+          .showExceptionNotification(Strings.restartingMotorControllerBlocked);
+    } else {
+      setPower(false);
+      await Future.delayed(Duration(seconds: 3), () {
+        setPower(true);
+      });
+    }
   }
 
   void _notify() {

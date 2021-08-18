@@ -349,9 +349,8 @@ class BatteryTempStates {
       title: Strings.batteryOverheatDisableKart,
       message: Strings.batteryOverheatDisableKartMsg,
       onSwitch: (motorController, systemProvider) {
-        Future.delayed(Duration(seconds: 5), () {
-          motorController.setPower(false);
-        });
+        //TODO: Force low speed
+        motorController.lowSpeedMode.alwaysActive = true;
       });
 
   static List<TemperatureState> get asList {

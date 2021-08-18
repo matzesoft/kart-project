@@ -59,32 +59,39 @@ class SpeedAndUser extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: widgetPadding,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Selector<MotorControllerProvider, double>(
-                selector: (context, kellyController) => kellyController.speed,
-                builder: (context, speed, _) {
-                  final speedAsInt = speed.round();
-                  return Text(
-                    speedAsInt.toString(),
-                    style: Theme.of(context).textTheme.headline1,
-                  );
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 4.0,
-                  vertical: 18.0,
-                ),
+          child: Consumer<MotorControllerProvider>(
+              builder: (context, kellyController, _) {
+            if (!kellyController.isOn) {
+              return Align(
+                alignment: Alignment.topLeft,
                 child: Text(
-                  Strings.kmh,
-                  style: Theme.of(context).textTheme.bodyText1,
+                  Strings.offCapsLock,
+                  style: Theme.of(context).textTheme.headline1!,
                 ),
-              ),
-            ],
-          ),
+              );
+            }
+            final speedAsInt = kellyController.speed.round();
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  speedAsInt.toString(),
+                  style: Theme.of(context).textTheme.headline1,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4.0,
+                    vertical: 18.0,
+                  ),
+                  child: Text(
+                    Strings.kmh,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ),
+              ],
+            );
+          }),
         ),
         Positioned(
           right: 1,

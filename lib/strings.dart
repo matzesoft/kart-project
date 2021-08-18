@@ -4,12 +4,13 @@ const GITHUB_REPO_LINK = "github.com/matzesoft/kart-project";
 class Strings {
   static String get users => _STRINGS['users']!;
   static String get user => _STRINGS['user']!;
-  static String get drive => _STRINGS['drive']!;
+  static String get motorAndBattery => _STRINGS['motor_and_battery']!;
   static String get lightAndDisplay => _STRINGS['light_and_display']!;
   static String get audio => _STRINGS['audio']!;
   static String get about => _STRINGS['about']!;
   static String get on => _STRINGS['on']!;
   static String get off => _STRINGS['off']!;
+  static String get offCapsLock => _STRINGS['off_capslock']!;
   static String get dimmed => _STRINGS['dimmed']!;
   static String get kmh => _STRINGS['kmh']!;
   static String get range => _STRINGS['range']!;
@@ -88,6 +89,8 @@ class Strings {
       _STRINGS['restart_motor_controller']!;
   static String get restartingMotorController =>
       _STRINGS['restarting_motor_controller']!;
+  static String get restartingMotorControllerBlocked =>
+      _STRINGS['restarting_motor_controller_blocked']!;
   // Controller errors
   static String get motorErrorCategorie => _STRINGS['motor_error_categorie']!;
   static String get supplyErrorCategorie => _STRINGS['supply_error_categorie']!;
@@ -150,12 +153,13 @@ class Strings {
   static const Map<String, String> _STRINGS = {
     "users": "Benutzer",
     "user": "Benutzer",
-    "drive": "Fahren",
+    "motor_and_battery": "Motor & Akku",
     "light_and_display": "Licht & Anzeige",
     "audio": "Audio",
     "about": "Über",
     "on": "An",
     "off": "Aus",
+    "off_capslock": "OFF",
     "dimmed": "Gedimmt",
     "kmh": "km/h",
     "range": "Reichweite",
@@ -236,6 +240,8 @@ class Strings {
     "power": "Power",
     "restart_motor_controller": "Starte den Motor-Controller neu.",
     "restarting_motor_controller": "Motor-Controller wird neu gestartet...",
+    "restarting_motor_controller_blocked":
+        "Motor kann nur bei Stand neu gestartet werden.",
     // Controller errors
     "motor_error_categorie": "Motor",
     "supply_error_categorie": "Versorgung",

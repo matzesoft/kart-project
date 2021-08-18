@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:kart_project/design/card_with_title.dart';
+import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,7 @@ class DevSetting extends StatelessWidget {
             ),
             KartServiceEnable(devOptions),
             ErrorNotificationsTest(devOptions),
+            MotorControllerPower(),
             Logs(),
           ],
         );
@@ -94,15 +96,34 @@ class ErrorNotificationsTest extends StatelessWidget {
         children: [
           TextButton(
             child: Text("Create Testerror"),
-            onPressed: () {
-              devOptions.createTestError(context);
-            },
+            onPressed: () => devOptions.createTestError(context),
           ),
           TextButton(
             child: Text("Close Testerror"),
-            onPressed: () {
-              devOptions.closeTestError(context);
-            },
+            onPressed: () => devOptions.closeTestError(context),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MotorControllerPower extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final motorController = context.read<MotorControllerProvider>();
+
+    return CardWithTitle(
+      title: "Motor PowerOff",
+      child: Column(
+        children: [
+          TextButton(
+            child: Text("Power OFF"),
+            onPressed: () => motorController.setPower(false),
+          ),
+          TextButton(
+            child: Text("Power ON"),
+            onPressed: () => motorController.setPower(true),
           ),
         ],
       ),
