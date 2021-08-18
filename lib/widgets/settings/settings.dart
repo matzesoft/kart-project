@@ -28,7 +28,7 @@ List<Setting> settings = [
     content: UserSetting(),
   ),
   Setting(
-    title: Strings.drive,
+    title: Strings.motorAndBattery,
     icon: EvaIcons.navigationOutline,
     content: DriveSetting(),
   ),
