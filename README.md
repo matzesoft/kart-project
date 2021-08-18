@@ -24,7 +24,7 @@ We are using some old speakers to play music on the kart or to hoot. Playing mus
 
 ### User options
 
-We had the idea of having multiple users, so when you are using the kart, all settings are adapted to your user.
+We had the idea of having multiple users, so when you are using the kart, all settings are adapted to you.
 
 ### Dark & Light theme
 
