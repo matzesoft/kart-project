@@ -36,10 +36,23 @@ We added a map using this [map](https://pub.dev/packages/map)-package. The data 
 
 ## Screenshots
 
-### Mainscreen
+### Lockscreen
 
-![main_light](./screenshots/main_light.png)
-![main_dark](./screenshots/main_dark.png)
+![lightmode_lockscreen](./screenshots/lightmode_lockscreen.jpg)
+
+### Dashboard
+
+![lightmode_dashboard](./screenshots/lightmode_dashboard.jpg)
+![darkmode_dashboard](./screenshots/darkmode_dashboard.jpg)
+
+### Settings
+
+![lightmode_settings_users](./screenshots/lightmode_settings_users.jpg)
+![lightmode_settings_driving](./screenshots/lightmode_settings_driving.jpg)
+![lightmode_settings_light](./screenshots/lightmode_settings_light.jpg)
+![lightmode_settings_safety](./screenshots/lightmode_settings_safety.jpg)
+
+For more screenshots go to the [screenshots folder](https://github.com/matzesoft/kart-project/tree/master/screenshots).
 
 ## Conclusion
 
