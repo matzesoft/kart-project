@@ -123,7 +123,6 @@ class ProviderInit extends StatelessWidget {
           create: (context) => TemperatureProvider(
             context.read<NotificationsProvider>(),
             context.read<MotorControllerProvider>(),
-            context.read<SystemProvider>(),
           ),
           lazy: false,
         ),

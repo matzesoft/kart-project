@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:kart_project/interfaces/gpio_interface.dart';
 import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/notifications_provider.dart';
-import 'package:kart_project/providers/system_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
 import 'package:wiring_pi_i2c/wiring_pi_i2c.dart';
@@ -15,13 +14,11 @@ class TemperatureProvider extends ChangeNotifier {
   TemperatureProvider(
     NotificationsProvider notifications,
     MotorControllerProvider motorController,
-    SystemProvider systemProvider,
   ) {
     _setupIsolate();
     battery = BatteryTemperatureController(
       notifications,
       motorController,
-      systemProvider,
     );
     switchCabinet = SwitchCabinetTemperatureController(
       notifications,
@@ -40,8 +37,8 @@ class TemperatureProvider extends ChangeNotifier {
 
   void _onNewTemperatureData(dynamic message) {
     final TemperatureData tempData = message;
-    battery._update(tempData.batteryTemps);
     switchCabinet._update(tempData.switchCabinetTemp);
+    battery._update(tempData.batteryTemps);
     notifyListeners();
   }
 }
@@ -233,6 +230,36 @@ class SwitchCabinetTemperatureController {
   }
 }
 
+class FanController {
+  final _gpio = GpioInterface.fan;
+  // final _speedInput = GpioInterface.fanRpmSpeed;
+  double _output = 0.0;
+
+  FanController() {
+    //_speedInput.onEvent.listen(_onSpeedChange);
+  }
+
+  // void _onSpeedChange(SignalEvent event) {
+  //   final value = _speedInput.getValue();
+  //   final edge = event.edge;
+  //   print("value: $value, edge: $edge");
+  // }
+
+  double get output => _output;
+
+  set output(double output) {
+    if (output < 0.0 || output > 1.0) {
+      throw ArgumentError("output must be set between 0.0 and 1.0");
+    }
+    _output = output;
+    // Range of fan is reducded to 40% - 100% or 0%.
+    final value = (output == 0.0) ? 0 : (((output * 0.6) + 0.4) * 100).round();
+    _gpio.write(value);
+  }
+}
+
+const _BATTERY_TEMPERATURE_NOTIFY_ID = "battey_over_temperature";
+
 @immutable
 class TemperatureState {
   TemperatureState({
@@ -254,7 +281,6 @@ class TemperatureState {
   final String message;
   final void Function(
     MotorControllerProvider motorControllerProvider,
-    SystemProvider systemProvider,
   )? onSwitch;
 
   bool checkOnSwitch(
@@ -262,13 +288,12 @@ class TemperatureState {
     TemperatureState currentState,
     NotificationsProvider notification,
     MotorControllerProvider motorController,
-    SystemProvider systemProvider,
   ) {
     // Only allows to higher up the level.
     if ((this.level > currentState.level) && (currentTemp >= temperature)) {
       notification.error.tryClose(notifyID);
       notification.error.create(this.asErrorNotification);
-      if (onSwitch != null) onSwitch!(motorController, systemProvider);
+      if (onSwitch != null) onSwitch!(motorController);
       return true;
     }
     return false;
@@ -305,7 +330,6 @@ class TemperatureStateGood extends TemperatureState {
     TemperatureState currentState,
     NotificationsProvider notifications,
     MotorControllerProvider motorController,
-    SystemProvider systemProvider,
   ) {
     if ((this.level < currentState.level) && (currentTemp < this.temperature)) {
       notifications.error.tryClose(notifyID);
@@ -326,10 +350,6 @@ class BatteryTempStates {
     notifyID: _BATTERY_TEMPERATURE_NOTIFY_ID,
     title: Strings.batteryOverheat,
     message: Strings.batteryOverheatMsg,
-    onSwitch: (motorController, systemProvider) {
-      //TODO: Force low speed
-      motorController.lowSpeedMode.alwaysActive = true;
-    },
   );
   static final enableLowSpeed = TemperatureState(
     temperature: 50,
@@ -337,7 +357,7 @@ class BatteryTempStates {
     notifyID: _BATTERY_TEMPERATURE_NOTIFY_ID,
     title: Strings.highBatteryOverheat,
     message: Strings.highBatteryOverheatMsg,
-    onSwitch: (motorController, systemProvider) {
+    onSwitch: (motorController) {
       //TODO: Force low speed
       motorController.lowSpeedMode.alwaysActive = true;
     },
@@ -348,7 +368,7 @@ class BatteryTempStates {
       notifyID: _BATTERY_TEMPERATURE_NOTIFY_ID,
       title: Strings.batteryOverheatDisableKart,
       message: Strings.batteryOverheatDisableKartMsg,
-      onSwitch: (motorController, systemProvider) {
+      onSwitch: (motorController) {
         //TODO: Force low speed
         motorController.lowSpeedMode.alwaysActive = true;
       });
@@ -358,19 +378,14 @@ class BatteryTempStates {
   }
 }
 
-const _BATTERY_TEMPERATURE_NOTIFY_ID = "battey_over_temperature";
-
 class BatteryTemperatureController {
   BatteryTemperatureController(
     this._notifications,
     this._motorController,
-    this._systemProvider,
   );
 
   final NotificationsProvider _notifications;
   final MotorControllerProvider _motorController;
-  final SystemProvider _systemProvider;
-
   List<int> _temperatures = [];
   TemperatureState state = BatteryTempStates.good;
 
@@ -401,39 +416,12 @@ class BatteryTemperatureController {
     if (maxTemperature != null) {
       final tempStates = BatteryTempStates.asList;
 
+      // TODO: Do not cycle threw all states when getting from normal temp to very high
       for (int i = 0; i < tempStates.length; i++) {
-        final switchState = tempStates[i].checkOnSwitch(maxTemperature, state,
-            _notifications, _motorController, _systemProvider);
+        final switchState = tempStates[i].checkOnSwitch(
+            maxTemperature, state, _notifications, _motorController);
         if (switchState) state = tempStates[i];
       }
     }
-  }
-}
-
-class FanController {
-  final _gpio = GpioInterface.fan;
-  // final _speedInput = GpioInterface.fanRpmSpeed;
-  double _output = 0.0;
-
-  FanController() {
-    //_speedInput.onEvent.listen(_onSpeedChange);
-  }
-
-  // void _onSpeedChange(SignalEvent event) {
-  //   final value = _speedInput.getValue();
-  //   final edge = event.edge;
-  //   print("value: $value, edge: $edge");
-  // }
-
-  double get output => _output;
-
-  set output(double output) {
-    if (output < 0.0 || output > 1.0) {
-      throw ArgumentError("output must be set between 0.0 and 1.0");
-    }
-    _output = output;
-    // Range of fan is reducded to 40% - 100% or 0%.
-    final value = (output == 0.0) ? 0 : (((output * 0.6) + 0.4) * 100).round();
-    _gpio.write(value);
   }
 }
