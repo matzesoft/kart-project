@@ -20,6 +20,7 @@ const _WHEEL_DIAMETER = 0.33; // m
 
 const _VOLTAGE_WHEN_CHARGED = 50.4;
 const _VOLTAGE_WHEN_LOW = 42.0;
+const _VOLTAGE_DIFFERENCE = _VOLTAGE_WHEN_CHARGED - _VOLTAGE_WHEN_LOW;
 
 const _ALLOW_MOTOR_POWER_OFF = 3;
 
@@ -49,6 +50,14 @@ class MotorControllerProvider extends ChangeNotifier {
     _canData.setup().then((_) {
       _canData.addListener(() => _onCanDataChanged());
     });
+
+    _brakeInoutGpio.onEvent.listen((_) {
+      final brakeInput = _brakeInoutGpio.getValue();
+      if (brakeInput != _isBraking) {
+        _isBraking = brakeInput;
+        notifyListeners();
+      }
+    });
   }
 
   MotorControllerProvider update(User newUser) {
@@ -68,8 +77,10 @@ class MotorControllerProvider extends ChangeNotifier {
   late final GlobalRangeProfil tripRangeProfil;
   final _powerGpio = GpioInterface.kellyOff;
   final _enableMotorGpio = GpioInterface.enableMotor;
+  final _brakeInoutGpio = GpioInterface.brakeInput;
   User _user;
   ControllerError? _error;
+  bool _isBraking = false;
 
   double get speed {
     final rpm = _canData.rpm;
@@ -77,8 +88,7 @@ class MotorControllerProvider extends ChangeNotifier {
   }
 
   double get batteryLevel {
-    final _difference = _VOLTAGE_WHEN_CHARGED - _VOLTAGE_WHEN_LOW;
-    final level = (batteryVoltage - _VOLTAGE_WHEN_LOW) / _difference;
+    final level = (batteryVoltage - _VOLTAGE_WHEN_LOW) / _VOLTAGE_DIFFERENCE;
     if (level < 0.0) return 0.0;
     if (level > 1.0) return 1.0;
     return level;
@@ -108,6 +118,8 @@ class MotorControllerProvider extends ChangeNotifier {
       _error = controllerError;
     }
   }
+
+  bool get isBraking => _isBraking;
 
   bool get isOn => _powerGpio.getValue();
 
@@ -383,7 +395,7 @@ class KellyCanData extends ChangeNotifier {
 
   int _rpm = 0;
   double _motorCurrent = 0.0;
-  double _batterVoltage = 0.0;
+  double _batteryVoltage = 0.0;
   int _throttleSignal = 0;
   int? _controllerTemperature;
   int? _motorTemperature;
@@ -392,7 +404,7 @@ class KellyCanData extends ChangeNotifier {
 
   int get rpm => _rpm;
   double get motorCurrent => _motorCurrent;
-  double get batteryVoltage => _batterVoltage;
+  double get batteryVoltage => _batteryVoltage;
   int get throttleSignal => _throttleSignal;
   int? get controllerTemperature => _controllerTemperature;
   int? get motorTemperature => _motorTemperature;
@@ -467,7 +479,7 @@ class KellyCanData extends ChangeNotifier {
       data[_BATTERY_VOLTAGE_LSB_INDEX],
     );
     if (_inRange(voltage, _BATTERY_VOLTAGE_RANGE)) {
-      _batterVoltage = voltage / _BATTERY_VOLTAGE_DIVIDER;
+      _batteryVoltage = voltage / _BATTERY_VOLTAGE_DIVIDER;
     }
 
     final error = _convertFrom2Bytes(
