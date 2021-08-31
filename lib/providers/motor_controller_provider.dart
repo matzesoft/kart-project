@@ -434,8 +434,6 @@ class KellyCanData extends ChangeNotifier {
       if (failedReading) {
         _failedReads += 1;
         if (_failedReads >= _FAILED_READS_LIMIT) {
-          logToConsole("KellyCanData", "update",
-              "Over _FAILED_READS_LIMIT $_FAILED_READS_LIMIT");
           throw SocketException("Unable to read from can bus.");
         }
       } else {
