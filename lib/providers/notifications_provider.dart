@@ -221,12 +221,15 @@ class SimpleNotification extends Notification {
   }
 }
 
+enum ErrorLevel { warning, critical, extremCritical }
+
 class ErrorNotification extends Notification {
   final String id;
   final IconData icon;
   final String categorie;
   final String title;
   final String message;
+  final ErrorLevel level;
   final Function(BuildContext context)? moreDetails;
 
   ErrorNotification(
@@ -235,6 +238,7 @@ class ErrorNotification extends Notification {
     this.categorie: "",
     this.title: "",
     this.message: "",
+    this.level: ErrorLevel.critical,
     this.moreDetails,
   }) : super(
           position: NotificationPosition.top,
@@ -243,6 +247,17 @@ class ErrorNotification extends Notification {
           widgetKey: id,
           translate: true,
         );
+
+  Color primaryColor(BuildContext context) {
+    if (Theme.of(context).brightness == Brightness.light) {
+      if (level == ErrorLevel.warning) return Colors.orangeAccent[700]!;
+      if (level == ErrorLevel.extremCritical) return Colors.redAccent[700]!;
+    } else {
+      if (level == ErrorLevel.warning) return Colors.orangeAccent;
+      if (level == ErrorLevel.extremCritical) return Colors.redAccent[200]!;
+    }
+    return Theme.of(context).errorColor;
+  }
 
   @override
   Widget _content(BuildContext context) {
@@ -256,7 +271,7 @@ class ErrorNotification extends Notification {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                child: Icon(icon, color: Theme.of(context).errorColor),
+                child: Icon(icon, color: primaryColor(context)),
               ),
               Expanded(
                 child: Padding(
@@ -266,7 +281,7 @@ class ErrorNotification extends Notification {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.headline6!.copyWith(
-                          color: Theme.of(context).errorColor,
+                          color: primaryColor(context),
                         ),
                   ),
                 ),

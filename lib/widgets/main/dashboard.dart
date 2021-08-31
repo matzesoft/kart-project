@@ -350,17 +350,20 @@ class ErrorItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton.icon(
-      icon: Icon(notification.icon, color: Theme.of(context).errorColor),
-      label: Text(notification.categorie),
-      style: TextButton.styleFrom(
-        primary: Theme.of(context).errorColor,
-        onSurface: Theme.of(context).errorColor,
-        padding: EdgeInsets.all(4.0),
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: TextButton.icon(
+        icon: Icon(notification.icon, color: notification.primaryColor(context)),
+        label: Text(notification.categorie),
+        style: TextButton.styleFrom(
+          primary: notification.primaryColor(context),
+          onSurface: notification.primaryColor(context),
+          padding: EdgeInsets.all(4.0),
+        ),
+        onPressed: notification.moreDetails != null
+            ? () => notification.moreDetails!(context)
+            : null,
       ),
-      onPressed: notification.moreDetails != null
-          ? () => notification.moreDetails!(context)
-          : null,
     );
   }
 }
