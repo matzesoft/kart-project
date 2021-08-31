@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:kart_project/design/theme.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:provider/provider.dart';
