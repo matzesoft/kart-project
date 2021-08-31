@@ -47,3 +47,12 @@ extension FlutterGpiodExtensions on GpioLine {
     this.setValue(!value);
   }
 }
+
+extension ListExtension on List {
+  bool get allElementsAreNull {
+    for (int i = 0; i < this.length; i++) {
+      if (this[i] != null) return false;
+    }
+    return true;
+  }
+}
