@@ -56,7 +56,7 @@ For more screenshots go to the [screenshots folder](https://github.com/matzesoft
 
 ## Conclusion
 
-After 1,5 years of work we finally made the Kart drive. At the moment we are working on a video to present the features best possible. We are going to open a small website with some more details and pictures. This repo will stay Software focused.
+After 1.5 years of work we finally made the Kart drive. At the moment we are working on a video to present the features best possible. We are going to open a small website with some more details and pictures. This repo will stay Software focused.
 
 I want to thank @ardera as the creator of [flutter-pi](https://github.com/ardera/flutter-pi) who helped me in various situations.
 
