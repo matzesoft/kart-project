@@ -60,6 +60,6 @@ For more screenshots go to the [screenshots folder](https://github.com/matzesoft
 
 After 1.5 years of work we finally made the Kart drive. Visit our german [website](https://sites.google.com/view/kaerelle/) for more information with a cool [action video](https://www.youtube.com/watch?v=eIbu9O5lCi4). This repo will stay software focused.
 
-I want to thank @ardera as the creator of [flutter-pi](https://github.com/ardera/flutter-pi) who helped me in various situations.
+I want to thank [@ardera](https://github.com/ardera) as the creator of [flutter-pi](https://github.com/ardera/flutter-pi) who helped me in various situations.
 
 If you found some bad code, something to improve or just have a question about the project at all feel free to open an issue or write an [e-mail](mailto:matzesoft@gmail.com).
