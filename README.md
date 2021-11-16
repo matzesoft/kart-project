@@ -3,6 +3,8 @@
 A [flutter-pi](https://github.com/ardera/flutter-pi)-app running on a RaspberryPi 4, being the infotainment system for a custom builded e-kart,
 planned by two brothers.
 
+You can find more information on the project itself on our german [website](https://sites.google.com/view/kaerelle/) or have a look at the [action video](https://www.youtube.com/watch?v=eIbu9O5lCi4).
+
 ## Features
 
 ### Driving information
@@ -56,7 +58,7 @@ For more screenshots go to the [screenshots folder](https://github.com/matzesoft
 
 ## Conclusion
 
-After 1.5 years of work we finally made the Kart drive. At the moment we are working on a video to present the features best possible. We are going to open a small website with some more details and pictures. This repo will stay Software focused.
+After 1.5 years of work we finally made the Kart drive. Visit our german [website](https://sites.google.com/view/kaerelle/) for more information with a cool [action video](https://www.youtube.com/watch?v=eIbu9O5lCi4). This repo will stay software focused.
 
 I want to thank @ardera as the creator of [flutter-pi](https://github.com/ardera/flutter-pi) who helped me in various situations.
 
