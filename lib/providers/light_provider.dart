@@ -32,7 +32,7 @@ class LightProvider extends ChangeNotifier {
   }
 
   /// Updates the [LightProvider] with the data of the [newUser] and the
-  /// [locked] value of the [BootProvider]. Returns the back the object itself.
+  /// [locked] value of the [BootProvider]. Returns back the object itself.
   /// This is normally called inside a [ProxyProvider]s update method.
   /// Does update all listeners.
   LightProvider update(User newUser, bool locked) {
@@ -156,7 +156,7 @@ class FrontLightController {
 /// Used when [LightState] is dimmed or on and the drivers isn't braking.
 const DEFAULT_BRIGHTNESS = 0.4;
 
-/// Used when [LightState] is dimmed or on and the drivers isn't braking.
+/// Used when [LightState] is dimmed or on and the drivers is braking.
 const BRAKING_BRIGHTNESS = 1.0;
 
 class BackLightController {
