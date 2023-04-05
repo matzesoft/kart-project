@@ -9,6 +9,7 @@ import 'package:kart_project/providers/notifications_provider.dart';
 import 'package:kart_project/strings.dart';
 import 'package:kart_project/widgets/settings/settings.dart';
 import 'package:wiring_pi_i2c/wiring_pi_i2c.dart';
+import 'package:kart_project/extensions.dart';
 
 class TemperatureProvider extends ChangeNotifier {
   TemperatureProvider(
@@ -48,7 +49,7 @@ class TemperatureData {
   TemperatureData(this.switchCabinetTemp, this.batteryTemps);
 
   final int? switchCabinetTemp;
-  final List<int> batteryTemps;
+  final List<int?> batteryTemps;
 }
 
 const _SWITCH_CABINET_SENSOR_ADDR = 0x18;
@@ -71,12 +72,16 @@ void _readTemperatureData(SendPort sendPort) {
       switchCabinetTemp = null;
     }
 
-    List<int> batteryTemps = [];
+    List<int?> batteryTemps = [];
     for (int i = 0; i < _batterySensors.length; i++) {
       try {
+        // TODO: Remove after testing
+        throw I2CException("ahh kapput", 69);
         final temp = _batterySensors[i].readTemperature();
         batteryTemps.add(temp);
-      } on I2CException {}
+      } on I2CException {
+        batteryTemps.add(null);
+      }
     }
 
     final tempData = TemperatureData(switchCabinetTemp, batteryTemps);
@@ -101,8 +106,6 @@ class MCP9808 {
     return (data & _TEMPERATURE_MASK) >> 4;
   }
 }
-
-const _SWITCH_CABINET_NOTIFY_ID = "switch_cabinet_heat";
 
 const _CONTROLLER_TEMP_FAN_FULL = 45;
 const _CONTROLLER_TEMP_WARNING = 65;
@@ -150,7 +153,7 @@ class SwitchCabinetTemperatureController {
   bool _controllerHeatWarning = false;
 
   late final heatWarning = ErrorNotification(
-    _SWITCH_CABINET_NOTIFY_ID,
+    "switch_cabinet_heat",
     icon: EvaIcons.thermometerPlusOutline,
     categorie: Strings.heat,
     title: Strings.highSwitchCabinetTemperature,
@@ -232,18 +235,7 @@ class SwitchCabinetTemperatureController {
 
 class FanController {
   final _gpio = GpioInterface.fan;
-  // final _speedInput = GpioInterface.fanRpmSpeed;
   double _output = 0.0;
-
-  FanController() {
-    //_speedInput.onEvent.listen(_onSpeedChange);
-  }
-
-  // void _onSpeedChange(SignalEvent event) {
-  //   final value = _speedInput.getValue();
-  //   final edge = event.edge;
-  //   print("value: $value, edge: $edge");
-  // }
 
   double get output => _output;
 
@@ -258,25 +250,22 @@ class FanController {
   }
 }
 
-const _BATTERY_TEMPERATURE_NOTIFY_ID = "battey_over_temperature";
-
 @immutable
-class TemperatureState {
-  TemperatureState({
+class BatteryTemperatureState {
+  BatteryTemperatureState({
     required this.level,
     required this.temperature,
-    required this.notifyID,
     this.title: "",
     this.message: "",
     this.onSwitch,
   });
 
-  static final _icon = EvaIcons.thermometerPlusOutline;
+  static const _notifyID = "battey_over_temperature";
+  static const _icon = EvaIcons.thermometerPlusOutline;
   static final _categorie = Strings.heat;
 
   final int level;
   final int temperature;
-  final String notifyID;
   final String title;
   final String message;
   final void Function(
@@ -285,13 +274,13 @@ class TemperatureState {
 
   bool checkOnSwitch(
     int currentTemp,
-    TemperatureState currentState,
+    BatteryTemperatureState currentState,
     NotificationsProvider notification,
     MotorControllerProvider motorController,
   ) {
     // Only allows to higher up the level.
     if ((this.level > currentState.level) && (currentTemp >= temperature)) {
-      notification.error.tryClose(notifyID);
+      notification.error.tryClose(_notifyID);
       notification.error.create(this.asErrorNotification);
       if (onSwitch != null) onSwitch!(motorController);
       return true;
@@ -300,12 +289,17 @@ class TemperatureState {
   }
 
   ErrorNotification get asErrorNotification {
+    ErrorLevel errorLevel = ErrorLevel.warning;
+    if (level == 3) errorLevel = ErrorLevel.extremCritical;
+    if (level == 2) errorLevel = ErrorLevel.critical;
+
     return ErrorNotification(
-      _BATTERY_TEMPERATURE_NOTIFY_ID,
+      _notifyID,
       icon: _icon,
       categorie: _categorie,
       title: title,
       message: message,
+      level: errorLevel,
       moreDetails: (context) {
         Navigator.pushNamed(
           context,
@@ -318,21 +312,21 @@ class TemperatureState {
 }
 
 @immutable
-class TemperatureStateGood extends TemperatureState {
+class BatteryTemperatureGood extends BatteryTemperatureState {
   /// In this case [temperature] is the value the current temperature must fall
   /// under to return back to this "good" state.
-  TemperatureStateGood({required int temperature, required String notifyID})
-      : super(level: 0, temperature: temperature, notifyID: notifyID);
+  BatteryTemperatureGood({required int temperature})
+      : super(level: 0, temperature: temperature);
 
   @override
   bool checkOnSwitch(
     int currentTemp,
-    TemperatureState currentState,
+    BatteryTemperatureState currentState,
     NotificationsProvider notifications,
     MotorControllerProvider motorController,
   ) {
     if ((this.level < currentState.level) && (currentTemp < this.temperature)) {
-      notifications.error.tryClose(notifyID);
+      notifications.error.tryClose(BatteryTemperatureState._notifyID);
       return true;
     }
     return false;
@@ -340,21 +334,16 @@ class TemperatureStateGood extends TemperatureState {
 }
 
 class BatteryTempStates {
-  static final good = TemperatureStateGood(
-    temperature: 35,
-    notifyID: _BATTERY_TEMPERATURE_NOTIFY_ID,
-  );
-  static final warning = TemperatureState(
+  static final good = BatteryTemperatureGood(temperature: 35);
+  static final warning = BatteryTemperatureState(
     temperature: 40,
     level: 1,
-    notifyID: _BATTERY_TEMPERATURE_NOTIFY_ID,
     title: Strings.batteryOverheat,
     message: Strings.batteryOverheatMsg,
   );
-  static final enableLowSpeed = TemperatureState(
+  static final enableLowSpeed = BatteryTemperatureState(
     temperature: 50,
     level: 2,
-    notifyID: _BATTERY_TEMPERATURE_NOTIFY_ID,
     title: Strings.highBatteryOverheat,
     message: Strings.highBatteryOverheatMsg,
     onSwitch: (motorController) {
@@ -362,10 +351,9 @@ class BatteryTempStates {
       motorController.lowSpeedMode.alwaysActive = true;
     },
   );
-  static final disableKart = TemperatureState(
+  static final disableKart = BatteryTemperatureState(
       temperature: 60,
       level: 3,
-      notifyID: _BATTERY_TEMPERATURE_NOTIFY_ID,
       title: Strings.batteryOverheatDisableKart,
       message: Strings.batteryOverheatDisableKartMsg,
       onSwitch: (motorController) {
@@ -373,10 +361,28 @@ class BatteryTempStates {
         motorController.lowSpeedMode.alwaysActive = true;
       });
 
-  static List<TemperatureState> get asList {
+  static List<BatteryTemperatureState> get asList {
     return [good, warning, enableLowSpeed, disableKart];
   }
 }
+
+final noTemperatureDataError = ErrorNotification(
+  "no_temperature_data",
+  icon: EvaIcons.thermometer,
+  categorie: Strings.sensors,
+  title: Strings.noTemperatureDataBattery,
+  message: Strings.noTemperatureDataBatteryMessage,
+  level: ErrorLevel.warning,
+  moreDetails: (context) {
+    Navigator.pushNamed(
+      context,
+      Settings.route,
+      arguments: 4, // Safety Options
+    );
+  },
+);
+
+const _TEMP_SENSOR_DIFFERENCE_TO_HIGH = 14;
 
 class BatteryTemperatureController {
   BatteryTemperatureController(
@@ -386,37 +392,89 @@ class BatteryTemperatureController {
 
   final NotificationsProvider _notifications;
   final MotorControllerProvider _motorController;
-  List<int> _temperatures = [];
-  TemperatureState state = BatteryTempStates.good;
+  List<int?> _temperatures = [];
+  BatteryTemperatureState state = BatteryTempStates.good;
+  bool _noTemperatureDataErrorShown = false;
 
-  List<int> get temperatures => _temperatures;
+  List<int?> get temperatures => _temperatures;
+
+  bool get noTemperatureData =>
+      temperatures.isEmpty || temperatures.allElementsAreNull;
 
   int? get maxTemp {
-    if (temperatures.isEmpty) return null;
+    if (noTemperatureData) return null;
 
-    int maxTemp = temperatures[0];
-    temperatures.forEach((temp) {
-      if (maxTemp < temp) maxTemp = temp;
-    });
+    int? maxTemp;
+    for (int i = 0; i < temperatures.length; i++) {
+      final temp = temperatures[i];
+
+      if (temp != null) {
+        if (maxTemp != null) {
+          if (maxTemp < temp) maxTemp = temp;
+        } else {
+          maxTemp = temp;
+        }
+      }
+    }
     return maxTemp;
   }
 
   int? get averageTemp {
-    if (temperatures.isEmpty) return null;
+    if (noTemperatureData) return null;
 
+    int count = temperatures.length;
     double sum = 0.0;
-    temperatures.forEach((temp) => sum += temp);
-    return (sum / temperatures.length).round();
+    temperatures.forEach((temp) {
+      (temp == null) ? count -= 1 : sum += temp;
+    });
+    return (sum / count).round();
   }
 
-  void _update(List<int> temperatures) {
-    _temperatures = temperatures;
+  void _update(List<int?> temperatures) {
+    logToConsole("BatteryTemperatureController", "_update",
+        "Temperatures: $temperatures");
 
+    // Checks if temperature data is empty and creates a error if true.
+    if (temperatures.allElementsAreNull && !_noTemperatureDataErrorShown) {
+      logToConsole("BatteryTemperatureController", "_update",
+          "All Temperature Sensors return null.");
+      _notifications.error.create(noTemperatureDataError);
+      _noTemperatureDataErrorShown = true;
+    } else if (!temperatures.allElementsAreNull &&
+        _noTemperatureDataErrorShown) {
+      _notifications.error.tryClose(noTemperatureDataError.id);
+      _noTemperatureDataErrorShown = false;
+    }
+
+    // Checks for not functioning temp sensors and unvalid sensor data.
+    if (this.noTemperatureData) {
+      this._temperatures = temperatures;
+    } else {
+      for (int i = 0; i < temperatures.length; i++) {
+        final tempBefore = this.temperatures[i];
+        int? temp = temperatures[i];
+
+        if (temp == null) {
+          logToConsole("BatteryTemperatureController", "_update",
+              "Temperature Sensor ${i + 1} unable to read data.");
+        } else if ((tempBefore != null) &&
+            (temp - tempBefore > _TEMP_SENSOR_DIFFERENCE_TO_HIGH)) {
+          logToConsole(
+            "BatteryTemperatureController",
+            "_update",
+            "Temperature difference to high. tempBefore: $tempBefore, tempNow: $temp",
+          );
+          temp = null;
+        }
+        this.temperatures[i] = temp;
+      }
+    }
+
+    // Checks for high temperature and updates [state] if necessary.
     final maxTemperature = this.maxTemp;
     if (maxTemperature != null) {
       final tempStates = BatteryTempStates.asList;
 
-      // TODO: Do not cycle threw all states when getting from normal temp to very high
       for (int i = 0; i < tempStates.length; i++) {
         final switchState = tempStates[i].checkOnSwitch(
             maxTemperature, state, _notifications, _motorController);

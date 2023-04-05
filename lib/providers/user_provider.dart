@@ -1,6 +1,5 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:kart_project/providers/map_provider.dart';
 import 'package:kart_project/providers/motor_controller_provider.dart';
 import 'package:kart_project/providers/preferences_provider.dart';

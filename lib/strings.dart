@@ -149,6 +149,11 @@ class Strings {
   static String get batteryTempAverage => _STRINGS['battery_temp_average']!;
   static String get batteryTempMax => _STRINGS['battery_temp_max']!;
   static String get safety => _STRINGS['safety']!;
+  static String get sensors => _STRINGS['sensors']!;
+  static String get noTemperatureDataBattery =>
+      _STRINGS['no_temperature_data_battery']!;
+  static String get noTemperatureDataBatteryMessage =>
+      _STRINGS['no_temperature_data_battery_message']!;
 
   static const Map<String, String> _STRINGS = {
     "users": "Benutzer",
@@ -299,6 +304,10 @@ class Strings {
     "battery": "Akku",
     "battery_temp_average": "Akkutemperatur Durchschnitt",
     "battery_temp_max": "Akkutemperatur Maximal",
-    "safety": "Sicherheit"
+    "safety": "Sicherheit",
+    "sensors": "Sensorik",
+    "no_temperature_data_battery": "Keine Temperaturdaten der Akkus lesbar",
+    "no_temperature_data_battery_message":
+        "Überprüfe die Akkutemperatur manuell und beende die Fahrt so schnell wie möglich."
   };
 }

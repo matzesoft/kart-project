@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 /// Holds the [ThemeData] for the [lightTheme] and [darkTheme], and provides
 /// some extra values for consistent design.

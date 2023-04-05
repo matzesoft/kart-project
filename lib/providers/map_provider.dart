@@ -5,7 +5,6 @@ import 'package:map/map.dart' hide Map;
 import 'package:kart_project/extensions.dart';
 import 'package:kart_project/strings.dart';
 import 'package:latlng/latlng.dart';
-import 'package:flutter/widgets.dart';
 
 const _LIGHT_MAP_PATH = "/home/pi/data/map/map_light";
 const _DARK_MAP_PATH = "/home/pi/data/map/map_dark";
